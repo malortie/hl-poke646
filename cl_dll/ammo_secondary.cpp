@@ -20,8 +20,8 @@
 
 #include "hud.h"
 #include "cl_util.h"
-#include <string.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdio>
 #include "parsemsg.h"
 
 DECLARE_MESSAGE( m_AmmoSecondary, SecAmmoVal );
@@ -62,9 +62,9 @@ int CHudAmmoSecondary :: Draw(float flTime)
 	int a, x, y, r, g, b, AmmoWidth;
 	UnpackRGB( r, g, b, RGB_YELLOWISH );
 #if defined ( POKE646_CLIENT_DLL )
-	a = (int) max( min( gHUD.m_flAlpha, MIN_ALPHA ), m_fFade );
+	a = std::max( std::min( gHUD.m_flAlpha, MIN_ALPHA ), static_cast<int>(m_fFade) );
 #else
-	a = (int) max( MIN_ALPHA, m_fFade );
+	a = std::max( MIN_ALPHA, static_cast<int>(m_fFade) );
 #endif // defined ( POKE646_CLIENT_DLL )
 	if (m_fFade > 0)
 		m_fFade -= (gHUD.m_flTimeDelta * 20);  // slowly lower alpha to fade out icons
@@ -145,7 +145,7 @@ int CHudAmmoSecondary :: MsgFunc_SecAmmoVal( const char *pszName, int iSize, voi
 	int count = 0;
 	for ( int i = 0; i < MAX_SEC_AMMO_VALUES; i++ )
 	{
-		count += max( 0, m_iAmmoAmounts[i] );
+		count += std::max( 0, m_iAmmoAmounts[i] );
 	}
 
 	if ( count == 0 ) 
