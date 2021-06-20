@@ -74,6 +74,10 @@ public:
 	BYTE	m_bLockedSentence;	
 	BYTE	m_bUnlockedSound;	
 	BYTE	m_bUnlockedSentence;
+#if defined ( POKE646_DLL ) && defined ( VENDETTA )
+	BOOL	m_bIsEndBossDoor;
+	int		m_iNumTimesItWasOpen;
+#endif // defined ( POKE646_DLL ) && defined ( VENDETTA )
 };
 
 
@@ -88,6 +92,10 @@ TYPEDESCRIPTION	CBaseDoor::m_SaveData[] =
 	DEFINE_FIELD( CBaseDoor, m_bUnlockedSound, FIELD_CHARACTER ),	
 	DEFINE_FIELD( CBaseDoor, m_bUnlockedSentence, FIELD_CHARACTER ),	
 
+#if defined ( POKE646_DLL ) && defined ( VENDETTA )
+	DEFINE_FIELD( CBaseDoor, m_bIsEndBossDoor, FIELD_BOOLEAN ),
+	DEFINE_FIELD( CBaseDoor, m_iNumTimesItWasOpen, FIELD_INTEGER ),
+#endif // defined ( POKE646_DLL ) && defined ( VENDETTA )
 };
 
 IMPLEMENT_SAVERESTORE( CBaseDoor, CBaseToggle );
@@ -321,6 +329,20 @@ void CBaseDoor::Spawn( )
 	}
 	else // touchable button
 		SetTouch( &CBaseDoor::DoorTouch );
+
+#if defined ( POKE646_DLL ) && defined ( VENDETTA )
+	m_bIsEndBossDoor	 = FALSE;
+	m_iNumTimesItWasOpen = 0;
+
+	if (FStrEq(STRING(gpGlobals->mapname), "pv_asl02") && FStrEq(STRING(pev->targetname), "robogate"))
+	{
+		m_bIsEndBossDoor = TRUE;
+	}
+	else
+	{
+		m_bIsEndBossDoor = FALSE;
+	}
+#endif // defined ( POKE646_DLL ) && defined ( VENDETTA )
 }
  
 
@@ -622,6 +644,47 @@ void CBaseDoor::DoorHitTop( void )
 	ASSERT(m_toggle_state == TS_GOING_UP);
 	m_toggle_state = TS_AT_TOP;
 	
+#if defined ( POKE646_DLL ) && defined ( VENDETTA )
+
+	// Increment number of times it was open.
+	m_iNumTimesItWasOpen++;
+
+	if (m_bIsEndBossDoor)
+	{
+		if (m_iNumTimesItWasOpen < 2)
+		{
+			// In flWait seconds, DoorGoDown will fire, unless wait is -1, then door stays open
+			pev->nextthink = pev->ltime + 1;
+			SetThink(&CBaseDoor::DoorGoDown);
+		}
+		else
+		{
+			m_flWait = -1;
+			pev->nextthink = -1;
+		}
+	}
+	else
+	{
+		// toggle-doors don't come down automatically, they wait for refire.
+		if (FBitSet(pev->spawnflags, SF_DOOR_NO_AUTO_RETURN))
+		{
+			// Re-instate touch method, movement is complete
+			if (!FBitSet(pev->spawnflags, SF_DOOR_USE_ONLY))
+				SetTouch(&CBaseDoor::DoorTouch);
+		}
+		else
+		{
+			// In flWait seconds, DoorGoDown will fire, unless wait is -1, then door stays open
+			pev->nextthink = pev->ltime + m_flWait;
+			SetThink(&CBaseDoor::DoorGoDown);
+
+			if (m_flWait == -1)
+			{
+				pev->nextthink = -1;
+			}
+		}
+	}
+#else
 	// toggle-doors don't come down automatically, they wait for refire.
 	if (FBitSet(pev->spawnflags, SF_DOOR_NO_AUTO_RETURN))
 	{
@@ -640,6 +703,7 @@ void CBaseDoor::DoorHitTop( void )
 			pev->nextthink = -1;
 		}
 	}
+#endif // defined ( POKE646_DLL ) && defined ( VENDETTA )
 
 	// Fire the close target (if startopen is set, then "top" is closed) - netname is the close target
 	if ( pev->netname && (pev->spawnflags & SF_DOOR_START_OPEN) )

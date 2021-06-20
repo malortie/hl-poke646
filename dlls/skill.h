@@ -90,6 +90,12 @@ struct skilldata_t
 	float miniturretHealth;
 	float sentryHealth;
 
+#if defined( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
+	float robocopHealth;
+	float robocopDmgMortar;
+	float robocopDmgFist;
+	float robocopSWRadius;
+#endif // defined( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 
 // Player Weapons
 	float plrDmgCrowbar;
@@ -135,6 +141,15 @@ struct skilldata_t
 	float plrStomach;
 	float plrLeg;
 	float plrArm;
+
+#if defined( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
+	float plrDmgNail;
+
+#if defined ( VENDETTA )
+	float plrDmgPar21;
+#endif // defined ( VENDETTA )
+
+#endif // defined( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 };
 
 extern	DLL_GLOBAL	skilldata_t	gSkillData;

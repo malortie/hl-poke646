@@ -84,6 +84,10 @@ int CHudBattery:: MsgFunc_Battery(const char *pszName,  int iSize, void *pbuf )
 
 int CHudBattery::Draw(float flTime)
 {
+#if defined ( POKE646_CLIENT_DLL )
+	return 1;
+#endif // defined ( POKE646_CLIENT_DLL )
+
 	if ( gHUD.m_iHideHUDDisplay & HIDEHUD_HEALTH )
 		return 1;
 

@@ -352,6 +352,15 @@ public:
 	int ammo_uranium;
 	int ammo_hornets;
 	int ammo_argrens;
+#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
+	int ammo_nails;
+	int ammo_xencandy;
+#if defined ( VENDETTA )
+	int ammo_par21;
+	int ammo_m203grens;
+#endif // defined ( VENDETTA )
+#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
+
 	//Special stuff for grenades and satchels.
 	float m_flStartThrow;
 	float m_flReleaseThrow;
@@ -360,6 +369,10 @@ public:
 
 	enum EGON_FIRESTATE { FIRE_OFF, FIRE_CHARGE };
 	int m_fireState;
+
+#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
+	int m_thrownByPlayer;
+#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 };
 
 

@@ -352,6 +352,8 @@ void CTripmineGrenade::DelayDeathThink( void )
 }
 #endif
 
+#if !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
+
 LINK_ENTITY_TO_CLASS( weapon_tripmine, CTripmine );
 
 void CTripmine::Spawn( )
@@ -521,6 +523,7 @@ void CTripmine::WeaponIdle( void )
 	SendWeaponAnim( iAnim );
 }
 
+#endif // !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
 
 
 

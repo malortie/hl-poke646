@@ -22,8 +22,12 @@
 #include "nodes.h"
 #include "player.h"
 #include "gamerules.h"
+#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
+#include "crossbow.h"
+#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 
 #ifndef CLIENT_DLL
+#if !defined ( POKE646_DLL )
 #define BOLT_AIR_VELOCITY	2000
 #define BOLT_WATER_VELOCITY	1000
 
@@ -46,6 +50,7 @@ class CCrossbowBolt : public CBaseEntity
 public:
 	static CCrossbowBolt *BoltCreate( void );
 };
+#endif // !defined ( POKE646_DLL )
 LINK_ENTITY_TO_CLASS( crossbow_bolt, CCrossbowBolt );
 
 CCrossbowBolt *CCrossbowBolt::BoltCreate( void )
@@ -219,6 +224,8 @@ void CCrossbowBolt::ExplodeThink( void )
 	UTIL_Remove(this);
 }
 #endif
+
+#if !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
 
 enum crossbow_e {
 	CROSSBOW_IDLE1 = 0,	// full
@@ -543,6 +550,6 @@ class CCrossbowAmmo : public CBasePlayerAmmo
 };
 LINK_ENTITY_TO_CLASS( ammo_crossbow, CCrossbowAmmo );
 
-
+#endif // !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
 
 #endif

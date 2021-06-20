@@ -279,6 +279,26 @@ cvar_t	sk_sentry_health1 = {"sk_sentry_health1","0"};
 cvar_t	sk_sentry_health2 = {"sk_sentry_health2","0"};
 cvar_t	sk_sentry_health3 = {"sk_sentry_health3","0"};
 
+#if defined( POKE646_DLL )
+
+// RoboCop
+cvar_t	sk_robocop_health1 = { "sk_robocop_health1", "0" };
+cvar_t	sk_robocop_health2 = { "sk_robocop_health2", "0" };
+cvar_t	sk_robocop_health3 = { "sk_robocop_health3", "0" };
+
+cvar_t	sk_robocop_dmg_mortar1 = { "sk_robocop_dmg_mortar1", "0" };
+cvar_t	sk_robocop_dmg_mortar2 = { "sk_robocop_dmg_mortar2", "0" };
+cvar_t	sk_robocop_dmg_mortar3 = { "sk_robocop_dmg_mortar3", "0" };
+
+cvar_t	sk_robocop_dmg_fist1 = { "sk_robocop_dmg_fist1", "0" };
+cvar_t	sk_robocop_dmg_fist2 = { "sk_robocop_dmg_fist2", "0" };
+cvar_t	sk_robocop_dmg_fist3 = { "sk_robocop_dmg_fist3", "0" };
+
+cvar_t	sk_robocop_sw_radius1 = { "sk_robocop_sw_radius1", "0" };
+cvar_t	sk_robocop_sw_radius2 = { "sk_robocop_sw_radius2", "0" };
+cvar_t	sk_robocop_sw_radius3 = { "sk_robocop_sw_radius3", "0" };
+
+#endif // defined( POKE646_DLL )
 
 // PLAYER WEAPONS
 
@@ -447,6 +467,25 @@ cvar_t	sk_player_arm3	= { "sk_player_arm3","1" };
 cvar_t	sk_player_leg1	= { "sk_player_leg1","1" };
 cvar_t	sk_player_leg2	= { "sk_player_leg2","1" };
 cvar_t	sk_player_leg3	= { "sk_player_leg3","1" };
+
+#if defined( POKE646_DLL )
+
+// Nails
+cvar_t	sk_plr_nail1 = { "sk_plr_nail1", "0" };
+cvar_t	sk_plr_nail2 = { "sk_plr_nail2", "0" };
+cvar_t	sk_plr_nail3 = { "sk_plr_nail3", "0" };
+
+#if defined ( VENDETTA )
+
+// Par21 Round
+cvar_t	sk_plr_par21_bullet1 = { "sk_plr_par21_bullet1", "0" };
+cvar_t	sk_plr_par21_bullet2 = { "sk_plr_par21_bullet2", "0" };
+cvar_t	sk_plr_par21_bullet3 = { "sk_plr_par21_bullet3", "0" };
+
+#endif // defined ( VENDETTA )
+
+#endif // defined( POKE646_DLL )
+
 
 // END Cvars for Skill Level settings
 
@@ -716,6 +755,26 @@ void GameDLLInit( void )
 	CVAR_REGISTER ( &sk_sentry_health2 );// {"sk_sentry_health2","0"};
 	CVAR_REGISTER ( &sk_sentry_health3 );// {"sk_sentry_health3","0"};
 
+#if defined( POKE646_DLL )
+
+	// RoboCop
+	CVAR_REGISTER(&sk_robocop_health1);
+	CVAR_REGISTER(&sk_robocop_health2);
+	CVAR_REGISTER(&sk_robocop_health3);
+
+	CVAR_REGISTER(&sk_robocop_dmg_mortar1);
+	CVAR_REGISTER(&sk_robocop_dmg_mortar2);
+	CVAR_REGISTER(&sk_robocop_dmg_mortar3);
+
+	CVAR_REGISTER(&sk_robocop_dmg_fist1);
+	CVAR_REGISTER(&sk_robocop_dmg_fist2);
+	CVAR_REGISTER(&sk_robocop_dmg_fist3);
+
+	CVAR_REGISTER(&sk_robocop_sw_radius1);
+	CVAR_REGISTER(&sk_robocop_sw_radius2);
+	CVAR_REGISTER(&sk_robocop_sw_radius3);
+
+#endif // defined( POKE646_DLL )
 
 	// PLAYER WEAPONS
 
@@ -883,6 +942,25 @@ void GameDLLInit( void )
 	CVAR_REGISTER ( &sk_player_leg1 );
 	CVAR_REGISTER ( &sk_player_leg2 );
 	CVAR_REGISTER ( &sk_player_leg3 );
+
+#if defined( POKE646_DLL )
+
+	// Nails
+	CVAR_REGISTER(&sk_plr_nail1);
+	CVAR_REGISTER(&sk_plr_nail2);
+	CVAR_REGISTER(&sk_plr_nail3);
+
+#if defined ( VENDETTA )
+
+	// Par21 Round
+	CVAR_REGISTER(&sk_plr_par21_bullet1);
+	CVAR_REGISTER(&sk_plr_par21_bullet2);
+	CVAR_REGISTER(&sk_plr_par21_bullet3);
+
+#endif // defined ( VENDETTA )
+
+#endif // defined( POKE646_DLL )
+
 // END REGISTER CVARS FOR SKILL LEVEL STUFF
 
 	SERVER_COMMAND( "exec skill.cfg\n" );

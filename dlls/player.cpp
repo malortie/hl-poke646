@@ -71,52 +71,71 @@ extern CGraph	WorldGraph;
 // Global Savedata for player
 TYPEDESCRIPTION	CBasePlayer::m_playerSaveData[] = 
 {
-	DEFINE_FIELD( CBasePlayer, m_flFlashLightTime, FIELD_TIME ),
-	DEFINE_FIELD( CBasePlayer, m_iFlashBattery, FIELD_INTEGER ),
+	DEFINE_FIELD(CBasePlayer, m_flFlashLightTime, FIELD_TIME),
+	DEFINE_FIELD(CBasePlayer, m_iFlashBattery, FIELD_INTEGER),
 
-	DEFINE_FIELD( CBasePlayer, m_afButtonLast, FIELD_INTEGER ),
-	DEFINE_FIELD( CBasePlayer, m_afButtonPressed, FIELD_INTEGER ),
-	DEFINE_FIELD( CBasePlayer, m_afButtonReleased, FIELD_INTEGER ),
+	DEFINE_FIELD(CBasePlayer, m_afButtonLast, FIELD_INTEGER),
+	DEFINE_FIELD(CBasePlayer, m_afButtonPressed, FIELD_INTEGER),
+	DEFINE_FIELD(CBasePlayer, m_afButtonReleased, FIELD_INTEGER),
 
-	DEFINE_ARRAY( CBasePlayer, m_rgItems, FIELD_INTEGER, MAX_ITEMS ),
-	DEFINE_FIELD( CBasePlayer, m_afPhysicsFlags, FIELD_INTEGER ),
+	DEFINE_ARRAY(CBasePlayer, m_rgItems, FIELD_INTEGER, MAX_ITEMS),
+	DEFINE_FIELD(CBasePlayer, m_afPhysicsFlags, FIELD_INTEGER),
 
-	DEFINE_FIELD( CBasePlayer, m_flTimeStepSound, FIELD_TIME ),
-	DEFINE_FIELD( CBasePlayer, m_flTimeWeaponIdle, FIELD_TIME ),
-	DEFINE_FIELD( CBasePlayer, m_flSwimTime, FIELD_TIME ),
-	DEFINE_FIELD( CBasePlayer, m_flDuckTime, FIELD_TIME ),
-	DEFINE_FIELD( CBasePlayer, m_flWallJumpTime, FIELD_TIME ),
+	DEFINE_FIELD(CBasePlayer, m_flTimeStepSound, FIELD_TIME),
+	DEFINE_FIELD(CBasePlayer, m_flTimeWeaponIdle, FIELD_TIME),
+	DEFINE_FIELD(CBasePlayer, m_flSwimTime, FIELD_TIME),
+	DEFINE_FIELD(CBasePlayer, m_flDuckTime, FIELD_TIME),
+	DEFINE_FIELD(CBasePlayer, m_flWallJumpTime, FIELD_TIME),
 
-	DEFINE_FIELD( CBasePlayer, m_flSuitUpdate, FIELD_TIME ),
-	DEFINE_ARRAY( CBasePlayer, m_rgSuitPlayList, FIELD_INTEGER, CSUITPLAYLIST ),
-	DEFINE_FIELD( CBasePlayer, m_iSuitPlayNext, FIELD_INTEGER ),
-	DEFINE_ARRAY( CBasePlayer, m_rgiSuitNoRepeat, FIELD_INTEGER, CSUITNOREPEAT ),
-	DEFINE_ARRAY( CBasePlayer, m_rgflSuitNoRepeatTime, FIELD_TIME, CSUITNOREPEAT ),
-	DEFINE_FIELD( CBasePlayer, m_lastDamageAmount, FIELD_INTEGER ),
+	DEFINE_FIELD(CBasePlayer, m_flSuitUpdate, FIELD_TIME),
+	DEFINE_ARRAY(CBasePlayer, m_rgSuitPlayList, FIELD_INTEGER, CSUITPLAYLIST),
+	DEFINE_FIELD(CBasePlayer, m_iSuitPlayNext, FIELD_INTEGER),
+	DEFINE_ARRAY(CBasePlayer, m_rgiSuitNoRepeat, FIELD_INTEGER, CSUITNOREPEAT),
+	DEFINE_ARRAY(CBasePlayer, m_rgflSuitNoRepeatTime, FIELD_TIME, CSUITNOREPEAT),
+	DEFINE_FIELD(CBasePlayer, m_lastDamageAmount, FIELD_INTEGER),
 
-	DEFINE_ARRAY( CBasePlayer, m_rgpPlayerItems, FIELD_CLASSPTR, MAX_ITEM_TYPES ),
-	DEFINE_FIELD( CBasePlayer, m_pActiveItem, FIELD_CLASSPTR ),
-	DEFINE_FIELD( CBasePlayer, m_pLastItem, FIELD_CLASSPTR ),
-	
-	DEFINE_ARRAY( CBasePlayer, m_rgAmmo, FIELD_INTEGER, MAX_AMMO_SLOTS ),
-	DEFINE_FIELD( CBasePlayer, m_idrowndmg, FIELD_INTEGER ),
-	DEFINE_FIELD( CBasePlayer, m_idrownrestored, FIELD_INTEGER ),
-	DEFINE_FIELD( CBasePlayer, m_tSneaking, FIELD_TIME ),
+	DEFINE_ARRAY(CBasePlayer, m_rgpPlayerItems, FIELD_CLASSPTR, MAX_ITEM_TYPES),
+	DEFINE_FIELD(CBasePlayer, m_pActiveItem, FIELD_CLASSPTR),
+	DEFINE_FIELD(CBasePlayer, m_pLastItem, FIELD_CLASSPTR),
 
-	DEFINE_FIELD( CBasePlayer, m_iTrain, FIELD_INTEGER ),
-	DEFINE_FIELD( CBasePlayer, m_bitsHUDDamage, FIELD_INTEGER ),
-	DEFINE_FIELD( CBasePlayer, m_flFallVelocity, FIELD_FLOAT ),
-	DEFINE_FIELD( CBasePlayer, m_iTargetVolume, FIELD_INTEGER ),
-	DEFINE_FIELD( CBasePlayer, m_iWeaponVolume, FIELD_INTEGER ),
-	DEFINE_FIELD( CBasePlayer, m_iExtraSoundTypes, FIELD_INTEGER ),
-	DEFINE_FIELD( CBasePlayer, m_iWeaponFlash, FIELD_INTEGER ),
-	DEFINE_FIELD( CBasePlayer, m_fLongJump, FIELD_BOOLEAN ),
-	DEFINE_FIELD( CBasePlayer, m_fInitHUD, FIELD_BOOLEAN ),
-	DEFINE_FIELD( CBasePlayer, m_tbdPrev, FIELD_TIME ),
+	DEFINE_ARRAY(CBasePlayer, m_rgAmmo, FIELD_INTEGER, MAX_AMMO_SLOTS),
+	DEFINE_FIELD(CBasePlayer, m_idrowndmg, FIELD_INTEGER),
+	DEFINE_FIELD(CBasePlayer, m_idrownrestored, FIELD_INTEGER),
+	DEFINE_FIELD(CBasePlayer, m_tSneaking, FIELD_TIME),
 
-	DEFINE_FIELD( CBasePlayer, m_pTank, FIELD_EHANDLE ),
-	DEFINE_FIELD( CBasePlayer, m_iHideHUD, FIELD_INTEGER ),
-	DEFINE_FIELD( CBasePlayer, m_iFOV, FIELD_INTEGER ),
+	DEFINE_FIELD(CBasePlayer, m_iTrain, FIELD_INTEGER),
+	DEFINE_FIELD(CBasePlayer, m_bitsHUDDamage, FIELD_INTEGER),
+	DEFINE_FIELD(CBasePlayer, m_flFallVelocity, FIELD_FLOAT),
+	DEFINE_FIELD(CBasePlayer, m_iTargetVolume, FIELD_INTEGER),
+	DEFINE_FIELD(CBasePlayer, m_iWeaponVolume, FIELD_INTEGER),
+	DEFINE_FIELD(CBasePlayer, m_iExtraSoundTypes, FIELD_INTEGER),
+	DEFINE_FIELD(CBasePlayer, m_iWeaponFlash, FIELD_INTEGER),
+	DEFINE_FIELD(CBasePlayer, m_fLongJump, FIELD_BOOLEAN),
+	DEFINE_FIELD(CBasePlayer, m_fInitHUD, FIELD_BOOLEAN),
+	DEFINE_FIELD(CBasePlayer, m_tbdPrev, FIELD_TIME),
+
+	DEFINE_FIELD(CBasePlayer, m_pTank, FIELD_EHANDLE),
+	DEFINE_FIELD(CBasePlayer, m_iHideHUD, FIELD_INTEGER),
+	DEFINE_FIELD(CBasePlayer, m_iFOV, FIELD_INTEGER),
+
+#if defined ( POKE646_DLL )
+	// Music
+	DEFINE_FIELD(CBasePlayer, m_bSong01_Played, FIELD_BOOLEAN),
+	DEFINE_FIELD(CBasePlayer, m_bSong02_Played, FIELD_BOOLEAN),
+	DEFINE_FIELD(CBasePlayer, m_bSong03_Played, FIELD_BOOLEAN),
+	DEFINE_FIELD(CBasePlayer, m_bSong04_Played, FIELD_BOOLEAN),
+	DEFINE_FIELD(CBasePlayer, m_bSong05_Played, FIELD_BOOLEAN),
+	DEFINE_FIELD(CBasePlayer, m_bSong06_Played, FIELD_BOOLEAN),
+	DEFINE_FIELD(CBasePlayer, m_flMusicCheckWait, FIELD_TIME),
+
+	// Player exert.
+	DEFINE_FIELD(CBasePlayer, m_iExertLevel, FIELD_INTEGER),
+	DEFINE_FIELD(CBasePlayer, m_flExertRate, FIELD_FLOAT),
+	DEFINE_FIELD(CBasePlayer, m_flExertUpdateStart, FIELD_TIME),
+
+	DEFINE_FIELD(CBasePlayer, m_fHudVisible, FIELD_BOOLEAN),
+	DEFINE_FIELD(CBasePlayer, m_fUpdateHudVisibility, FIELD_BOOLEAN),
+#endif // defined ( POKE646_DLL )
 	
 	//DEFINE_FIELD( CBasePlayer, m_fDeadTime, FIELD_FLOAT ), // only used in multiplayer games
 	//DEFINE_FIELD( CBasePlayer, m_fGameHUDInitialized, FIELD_INTEGER ), // only used in multiplayer games
@@ -188,6 +207,10 @@ int gmsgTeamNames = 0;
 int gmsgStatusText = 0;
 int gmsgStatusValue = 0; 
 
+#if defined ( POKE646_DLL )
+int gmsgStartUp = 0;
+int gmsgScope = 0;
+#endif // defined ( POKE646_DLL )
 
 
 void LinkUserMessages( void )
@@ -235,6 +258,11 @@ void LinkUserMessages( void )
 
 	gmsgStatusText = REG_USER_MSG("StatusText", -1);
 	gmsgStatusValue = REG_USER_MSG("StatusValue", 3); 
+
+#if defined ( POKE646_DLL )
+	gmsgStartUp = REG_USER_MSG("StartUp", 2);
+	gmsgScope = REG_USER_MSG("Scope", 1); 
+#endif // defined ( POKE646_DLL )
 
 }
 
@@ -366,8 +394,10 @@ void CBasePlayer :: DeathSound( void )
 		break;
 	}
 
+#if !defined ( POKE646 )
 	// play one of the suit death alarms
 	EMIT_GROUPNAME_SUIT(ENT(pev), "HEV_DEAD");
+#endif // !defined ( POKE646 )
 }
 
 // override takehealth
@@ -839,10 +869,21 @@ void CBasePlayer::RemoveAllItems( BOOL removeSuit )
 	pev->viewmodel		= 0;
 	pev->weaponmodel	= 0;
 	
+#if defined ( POKE646_DLL )
+	if ( removeSuit )
+	{
+		pev->weapons = 0;
+	
+		HidePlayerHUD();
+	}
+	else
+		pev->weapons &= ~WEAPON_ALLWEAPONS;
+#else
 	if ( removeSuit )
 		pev->weapons = 0;
 	else
 		pev->weapons &= ~WEAPON_ALLWEAPONS;
+#endif // defined ( POKE646_DLL )
 
 	for ( i = 0; i < MAX_AMMO_SLOTS;i++)
 		m_rgAmmo[i] = 0;
@@ -1134,6 +1175,14 @@ void CBasePlayer::TabulateAmmo()
 	ammo_rockets = AmmoInventory( GetAmmoIndex( "rockets" ) );
 	ammo_uranium = AmmoInventory( GetAmmoIndex( "uranium" ) );
 	ammo_hornets = AmmoInventory( GetAmmoIndex( "Hornets" ) );
+#if defined ( POKE646_DLL )
+	ammo_nails = AmmoInventory( GetAmmoIndex( "nails" ) );
+	ammo_xencandy = AmmoInventory( GetAmmoIndex( "xencandy" ) );
+#if defined ( VENDETTA )
+	ammo_par21 = AmmoInventory(GetAmmoIndex("par21"));
+	ammo_m203grens = AmmoInventory(GetAmmoIndex("M203grenades"));
+#endif // defined ( VENDETTA )
+#endif // defined ( POKE646_DLL )
 }
 
 
@@ -1982,6 +2031,106 @@ void CBasePlayer::PreThink(void)
 	{
 		pev->velocity = g_vecZero;
 	}
+
+#if defined ( POKE646_DLL )
+	// Only try to play music if wait time has elapsed.
+	if (m_flMusicCheckWait <= gpGlobals->time)
+	{
+		if (!m_bSong01_Played)
+		{
+#if defined ( VENDETTA )
+			if (FStrEq(STRING(gpGlobals->mapname), "pv_intro"))
+			{
+				CLIENT_COMMAND(edict(), "mp3 play media/int.mp3\n");
+				m_bSong01_Played = TRUE;
+			}
+#else
+			if (FStrEq(STRING(gpGlobals->mapname), "po_haz01"))
+			{
+				CLIENT_COMMAND(edict(), "mp3 play media/hazard.mp3\n");
+				m_bSong01_Played = TRUE;
+			}
+#endif // defined ( VENDETTA )
+		}
+		if (!m_bSong02_Played)
+		{
+#if defined ( VENDETTA )
+			if (FStrEq(STRING(gpGlobals->mapname), "pv_orl01"))
+			{
+				CLIENT_COMMAND(edict(), "mp3 play media/orl.mp3\n");
+				m_bSong02_Played = TRUE;
+			}
+#else
+			if (FStrEq(STRING(gpGlobals->mapname), "po_aud01"))
+			{
+				CLIENT_COMMAND(edict(), "mp3 play media/audion.mp3\n");
+				m_bSong02_Played = TRUE;
+			}
+#endif // defined ( VENDETTA )
+		}
+		if (!m_bSong03_Played)
+		{
+#if defined ( VENDETTA )
+			if (FStrEq(STRING(gpGlobals->mapname), "pv_ntc01"))
+			{
+				CLIENT_COMMAND(edict(), "mp3 play media/ntc.mp3\n");
+				m_bSong03_Played = TRUE;
+			}
+#else
+			if (FStrEq(STRING(gpGlobals->mapname), "po_sew01"))
+			{
+				CLIENT_COMMAND(edict(), "mp3 play media/sewer.mp3\n");
+				m_bSong03_Played = TRUE;
+			}
+#endif // defined ( VENDETTA )
+		}
+		if (!m_bSong04_Played)
+		{
+#if defined ( VENDETTA )
+			if (FStrEq(STRING(gpGlobals->mapname), "pv_ntc05"))
+			{
+				CLIENT_COMMAND(edict(), "mp3 play media/asl.mp3\n");
+				m_bSong04_Played = TRUE;
+			}
+#else
+			if (FStrEq(STRING(gpGlobals->mapname), "po_lib01"))
+			{
+				CLIENT_COMMAND(edict(), "mp3 play media/library.mp3\n");
+				m_bSong04_Played = TRUE;
+			}
+#endif // defined ( VENDETTA )
+		}
+		if (!m_bSong05_Played)
+		{
+#if defined ( VENDETTA )
+			if (FStrEq(STRING(gpGlobals->mapname), "pv_outro"))
+			{
+				CLIENT_COMMAND(edict(), "mp3 play media/out.mp3\n");
+				m_bSong05_Played = TRUE;
+			}
+#else
+			if (FStrEq(STRING(gpGlobals->mapname), "po_eas01"))
+			{
+				CLIENT_COMMAND(edict(), "mp3 play media/eastend.mp3\n");
+				m_bSong05_Played = TRUE;
+			}
+#endif // defined ( VENDETTA )
+		}
+		if (!m_bSong06_Played)
+		{
+#if defined ( VENDETTA )
+			m_bSong06_Played = TRUE;
+#else
+			if (FStrEq(STRING(gpGlobals->mapname), "credits"))
+			{
+				CLIENT_COMMAND(edict(), "mp3 play media/credits.mp3\n");
+				m_bSong06_Played = TRUE;
+			}
+
+#endif // defined ( VENDETTA )
+		}
+	}
+#endif // defined ( POKE646_DLL )
 }
 /* Time based Damage works as follows: 
 	1) There are several types of timebased damage:
@@ -2093,7 +2242,9 @@ void CBasePlayer::CheckTimeBasedDamage()
 				bDuration = NERVEGAS_DURATION;
 				break;
 			case itbd_Poison:
+#if !defined ( POKE646_DLL ) || defined ( VENDETTA )
 				TakeDamage(pev, pev, POISON_DAMAGE, DMG_GENERIC);
+#endif // !defined ( POKE646_DLL ) || defined ( VENDETTA )
 				bDuration = POISON_DURATION;
 				break;
 			case itbd_Radiation:
@@ -2333,6 +2484,10 @@ void CBasePlayer::CheckSuitUpdate()
 
 void CBasePlayer::SetSuitUpdate(char *name, int fgroup, int iNoRepeatTime)
 {
+#if defined ( POKE646_DLL )
+	return;
+#endif // defined ( POKE646_DLL )
+
 	int i;
 	int isentence;
 	int iempty = -1;
@@ -2656,6 +2811,10 @@ void CBasePlayer::PostThink()
 
 	UpdatePlayerSound();
 
+#if defined ( POKE646_DLL )
+	UpdateExertLevel();
+#endif // defined ( POKE646_DLL )
+
 pt_end:
 #if defined( CLIENT_WEAPONS )
 		// Decay timers on weapons
@@ -2850,12 +3009,20 @@ ReturnSpot:
 void CBasePlayer::Spawn( void )
 {
 	pev->classname		= MAKE_STRING("player");
+#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
+	pev->health			= 50;
+#else
 	pev->health			= 100;
+#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 	pev->armorvalue		= 0;
 	pev->takedamage		= DAMAGE_AIM;
 	pev->solid			= SOLID_SLIDEBOX;
 	pev->movetype		= MOVETYPE_WALK;
+#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
+	pev->max_health		= 100;
+#else
 	pev->max_health		= pev->health;
+#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 	pev->flags		   &= FL_PROXY;	// keep proxy flag sey by engine
 	pev->flags		   |= FL_CLIENT;
 	pev->air_finished	= gpGlobals->time + 12;
@@ -2936,6 +3103,19 @@ void CBasePlayer::Spawn( void )
 	m_lastx = m_lasty = 0;
 	
 	m_flNextChatTime = gpGlobals->time;
+
+#if defined ( POKE646_DLL )
+	m_bSong01_Played =
+	m_bSong02_Played =
+	m_bSong03_Played =
+	m_bSong04_Played =
+	m_bSong05_Played =
+	m_bSong06_Played = FALSE;
+
+	m_fHudVisible = FALSE;
+	m_fUpdateHudVisibility = FALSE;
+	m_flMusicCheckWait = gpGlobals->time + 0.1f; // Give a bit of time before attempting to use MP3 player.
+#endif // defined ( POKE646_DLL )
 
 	g_pGameRules->PlayerSpawn( this );
 }
@@ -3062,6 +3242,12 @@ int CBasePlayer::Restore( CRestore &restore )
 	//			Barring that, we clear it out here instead of using the incorrect restored time value.
 	m_flNextAttack = UTIL_WeaponTimeBase();
 #endif
+
+#if defined ( POKE646_DLL )
+	m_fUpdateHudVisibility = TRUE;
+
+	m_flMusicCheckWait = gpGlobals->time + 0.5f;
+#endif // defined ( POKE646_DLL )
 
 	return status;
 }
@@ -3462,6 +3648,7 @@ void CBasePlayer::ImpulseCommands( )
 		break;
 		}
 	case 100:
+#if !defined ( POKE646_DLL )
         // temporary flashlight for level designers
         if ( FlashlightIsOn() )
 		{
@@ -3471,6 +3658,7 @@ void CBasePlayer::ImpulseCommands( )
 		{
 			FlashlightTurnOn();
 		}
+#endif // !defined ( POKE646_DLL )
 		break;
 
 	case	201:// paint decal
@@ -3535,6 +3723,29 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 
 	case 101:
 		gEvilImpulse101 = TRUE;
+#if defined ( POKE646_DLL )
+		GiveNamedItem( "item_suit" );
+		GiveNamedItem( "weapon_heaterpipe" );
+		GiveNamedItem( "weapon_shotgun" );
+		GiveNamedItem( "ammo_buckshot" );
+		GiveNamedItem( "weapon_cmlwbr" );
+		GiveNamedItem( "ammo_bolts" );
+		GiveNamedItem( "weapon_pipebomb" );
+#if !defined ( VENDETTA )
+		GiveNamedItem( "weapon_bradnailer" );
+		GiveNamedItem( "ammo_nailclip" );
+		GiveNamedItem( "ammo_nailround" );
+		GiveNamedItem( "weapon_nailgun" );
+		GiveNamedItem( "weapon_xs" );
+		GiveNamedItem( "ammo_xencandy" );
+#else
+		GiveNamedItem( "weapon_par21" );
+		GiveNamedItem( "ammo_par21_clip" );
+		GiveNamedItem( "ammo_par21_grenade" );
+		GiveNamedItem( "ammo_m203grenade" );
+#endif // !defined ( VENDETTA )
+
+#else
 		GiveNamedItem( "item_suit" );
 		GiveNamedItem( "item_battery" );
 		GiveNamedItem( "weapon_crowbar" );
@@ -3561,6 +3772,7 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 		GiveNamedItem( "weapon_snark" );
 		GiveNamedItem( "weapon_hornetgun" );
 #endif
+#endif // defined ( POKE646_DLL )
 		gEvilImpulse101 = FALSE;
 		break;
 
@@ -3977,6 +4189,92 @@ void CBasePlayer :: UpdateClientData( void )
 
 		InitStatusBar();
 	}
+
+#if defined ( POKE646_DLL )
+	//
+	// Poke646 & Vendetta - Give suit to toggle hud on map po_aud01 or po_orl01
+	//
+	if (!(pev->weapons & (1 << WEAPON_SUIT)))
+	{
+#if defined ( VENDETTA )
+		if (FStrEq(STRING(gpGlobals->mapname), "pv_orl01"))
+		{
+			pev->weapons |= (1 << WEAPON_SUIT);
+
+			//
+			// Make HUD completely transparent and slowly increase it's alpha.
+			//
+			ShowPlayerHUD();
+		}
+#else
+		if (FStrEq(STRING(gpGlobals->mapname), "po_haz01"))
+		{
+			pev->weapons |= (1 << WEAPON_SUIT);
+
+			// Force HUD update.
+			m_fHudVisible = TRUE;
+
+			//
+			// Make HUD completely transparent.
+			//
+			HidePlayerHUD(TRUE);
+		}
+		else if (FStrEq(STRING(gpGlobals->mapname), "po_aud01"))
+		{
+			pev->weapons |= (1 << WEAPON_SUIT);
+
+			//
+			// Make HUD completely transparent and slowly increase it's alpha.
+			//
+			ShowPlayerHUD();
+		}
+		else if (FStrEq(STRING(gpGlobals->mapname), "credits"))
+		{
+			pev->weapons = 0;
+
+			//
+			// Make HUD completely transparent and slowly increase it's alpha.
+			//
+			HidePlayerHUD(TRUE);
+		}
+#endif // defined ( VENDETTA )
+	}
+
+	// Update HUD visibility.
+	if (m_fUpdateHudVisibility)
+	{
+		// If player is frozen, tell client to hide HUD,
+		// if visible.
+		if ((pev->flags & FL_FROZEN) && m_fHudVisible )
+		{
+			if (pev->weapons & (1 << WEAPON_SUIT))
+			{
+				HidePlayerHUD();
+			}
+		}
+		// If player is not frozen, tell client to show HUD,
+		// if not visible.
+		else if (!(pev->flags & FL_FROZEN) && !m_fHudVisible)
+		{
+			if (pev->weapons & (1 << WEAPON_SUIT))
+			{
+				ShowPlayerHUD();
+			}
+		}
+		else
+		{
+			if (pev->weapons & (1 << WEAPON_SUIT))
+			{
+				m_fHudVisible = FALSE;
+
+				ShowPlayerHUD(TRUE);
+			}
+		}
+
+		m_fUpdateHudVisibility = FALSE;
+	}
+
+#endif // defined ( POKE646_DLL )
 
 	if ( m_iHideHUD != m_iClientHideHUD )
 	{
@@ -4665,6 +4963,87 @@ BOOL CBasePlayer :: SwitchWeapon( CBasePlayerItem *pWeapon )
 	return TRUE;
 }
 
+
+#if defined ( POKE646_DLL )
+
+void CBasePlayer::IncrementExertLevel(int amount)
+{
+	m_iExertLevel += min(amount, PLAYER_EXERT_LEVEL_MAX - m_iExertLevel);
+}
+
+void CBasePlayer::DecrementExertLevel(int amount)
+{
+	m_iExertLevel -= min(amount, m_iExertLevel);
+}
+
+void CBasePlayer::SetExertLevel(int level)
+{
+	m_iExertLevel = clamp(level, PLAYER_EXERT_LEVEL_MIN, PLAYER_EXERT_LEVEL_MAX);
+}
+
+int CBasePlayer::GetExertLevel(void) const
+{
+	return m_iExertLevel;
+}
+
+void CBasePlayer::UpdateExertLevel(void)
+{
+	if (m_iExertLevel > PLAYER_EXERT_LEVEL_MIN)
+	{
+		// Slowly decrease exert level.
+		if ((gpGlobals->time - m_flExertUpdateStart) > m_flExertRate)
+		{
+			float temp = (float)m_iExertLevel * 0.0625f;
+
+			if (temp < 1)
+				temp = 1;
+
+			m_iExertLevel -= min(m_iExertLevel, temp);
+
+			m_flExertRate = PLAYER_EXERT_RATE;
+			m_flExertUpdateStart = gpGlobals->time;
+		}
+	}
+
+#ifndef CLIENT_DLL
+	// ALERT(at_console, "Player exert level: %d\n", m_iExertLevel);
+#endif
+}
+
+void CBasePlayer::ShowPlayerHUD(BOOL bInstant)
+{
+	if (m_fHudVisible)
+		return;
+
+	m_fHudVisible = TRUE;
+
+	MESSAGE_BEGIN(MSG_ONE, gmsgStartUp, NULL, pev);
+		WRITE_BYTE(255);	// Target alpha
+	if (bInstant)
+		WRITE_BYTE(255);	// Startup alpha
+	else
+		WRITE_BYTE(0);		// Startup alpha
+	MESSAGE_END();
+}
+
+void CBasePlayer::HidePlayerHUD(BOOL bInstant)
+{
+	if (!m_fHudVisible)
+		return;
+
+	m_fHudVisible = FALSE;
+
+	MESSAGE_BEGIN(MSG_ONE, gmsgStartUp, NULL, pev);
+		WRITE_BYTE(0);		// Target alpha
+	if (bInstant)
+		WRITE_BYTE(0);		// Startup alpha
+	else
+		WRITE_BYTE(255);	// Startup alpha
+	MESSAGE_END();
+}
+
+#endif // defined ( POKE646_DLL )
+
 //=========================================================
 // Dead HEV suit prop
 //=========================================================
@@ -4748,8 +5127,24 @@ void CStripWeapons :: Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TY
 		pPlayer = (CBasePlayer *)CBaseEntity::Instance( g_engfuncs.pfnPEntityOfEntIndex( 1 ) );
 	}
 
+#if defined ( POKE646_DLL )
+
+#if !defined ( VENDETTA )
+	if ( pPlayer )
+	{
+		if ( !FStrEq( STRING(gpGlobals->mapname), "po_xen01") )
+			pPlayer->RemoveAllItems( TRUE );
+		else
+			pPlayer->RemoveAllItems( FALSE );
+	}
+#else
+	if ( pPlayer )
+		pPlayer->RemoveAllItems( TRUE );
+#endif // !defined ( VENDETTA )
+#else
 	if ( pPlayer )
 		pPlayer->RemoveAllItems( FALSE );
+#endif // defined ( POKE646_DLL )
 }
 
 

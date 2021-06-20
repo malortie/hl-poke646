@@ -46,6 +46,9 @@ DLL_GLOBAL	short	g_sModelIndexWExplosion;// holds the index for the underwater e
 DLL_GLOBAL	short	g_sModelIndexBubbles;// holds the index for the bubbles model
 DLL_GLOBAL	short	g_sModelIndexBloodDrop;// holds the sprite index for the initial blood
 DLL_GLOBAL	short	g_sModelIndexBloodSpray;// holds the sprite index for splattered blood
+#if defined ( POKE646_DLL )
+DLL_GLOBAL	short	g_sModelIndexShockwave;// holds the index for the shockwave explosion
+#endif // defined ( POKE646_DLL )
 
 ItemInfo CBasePlayerItem::ItemInfoArray[MAX_WEAPONS];
 AmmoInfo CBasePlayerItem::AmmoInfoArray[MAX_AMMO_SLOTS];
@@ -177,6 +180,12 @@ void DecalGunshot( TraceResult *pTrace, int iBulletType )
 		case BULLET_MONSTER_MP5:
 		case BULLET_PLAYER_BUCKSHOT:
 		case BULLET_PLAYER_357:
+#if defined ( POKE646_DLL )
+		case BULLET_PLAYER_NAIL:
+#if defined ( VENDETTA )
+		case BULLET_PLAYER_PAR21:
+#endif // defined ( VENDETTA )
+#endif // defined ( POKE646_DLL )
 		default:
 			// smoke and decal
 			UTIL_GunshotDecalTrace( pTrace, DamageDecal( pEntity, DMG_BULLET ) );
@@ -312,6 +321,48 @@ void W_Precache(void)
 	// custom items...
 
 	// common world objects
+#if defined ( POKE646_DLL )
+	UTIL_PrecacheOther( "item_suit" );
+	UTIL_PrecacheOther( "item_battery" );
+	UTIL_PrecacheOther( "item_antidote" );
+	UTIL_PrecacheOther( "item_security" );
+	UTIL_PrecacheOther( "item_longjump" );
+
+	// heaterpipe
+	UTIL_PrecacheOtherWeapon("weapon_heaterpipe");
+
+	// shotgun
+	UTIL_PrecacheOtherWeapon( "weapon_shotgun" );
+	UTIL_PrecacheOther( "ammo_buckshot" );
+
+	// cmlwbr
+	UTIL_PrecacheOtherWeapon( "weapon_cmlwbr" );
+	UTIL_PrecacheOther( "ammo_bolts" );
+
+	// pipebomb
+	UTIL_PrecacheOtherWeapon("weapon_pipebomb");
+
+#if !defined ( VENDETTA )
+	// bradnailer
+	UTIL_PrecacheOtherWeapon("weapon_bradnailer");
+	UTIL_PrecacheOther("ammo_nailclip");
+	UTIL_PrecacheOther("ammo_nailround");
+
+	// nailgun
+	UTIL_PrecacheOtherWeapon("weapon_nailgun");
+
+	// xen squasher
+	UTIL_PrecacheOtherWeapon("weapon_xs");
+	UTIL_PrecacheOther("ammo_xencandy");
+#else
+	// par21
+	UTIL_PrecacheOtherWeapon("weapon_par21");
+	UTIL_PrecacheOther("ammo_par21_clip");
+	UTIL_PrecacheOther("ammo_par21_grenade");
+	UTIL_PrecacheOther("ammo_m203grenade");
+#endif // !defined ( VENDETTA )
+
+#else
 	UTIL_PrecacheOther( "item_suit" );
 	UTIL_PrecacheOther( "item_battery" );
 	UTIL_PrecacheOther( "item_antidote" );
@@ -383,6 +434,7 @@ void W_Precache(void)
 	// hornetgun
 	UTIL_PrecacheOtherWeapon( "weapon_hornetgun" );
 #endif
+#endif // defined ( POKE646_DLL )
 
 
 #if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
@@ -402,6 +454,15 @@ void W_Precache(void)
 	g_sModelIndexLaser = PRECACHE_MODEL( (char *)g_pModelNameLaser );
 	g_sModelIndexLaserDot = PRECACHE_MODEL("sprites/laserdot.spr");
 
+#if defined ( POKE646_DLL )
+	g_sModelIndexShockwave = PRECACHE_MODEL("sprites/shockwave.spr"); // shockwave explosion
+#endif // defined ( POKE646_DLL )
+
+#if defined ( POKE646_DLL )
+
+
+	PRECACHE_MODEL("sprites/wallsmoke.spr");
+#endif // defined ( POKE646_DLL )
 
 	// used by explosions
 	PRECACHE_MODEL ("models/grenade.mdl");
@@ -420,6 +481,14 @@ void W_Precache(void)
 	
 	PRECACHE_SOUND ("items/weapondrop1.wav");// weapon falls to the ground
 
+#if defined ( POKE646_DLL )
+	PRECACHE_MODEL("models/w_grenade.mdl");
+
+	PRECACHE_SOUND("weapons/brad_hit1.wav");	// hit by nail
+	PRECACHE_SOUND("weapons/brad_hit2.wav");	// hit by nail
+
+	UTIL_PrecacheOther("fire_trail");			// pipebomb explosion effect.
+#endif // defined ( POKE646_DLL )
 }
 
 
@@ -1614,4 +1683,30 @@ TYPEDESCRIPTION	CSatchel::m_SaveData[] =
 	DEFINE_FIELD( CSatchel, m_chargeReady, FIELD_INTEGER ),
 };
 IMPLEMENT_SAVERESTORE( CSatchel, CBasePlayerWeapon );
+
+#if defined ( POKE646_DLL )
+
+TYPEDESCRIPTION	CCmlwbr::m_SaveData[] =
+{
+	DEFINE_FIELD(CCmlwbr, m_fInAttack, FIELD_INTEGER),
+	DEFINE_FIELD(CCmlwbr, m_fInZoom, FIELD_INTEGER),
+};
+IMPLEMENT_SAVERESTORE(CCmlwbr, CBasePlayerWeapon);
+
+TYPEDESCRIPTION	CXenSquasher::m_SaveData[] =
+{
+	DEFINE_FIELD(CXenSquasher, m_fInAttack, FIELD_INTEGER),
+	//	DEFINE_FIELD( CGauss, m_flStartCharge, FIELD_TIME ),
+	//	DEFINE_FIELD( CGauss, m_flPlayAftershock, FIELD_TIME ),
+	//	DEFINE_FIELD( CGauss, m_flNextAmmoBurn, FIELD_TIME ),
+	DEFINE_FIELD(CXenSquasher, m_fPrimaryFire, FIELD_BOOLEAN),
+};
+IMPLEMENT_SAVERESTORE(CXenSquasher, CBasePlayerWeapon);
+
+TYPEDESCRIPTION	CPipeBomb::m_SaveData[] =
+{
+	DEFINE_FIELD(CPipeBomb, m_thrownByPlayer, FIELD_INTEGER),
+};
+IMPLEMENT_SAVERESTORE(CPipeBomb, CSatchel);
+#endif // defined ( POKE646_DLL )
 

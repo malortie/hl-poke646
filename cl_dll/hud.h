@@ -20,8 +20,11 @@
 // CHud handles the message, calculation, and drawing the HUD
 //
 
-
+#if defined ( POKE646_CLIENT_DLL )
+#define RGB_YELLOWISH 0x00FFFFFF //255,255,255
+#else
 #define RGB_YELLOWISH 0x00FFA000 //255,160,0
+#endif // defined ( POKE646_CLIENT_DLL )
 #define RGB_REDISH 0x00FF1010 //255,160,0
 #define RGB_GREENISH 0x0000A000 //0,160,0
 
@@ -533,6 +536,27 @@ private:
 	int 	m_nCompositeScore;
 };
 
+#if defined ( POKE646_CLIENT_DLL )
+//
+//-----------------------------------------------------
+//
+class CHudScope : public CHudBase
+{
+public:
+	int Init(void);
+	int VidInit(void);
+	int Draw(float flTime);
+	void Reset(void);
+	int MsgFunc_Scope(const char *pszName, int iSize, void *pbuf);
+
+	int DrawScope(void);
+
+private:
+	HSPRITE m_hSprite;
+};
+
+#endif // defined ( POKE646_CLIENT_DLL )
+
 //
 //-----------------------------------------------------
 //
@@ -611,6 +635,9 @@ public:
 	CHudTextMessage m_TextMessage;
 	CHudStatusIcons m_StatusIcons;
 	CHudBenchmark	m_Benchmark;
+#if defined ( POKE646_CLIENT_DLL )
+	CHudScope		m_Scope;
+#endif // defined ( POKE646_CLIENT_DLL )
 
 	void Init( void );
 	void VidInit( void );
@@ -630,6 +657,9 @@ public:
 	void _cdecl MsgFunc_ViewMode( const char *pszName, int iSize, void *pbuf );
 	int _cdecl MsgFunc_SetFOV(const char *pszName,  int iSize, void *pbuf);
 	int  _cdecl MsgFunc_Concuss( const char *pszName, int iSize, void *pbuf );
+#if defined ( POKE646_CLIENT_DLL )
+	int _cdecl MsgFunc_StartUp(const char *pszName, int iSize, void *pbuf);
+#endif // defined ( POKE646_CLIENT_DLL )
 
 	// Screen information
 	SCREENINFO	m_scrinfo;
@@ -645,6 +675,12 @@ public:
 	void AddHudElem(CHudBase *p);
 
 	float GetSensitivity();
+
+#if defined ( POKE646_CLIENT_DLL )
+	float m_flAlpha;
+private:
+	float m_flTargetAlpha;
+#endif // defined ( POKE646_CLIENT_DLL )
 
 };
 

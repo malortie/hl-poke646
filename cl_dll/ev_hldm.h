@@ -17,6 +17,13 @@ typedef	enum
 	BULLET_PLAYER_357, // python
 	BULLET_PLAYER_BUCKSHOT, // shotgun
 	BULLET_PLAYER_CROWBAR, // crowbar swipe
+#if defined ( POKE646_CLIENT_DLL )
+	BULLET_PLAYER_NAIL, // nails
+	BULLET_PLAYER_XS, // xen squasher
+#if defined ( VENDETTA )
+	BULLET_PLAYER_PAR21, // par21
+#endif // defined ( VENDETTA )
+#endif // defined ( POKE646_CLIENT_DLL )
 
 	BULLET_MONSTER_9MM,
 	BULLET_MONSTER_MP5,
@@ -37,6 +44,16 @@ enum glock_e {
 };
 
 enum shotgun_e {
+#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
+	SHOTGUN_IDLE = 0,
+	SHOTGUN_FIRE,
+	SHOTGUN_RELOAD,
+	SHOTGUN_PUMP,
+	SHOTGUN_START_RELOAD,
+	SHOTGUN_DRAW,
+	SHOTGUN_HOLSTER,
+	SHOTGUN_IDLE_DEEP,
+#else
 	SHOTGUN_IDLE = 0,
 	SHOTGUN_FIRE,
 	SHOTGUN_FIRE2,
@@ -47,6 +64,7 @@ enum shotgun_e {
 	SHOTGUN_HOLSTER,
 	SHOTGUN_IDLE4,
 	SHOTGUN_IDLE_DEEP
+#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 };
 
 enum mp5_e

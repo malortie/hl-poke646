@@ -92,6 +92,10 @@ void CHud::Think(void)
 	Bench_CheckStart();
 }
 
+#if defined ( POKE646_CLIENT_DLL )
+void HUD_DrawOrthoTriangles(void);
+#endif // defined ( POKE646_CLIENT_DLL )
+
 // Redraw
 // step through the local data,  placing the appropriate graphics & text as appropriate
 // returns 1 if they've changed, 0 otherwise
@@ -141,6 +145,10 @@ int CHud :: Redraw( float flTime, int intermission )
 
 	// if no redrawing is necessary
 	// return 0;
+
+#if defined ( POKE646_CLIENT_DLL )
+	HUD_DrawOrthoTriangles();
+#endif // defined ( POKE646_CLIENT_DLL )
 	
 	// draw all registered HUD elements
 	if ( m_pCvarDraw->value )
@@ -218,6 +226,19 @@ int CHud :: Redraw( float flTime, int intermission )
 		SPR_DrawAdditive( 0, mx, my, NULL );
 	}
 	*/
+
+#if defined ( POKE646_CLIENT_DLL )
+	//
+	// Slowly increase HUD alpha value.
+	//
+	if (m_flAlpha != m_flTargetAlpha)
+	{
+		if (m_flAlpha < m_flTargetAlpha)
+			m_flAlpha = min(m_flAlpha + 2, m_flTargetAlpha);
+		else if (m_flAlpha > m_flTargetAlpha)
+			m_flAlpha = max(m_flAlpha - 8, m_flTargetAlpha);
+	}
+#endif // defined ( POKE646_CLIENT_DLL )
 
 	return 1;
 }

@@ -22,6 +22,10 @@
 #include	"monsters.h"
 #include	"schedule.h"
 
+#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
+#define SF_BARNACLE_SPAWN_XENCANDY		1
+#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
+
 #define	BARNACLE_BODY_HEIGHT	44 // how 'tall' the barnacle's model is.
 #define BARNACLE_PULL_SPEED		8
 #define BARNACLE_KILL_VICTIM_DELAY	5 // how many seconds after pulling prey in to gib them. 
@@ -53,6 +57,9 @@ public:
 	BOOL  m_fTongueExtended;
 	BOOL  m_fLiftingPrey;
 	float m_flTongueAdj;
+#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
+	BOOL  m_fXenCandySpawned;
+#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 };
 LINK_ENTITY_TO_CLASS( monster_barnacle, CBarnacle );
 
@@ -64,6 +71,9 @@ TYPEDESCRIPTION	CBarnacle::m_SaveData[] =
 	DEFINE_FIELD( CBarnacle, m_fTongueExtended, FIELD_BOOLEAN ),
 	DEFINE_FIELD( CBarnacle, m_fLiftingPrey, FIELD_BOOLEAN ),
 	DEFINE_FIELD( CBarnacle, m_flTongueAdj, FIELD_FLOAT ),
+#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
+	DEFINE_FIELD( CBarnacle, m_fXenCandySpawned, FIELD_BOOLEAN ),
+#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 };
 
 IMPLEMENT_SAVERESTORE( CBarnacle, CBaseMonster );
@@ -90,6 +100,25 @@ void CBarnacle :: HandleAnimEvent( MonsterEvent_t *pEvent )
 	{
 	case BARNACLE_AE_PUKEGIB:
 		CGib::SpawnRandomGibs( pev, 1, 1 );	
+#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
+		if ((pev->spawnflags & SF_BARNACLE_SPAWN_XENCANDY) && !m_fXenCandySpawned)
+		{
+			Vector vecSrc = pev->origin + Vector(0, 0, -16);
+
+			Vector vecAngles = pev->angles;
+			vecAngles.x = vecAngles.z = 0;
+			vecAngles.y = RANDOM_LONG(0, 36) * 10;
+
+			CBaseEntity*pItem = DropItem("ammo_xencandy", vecSrc, vecAngles);
+
+			if (pItem)
+			{
+				pItem->pev->owner = edict();
+
+				m_fXenCandySpawned = TRUE;
+			}
+		}
+#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 		break;
 	default:
 		CBaseMonster::HandleAnimEvent( pEvent );
@@ -128,6 +157,10 @@ void CBarnacle :: Spawn()
 	pev->nextthink = gpGlobals->time + 0.5;
 
 	UTIL_SetOrigin ( pev, pev->origin );
+
+#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
+	m_fXenCandySpawned = FALSE;
+#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 }
 
 int CBarnacle::TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, int bitsDamageType )
@@ -383,6 +416,10 @@ void CBarnacle :: Precache()
 	PRECACHE_SOUND("barnacle/bcl_chew3.wav");
 	PRECACHE_SOUND("barnacle/bcl_die1.wav" );
 	PRECACHE_SOUND("barnacle/bcl_die3.wav" );
+
+#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
+	UTIL_PrecacheOther( "ammo_xencandy" );
+#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 }	
 
 //=========================================================

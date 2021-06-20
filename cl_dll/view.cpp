@@ -1408,6 +1408,19 @@ int V_FindViewModelByWeaponModel(int weaponindex)
 		{ "models/p_shotgun.mdl",		"models/v_tfc_shotgun.mdl"	},
 		{ "models/p_spygun.mdl",		"models/v_tfc_pistol.mdl"	},
 #endif
+#if defined ( POKE646_CLIENT_DLL )
+		{ "models/p_bradnailer.mdl",	"models/v_bradnailer.mdl"	},
+		{ "models/p_cmlwbr.mdl",		"models/v_cmlwbr.mdl"		},
+		{ "models/p_heaterpipe.mdl",	"models/v_heaterpipe.mdl"	},
+		{ "models/p_nailgun.mdl",		"models/v_nailgun.mdl"		},
+#if defined ( VENDETTA )
+		{ "models/p_par21.mdl",			"models/v_par21.mdl"		},
+#endif // defined ( VENDETTA )
+		{ "models/p_pipebomb.mdl",		"models/v_pipebomb.mdl"		},
+		{ "models/p_pipebomb_watch.mdl","models/v_pipebomb_watch.mdl"	},
+		{ "models/p_shotgun.mdl",		"models/v_shotgun.mdl"		},
+		{ "models/p_xs.mdl",			"models/v_xs.mdl"			},
+#else
 		{ "models/p_crossbow.mdl",		"models/v_crossbow.mdl"		},
 		{ "models/p_crowbar.mdl",		"models/v_crowbar.mdl"		},
 		{ "models/p_egon.mdl",			"models/v_egon.mdl"			},
@@ -1423,6 +1436,7 @@ int V_FindViewModelByWeaponModel(int weaponindex)
 		{ "models/p_tripmine.mdl",		"models/v_tripmine.mdl"		},
 		{ "models/p_satchel_radio.mdl",	"models/v_satchel_radio.mdl"},
 		{ "models/p_satchel.mdl",		"models/v_satchel.mdl"		},
+#endif // defined ( POKE646_CLIENT_DLL )
 		{ NULL, NULL } };
 
 	struct model_s * weaponModel = IEngineStudio.GetModelByIndex( weaponindex );

@@ -912,6 +912,10 @@ void ClientPrecache( void )
 
 	if (giPrecacheGrunt)
 		UTIL_PrecacheOther("monster_human_grunt");
+
+#if defined ( POKE646_DLL )
+	PRECACHE_SOUND("player/breathe2.wav");
+#endif // defined ( POKE646_DLL )
 }
 
 /*
@@ -1754,11 +1758,29 @@ void UpdateClientData ( const edict_t *ent, int sendweapons, struct clientdata_s
 					cd->vuser4.y	= pl->m_rgAmmo[gun->m_iPrimaryAmmoType];
 					cd->vuser4.z	= pl->m_rgAmmo[gun->m_iSecondaryAmmoType];
 					
+#if defined ( POKE646_DLL )
+					if ( pl->m_pActiveItem->m_iId == WEAPON_BRADNAILER || pl->m_pActiveItem->m_iId == WEAPON_NAILGUN )
+					{
+						cd->vuser2.y = pl->ammo_nails;
+					}
+					else if ( pl->m_pActiveItem->m_iId == WEAPON_XS )
+					{
+						cd->vuser2.y = pl->ammo_xencandy;
+					}
+#if defined ( VENDETTA )
+					else if ( pl->m_pActiveItem->m_iId == WEAPON_PAR21 )
+					{
+						cd->vuser2.y = pl->ammo_par21;
+						cd->vuser2.z = pl->ammo_m203grens;
+					}
+#endif // defined ( VENDETTA )
+#else
 					if ( pl->m_pActiveItem->m_iId == WEAPON_RPG )
 					{
 						cd->vuser2.y = ( ( CRpg * )pl->m_pActiveItem)->m_fSpotActive;
 						cd->vuser2.z = ( ( CRpg * )pl->m_pActiveItem)->m_cActiveRockets;
 					}
+#endif // defined ( POKE646_DLL )
 				}
 			}
 		}

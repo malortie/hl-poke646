@@ -276,6 +276,45 @@ int CHGrunt::IRelationship ( CBaseEntity *pTarget )
 //=========================================================
 void CHGrunt :: GibMonster ( void )
 {
+#if defined ( POKE646_DLL )
+
+	// Only allow grunts to drop weapons on Vendetta.
+#if defined ( VENDETTA )
+
+	Vector	vecGunPos;
+	Vector	vecGunAngles;
+
+	if (GetBodygroup(2) != 2)
+	{// throw a gun if the grunt has one
+		GetAttachment(0, vecGunPos, vecGunAngles);
+
+		CBaseEntity *pGun;
+
+		// Only drop items such as par21 and m203 grenades
+		if (FBitSet( pev->weapons, HGRUNT_9MMAR ))
+		{
+			pGun = DropItem( "weapon_par21", vecGunPos, vecGunAngles );
+		}
+	
+		if ( pGun )
+		{
+			pGun->pev->velocity = Vector (RANDOM_FLOAT(-100,100), RANDOM_FLOAT(-100,100), RANDOM_FLOAT(200,300));
+			pGun->pev->avelocity = Vector ( 0, RANDOM_FLOAT( 200, 400 ), 0 );
+		}
+
+		if (FBitSet( pev->weapons, HGRUNT_GRENADELAUNCHER ))
+		{
+			pGun = DropItem( "ammo_m203grenade", vecGunPos, vecGunAngles );
+			if ( pGun )
+			{
+				pGun->pev->velocity = Vector (RANDOM_FLOAT(-100,100), RANDOM_FLOAT(-100,100), RANDOM_FLOAT(200,300));
+				pGun->pev->avelocity = Vector ( 0, RANDOM_FLOAT( 200, 400 ), 0 );
+			}
+		}
+	}
+#endif // defined ( VENDETTA )
+
+#else
 	Vector	vecGunPos;
 	Vector	vecGunAngles;
 
@@ -308,6 +347,7 @@ void CHGrunt :: GibMonster ( void )
 			}
 		}
 	}
+#endif // defined ( POKE646_DLL )
 
 	CBaseMonster :: GibMonster();
 }
@@ -848,6 +888,33 @@ void CHGrunt :: HandleAnimEvent( MonsterEvent_t *pEvent )
 	{
 		case HGRUNT_AE_DROP_GUN:
 			{
+#if defined ( POKE646_DLL )
+
+			// Only allow grunts to drop weapons on Vendetta.
+#if defined ( VENDETTA )
+
+			Vector	vecGunPos;
+			Vector	vecGunAngles;
+
+			GetAttachment( 0, vecGunPos, vecGunAngles );
+
+			// switch to body group with no gun.
+			SetBodygroup( GUN_GROUP, GUN_NONE );
+
+			// now spawn a gun.
+
+			// Only drop items such as par21 and m203 grenades
+			if (FBitSet(pev->weapons, HGRUNT_9MMAR))
+			{
+				DropItem( "weapon_par21", vecGunPos, vecGunAngles );
+			}
+			if (FBitSet( pev->weapons, HGRUNT_GRENADELAUNCHER ))
+			{
+				DropItem( "ammo_m203grenade", BodyTarget( pev->origin ), vecGunAngles );
+			}
+#endif // defined ( VENDETTA )
+
+#else
 			Vector	vecGunPos;
 			Vector	vecGunAngles;
 
@@ -869,7 +936,7 @@ void CHGrunt :: HandleAnimEvent( MonsterEvent_t *pEvent )
 			{
 				DropItem( "ammo_ARgrenades", BodyTarget( pev->origin ), vecGunAngles );
 			}
-
+#endif // defined ( POKE646_DLL )
 			}
 			break;
 
@@ -1020,6 +1087,7 @@ void CHGrunt :: Spawn()
 	}
 	m_cAmmoLoaded		= m_cClipSize;
 
+#if !defined ( POKE646_DLL )
 	if (RANDOM_LONG( 0, 99 ) < 80)
 		pev->skin = 0;	// light skin
 	else
@@ -1034,6 +1102,7 @@ void CHGrunt :: Spawn()
 		SetBodygroup( HEAD_GROUP, HEAD_M203 );
 		pev->skin = 1; // alway dark skin
 	}
+#endif // !defined ( POKE646_DLL )
 
 	CTalkMonster::g_talkWaitTime = 0;
 
@@ -2484,6 +2553,7 @@ void CDeadHGrunt :: Spawn( void )
 	// Corpses have less health
 	pev->health			= 8;
 
+#if !defined ( POKE646_DLL )
 	// map old bodies onto new bodies
 	switch( pev->body )
 	{
@@ -2512,6 +2582,7 @@ void CDeadHGrunt :: Spawn( void )
 		SetBodygroup( GUN_GROUP, GUN_NONE );
 		break;
 	}
+#endif // !defined ( POKE646_DLL )
 
 	MonsterInitDead();
 }

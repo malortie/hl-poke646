@@ -36,6 +36,53 @@ extern DLL_GLOBAL Vector		g_vecAttackDir;
 // be spawned, and still remain fairly flexible
 const char *CBreakable::pSpawnObjects[] =
 {
+#if defined ( VENDETTA )
+	NULL,				// 0
+	"item_healthkit",	// 1
+	"item_healthkit",	// 2
+	"weapon_9mmhandgun",// 3
+	"ammo_9mmclip",		// 4
+	"weapon_9mmAR",		// 5
+	"ammo_9mmAR",		// 6
+	"weapon_cmlwbr",	// 7
+	"weapon_shotgun",	// 8
+	"weapon_shotgun",	// 9
+	"weapon_crossbow",	// 10
+	"ammo_crossbow",	// 11
+	"weapon_357",		// 12
+	"ammo_357",			// 13
+	"weapon_rpg",		// 14
+	"weapon_pipebomb",	// 15
+	"ammo_gaussclip",	// 16
+	"ammo_par21_clip",	// 17
+	"ammo_m203grenade",	// 18
+	"weapon_satchel",	// 19
+	"weapon_snark",		// 20
+	"weapon_hornetgun",	// 21
+#elif defined ( POKE646_DLL )
+	NULL,				// 0
+	"item_healthkit",	// 1
+	"item_healthkit",	// 2
+	"weapon_bradnailer",// 3
+	"ammo_nailclip",	// 4
+	"weapon_nailgun",	// 5
+	"ammo_nailround",	// 6
+	"weapon_cmlwbr",	// 7
+	"ammo_bolts",		// 8
+	"weapon_shotgun",	// 9
+	"ammo_buckshot",	// 10
+	"ammo_crossbow",	// 11
+	"weapon_357",		// 12
+	"ammo_357",			// 13
+	"weapon_rpg",		// 14
+	"weapon_pipebomb",	// 15
+	"ammo_gaussclip",	// 16
+	"weapon_handgrenade",// 17
+	"weapon_tripmine",	// 18
+	"weapon_satchel",	// 19
+	"weapon_snark",		// 20
+	"weapon_hornetgun",	// 21
+#else
 	NULL,				// 0
 	"item_battery",		// 1
 	"item_healthkit",	// 2
@@ -58,6 +105,7 @@ const char *CBreakable::pSpawnObjects[] =
 	"weapon_satchel",	// 19
 	"weapon_snark",		// 20
 	"weapon_hornetgun",	// 21
+#endif
 };
 
 void CBreakable::KeyValue( KeyValueData* pkvd )

@@ -862,7 +862,11 @@ int CHudAmmo::Draw(float flTime)
 
 	AmmoWidth = gHUD.GetSpriteRect(gHUD.m_HUD_number_0).right - gHUD.GetSpriteRect(gHUD.m_HUD_number_0).left;
 
+#if defined ( POKE646_CLIENT_DLL )
+	a = (int) min( gHUD.m_flAlpha, max( MIN_ALPHA, m_fFade) );
+#else
 	a = (int) max( MIN_ALPHA, m_fFade );
+#endif // defined ( POKE646_CLIENT_DLL )
 
 	if (m_fFade > 0)
 		m_fFade -= (gHUD.m_flTimeDelta * 20);
@@ -917,9 +921,14 @@ int CHudAmmo::Draw(float flTime)
 		}
 
 		// Draw the ammo Icon
+#if defined ( POKE646_CLIENT_DLL )
+		SPR_Set(m_pWeapon->hAmmo, r, g, b);
+		SPR_DrawAdditive(0, x + iIconWidth / 4, y, &m_pWeapon->rcAmmo);
+#else
 		int iOffset = (m_pWeapon->rcAmmo.bottom - m_pWeapon->rcAmmo.top)/8;
 		SPR_Set(m_pWeapon->hAmmo, r, g, b);
 		SPR_DrawAdditive(0, x, y - iOffset, &m_pWeapon->rcAmmo);
+#endif // defined ( POKE646_CLIENT_DLL )
 	}
 
 	// Does weapon have seconday ammo?
@@ -936,8 +945,13 @@ int CHudAmmo::Draw(float flTime)
 
 			// Draw the ammo Icon
 			SPR_Set(m_pWeapon->hAmmo2, r, g, b);
+#if defined ( POKE646_CLIENT_DLL )
+			int iOffset = (m_pWeapon->rcAmmo2.bottom - m_pWeapon->rcAmmo2.top)/8;
+			SPR_DrawAdditive(0, x + iIconWidth / 4, y, &m_pWeapon->rcAmmo2);
+#else
 			int iOffset = (m_pWeapon->rcAmmo2.bottom - m_pWeapon->rcAmmo2.top)/8;
 			SPR_DrawAdditive(0, x, y - iOffset, &m_pWeapon->rcAmmo2);
+#endif // defined ( POKE646_CLIENT_DLL )
 		}
 	}
 	return 1;
@@ -949,6 +963,7 @@ int CHudAmmo::Draw(float flTime)
 //
 int DrawBar(int x, int y, int width, int height, float f)
 {
+#if defined ( POKE646_CLIENT_DLL )
 	int r, g, b;
 
 	if (f < 0)
@@ -963,7 +978,43 @@ int DrawBar(int x, int y, int width, int height, float f)
 		// Always show at least one pixel if we have ammo.
 		if (w <= 0)
 			w = 1;
+
+		g = f * 255;
+		r = 255 - g;
+		b = 0;
+
+		ScaleColors(r, g, b, min(gHUD.m_flAlpha, 255));
+
+		FillRGBA(x, y, w, height, r, g, b, min(gHUD.m_flAlpha, 255));
+		x += w;
+		width -= w;
+	}
+	else
+	{
+		UnpackRGB(r, g, b, RGB_YELLOWISH);
+	}
+
+	FillRGBA(x, y, width, height, r, g, b, min(gHUD.m_flAlpha, 128));
+
+	return (x + width);
+#else
+	int r, g, b;
+
+	if (f < 0)
+		f = 0;
+	if (f > 1)
+		f = 1;
+
+	if (f)
+	{
+		int w = f * width;
+
+		// Always show at least one pixel if we have ammo.
+		if (w <= 0)
+			w = 1;
+
 		UnpackRGB(r, g, b, RGB_GREENISH);
+
 		FillRGBA(x, y, w, height, r, g, b, 255);
 		x += w;
 		width -= w;
@@ -974,6 +1025,7 @@ int DrawBar(int x, int y, int width, int height, float f)
 	FillRGBA(x, y, width, height, r, g, b, 128);
 
 	return (x + width);
+#endif // defined ( POKE646_CLIENT_DLL )
 }
 
 
@@ -1014,6 +1066,123 @@ void DrawAmmoBar(WEAPON *p, int x, int y, int width, int height)
 //
 int CHudAmmo::DrawWList(float flTime)
 {
+#if defined ( POKE646_CLIENT_DLL )
+	int r,g,b,x,y,a,i;
+
+	if ( !gpActiveSel )
+		return 0;
+
+	int iActiveSlot;
+
+	if ( gpActiveSel == (WEAPON *)1 )
+		iActiveSlot = -1;	// current slot has no weapons
+	else 
+		iActiveSlot = gpActiveSel->iSlot;
+
+	x = 10; //!!!
+	y = 10; //!!!
+	
+
+	// Ensure that there are available choices in the active slot
+	if ( iActiveSlot > 0 )
+	{
+		if ( !gWR.GetFirstPos( iActiveSlot ) )
+		{
+			gpActiveSel = (WEAPON *)1;
+			iActiveSlot = -1;
+		}
+	}
+		
+	// Draw top line
+	for ( i = 0; i < MAX_WEAPON_SLOTS; i++ )
+	{
+		int iHeight;
+
+		UnpackRGB(r,g,b, RGB_YELLOWISH);
+	
+		if ( iActiveSlot == i )
+			a = min(gHUD.m_flAlpha, 255);
+		else
+			a = min(gHUD.m_flAlpha, 192);
+
+		ScaleColors(r, g, b, min(gHUD.m_flAlpha, 128)); // 255
+		SPR_Set(gHUD.GetSprite(m_HUD_bucket0 + i), r, g, b );
+
+		// make active slot wide enough to accomodate gun pictures
+		if ( i == iActiveSlot )
+		{
+			WEAPON *p = gWR.GetFirstPos(iActiveSlot);
+			if ( p )
+				iHeight = p->rcActive.bottom - p->rcActive.top;
+			else
+				iHeight = giBucketWidth;
+		}
+		else
+			iHeight = giBucketHeight;
+
+		SPR_DrawAdditive(0, x, y, &gHUD.GetSpriteRect(m_HUD_bucket0 + i));
+		
+		y += iHeight + 5;
+	}
+
+
+	a = min(gHUD.m_flAlpha, 128); //!!!
+
+	y = 10;
+
+	// Draw all of the buckets
+	for (i = 0; i < MAX_WEAPON_SLOTS; i++)
+	{
+		x = giBucketWidth + 15;
+
+		WEAPON *p = gWR.GetFirstPos( i );
+		int iHeight = giBucketHeight;
+		if ( p )
+			iHeight = p->rcActive.bottom - p->rcActive.top;
+
+		for ( int iPos = 0; iPos < MAX_WEAPON_POSITIONS; iPos++ )
+		{
+			p = gWR.GetWeaponSlot( i, iPos );
+
+			if ( !p || !p->iId )
+				continue;
+
+			UnpackRGB( r,g,b, RGB_YELLOWISH );
+
+			// if active, then we must have ammo.
+
+			if ( gpActiveSel == p )
+			{
+				ScaleColors(r, g, b, min(gHUD.m_flAlpha, 192));
+
+				SPR_Set(p->hActive, r, g, b );
+				SPR_DrawAdditive(0, x, y, &p->rcActive);
+			}
+			else
+			{
+				// Draw Weapon if Red if no ammo
+
+				if ( gWR.HasAmmo(p) )
+					ScaleColors(r, g, b, min(gHUD.m_flAlpha, 192));
+				else
+					ScaleColors(r, g, b, min(gHUD.m_flAlpha, 64));
+
+				SPR_Set( p->hInactive, r, g, b );
+				SPR_DrawAdditive( 0, x, y, &p->rcInactive );
+			}
+
+			// Draw Ammo Bar
+
+			DrawAmmoBar(p, x + giABWidth/2, y, giABWidth, giABHeight);
+
+			x += p->rcActive.right - p->rcActive.left + 5;
+		}
+
+		y += iHeight + 5;
+	}	
+
+	return 1;
+#else
 	int r,g,b,x,y,a,i;
 
 	if ( !gpActiveSel )
@@ -1169,7 +1338,7 @@ int CHudAmmo::DrawWList(float flTime)
 	}	
 
 	return 1;
-
+#endif // defined ( POKE646_CLIENT_DLL )
 }
 
 

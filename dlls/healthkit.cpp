@@ -55,14 +55,22 @@ IMPLEMENT_SAVERESTORE( CHealthKit, CItem);
 void CHealthKit :: Spawn( void )
 {
 	Precache( );
+#if defined ( POKE646_DLL )
+	SET_MODEL(ENT(pev), "models/w_medibox.mdl");
+#else
 	SET_MODEL(ENT(pev), "models/w_medkit.mdl");
+#endif // defined ( POKE646_DLL )
 
 	CItem::Spawn();
 }
 
 void CHealthKit::Precache( void )
 {
+#if defined ( POKE646_DLL )
+	PRECACHE_MODEL("models/w_medibox.mdl");
+#else
 	PRECACHE_MODEL("models/w_medkit.mdl");
+#endif // defined ( POKE646_DLL )
 	PRECACHE_SOUND("items/smallmedkit1.wav");
 }
 

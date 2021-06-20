@@ -27,6 +27,11 @@
 #include "parsemsg.h"
 #include <string.h>
 
+#if defined ( POKE646_CLIENT_DLL )
+#ifndef M_PI
+#define M_PI	3.14159265358979323846
+#endif
+#endif // defined ( POKE646_CLIENT_DLL )
 
 DECLARE_MESSAGE(m_Health, Health )
 DECLARE_MESSAGE(m_Health, Damage )
@@ -56,7 +61,11 @@ int CHudHealth::Init(void)
 {
 	HOOK_MESSAGE(Health);
 	HOOK_MESSAGE(Damage);
+#if defined ( POKE646_CLIENT_DLL ) && !defined ( VENDETTA )
+	m_iHealth = 50;
+#else
 	m_iHealth = 100;
+#endif // defined ( POKE646_CLIENT_DLL ) && !defined ( VENDETTA )
 	m_fFade = 0;
 	m_iFlags = 0;
 	m_bitsDamage = 0;
@@ -65,7 +74,6 @@ int CHudHealth::Init(void)
 	giDmgWidth = 0;
 
 	memset(m_dmg, 0, sizeof(DAMAGE_IMAGE) * NUM_DMG_TYPES);
-
 
 	gHUD.AddHudElem(this);
 	return 1;
@@ -160,15 +168,82 @@ void CHudHealth::GetPainColor( int &r, int &g, int &b )
 	}
 	else
 	{
+#if defined ( POKE646_CLIENT_DLL )
+		UnpackRGB(r, g, b, RGB_YELLOWISH);
+		g = b =  255 * fabs(sin(gEngfuncs.GetClientTime() * M_PI * 2.0f));
+#else
 		r = 250;
 		g = 0;
 		b = 0;
+#endif // defined ( POKE646_CLIENT_DLL )
 	}
 #endif 
 }
 
 int CHudHealth::Draw(float flTime)
 {
+#if defined ( POKE646_CLIENT_DLL )
+
+	int r, g, b;
+	int a = 0, x, y;
+	int HealthWidth;
+
+	if ( (gHUD.m_iHideHUDDisplay & HIDEHUD_HEALTH) || gEngfuncs.IsSpectateOnly() )
+		return 1;
+
+	if ( !m_hSprite )
+		m_hSprite = LoadSprite(PAIN_NAME);
+
+	// Has health changed? Flash the health #
+	if (m_fFade)
+	{
+		m_fFade -= (gHUD.m_flTimeDelta * 20);
+		if (m_fFade <= 0)
+		{
+			a = min(gHUD.m_flAlpha, MIN_ALPHA);
+			m_fFade = 0;
+		}
+
+		// Fade the health number back to dim
+		a = min(gHUD.m_flAlpha, MIN_ALPHA) + (m_fFade / FADE_TIME) * 128;
+
+	}
+	else
+		a = min(gHUD.m_flAlpha, MIN_ALPHA);
+
+	// If health is getting low, make it bright red
+	if (m_iHealth <= 25)
+		a = min(gHUD.m_flAlpha, 255);
+
+	GetPainColor( r, g, b );
+	ScaleColors(r, g, b, a );
+
+	// Only draw health if we have the suit.
+	if (gHUD.m_iWeaponBits & (1<<(WEAPON_SUIT)))
+	{
+		HealthWidth = gHUD.GetSpriteRect(gHUD.m_HUD_number_0).right - gHUD.GetSpriteRect(gHUD.m_HUD_number_0).left;
+
+		struct rect_s cross = gHUD.GetSpriteRect(m_HUD_cross);
+
+		int CrossWidth = cross.right - cross.left;
+		int CrossHeight = cross.bottom - cross.top;
+
+		y = ScreenHeight - gHUD.m_iFontHeight / 2 - CrossHeight;
+		x = CrossWidth;
+
+		SPR_Set(gHUD.GetSprite(m_HUD_cross), r, g, b);
+		SPR_DrawAdditive(0, x, y, &cross);
+
+		y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
+		x = CrossWidth * 2.0f + HealthWidth;
+
+		x = gHUD.DrawHudNumber(x, y, DHN_3DIGITS | DHN_DRAWZERO, m_iHealth, r, g, b);
+	}
+
+	DrawDamage(flTime);
+	return DrawPain(flTime);
+
+#else
 	int r, g, b;
 	int a = 0, x, y;
 	int HealthWidth;
@@ -229,6 +304,7 @@ int CHudHealth::Draw(float flTime)
 
 	DrawDamage(flTime);
 	return DrawPain(flTime);
+#endif // defined ( POKE646_CLIENT_DLL )
 }
 
 void CHudHealth::CalcDamageDirection(vec3_t vecFrom)

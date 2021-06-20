@@ -222,6 +222,14 @@ void CGameRules::RefreshSkillData ( void )
 	// Sentry Turret
 	gSkillData.sentryHealth = GetSkillCvar( "sk_sentry_health");
 
+#if defined( POKE646_DLL )
+	// RoboCop
+	gSkillData.robocopHealth = GetSkillCvar("sk_robocop_health");
+	gSkillData.robocopDmgMortar = GetSkillCvar("sk_robocop_dmg_mortar");
+	gSkillData.robocopDmgFist = GetSkillCvar("sk_robocop_dmg_fist");
+	gSkillData.robocopSWRadius = GetSkillCvar("sk_robocop_sw_radius");
+#endif // defined( POKE646_DLL )
+
 // PLAYER WEAPONS
 
 	// Crowbar whack
@@ -302,6 +310,17 @@ void CGameRules::RefreshSkillData ( void )
 	gSkillData.plrStomach = GetSkillCvar( "sk_player_stomach" );
 	gSkillData.plrLeg = GetSkillCvar( "sk_player_leg" );
 	gSkillData.plrArm = GetSkillCvar( "sk_player_arm" );
+
+#if defined( POKE646_DLL )
+	// Nails
+	gSkillData.plrDmgNail = GetSkillCvar("sk_plr_nail");
+
+#if defined ( VENDETTA )
+	// Par21
+	gSkillData.plrDmgPar21 = GetSkillCvar("sk_plr_par21_bullet");
+#endif // defined ( VENDETTA )
+
+#endif // defined( POKE646_DLL )
 }
 
 //=========================================================

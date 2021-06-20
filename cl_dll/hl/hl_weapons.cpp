@@ -52,6 +52,19 @@ int   g_irunninggausspred = 0;
 vec3_t previousorigin;
 
 // HLDM Weapon placeholder entities.
+#if defined ( POKE646_CLIENT_DLL )
+CHeaterPipe g_HeaterPipe;
+CCmlwbr g_Cmlwbr;
+CShotgun g_Shotgun;
+CPipeBomb g_PipeBomb;
+#if !defined ( VENDETTA )
+CBradnailer g_Bradnailer;
+CNailgun g_Nailgun;
+CXenSquasher g_Xs;
+#else
+CPar21 g_Par21;
+#endif // !defined ( VENDETTA )
+#else
 CGlock g_Glock;
 CCrowbar g_Crowbar;
 CPython g_Python;
@@ -66,6 +79,7 @@ CHandGrenade g_HandGren;
 CSatchel g_Satchel;
 CTripmine g_Tripmine;
 CSqueak g_Snark;
+#endif // defined ( POKE646_CLIENT_DLL )
 
 
 /*
@@ -605,6 +619,19 @@ void HUD_InitClientWeapons( void )
 	HUD_PrepEntity( &player		, NULL );
 
 	// Allocate slot(s) for each weapon that we are going to be predicting
+#if defined ( POKE646_CLIENT_DLL )
+	HUD_PrepEntity( &g_HeaterPipe	, &player );
+	HUD_PrepEntity( &g_Shotgun		, &player );
+	HUD_PrepEntity( &g_Cmlwbr		, &player );
+	HUD_PrepEntity( &g_PipeBomb		, &player );
+#if !defined ( VENDETTA )
+	HUD_PrepEntity( &g_Bradnailer	, &player );
+	HUD_PrepEntity( &g_Nailgun		, &player );
+	HUD_PrepEntity( &g_Xs			, &player );
+#else
+	HUD_PrepEntity( &g_Par21		, &player );
+#endif //  !defined ( VENDETTA )
+#else
 	HUD_PrepEntity( &g_Glock	, &player );
 	HUD_PrepEntity( &g_Crowbar	, &player );
 	HUD_PrepEntity( &g_Python	, &player );
@@ -619,6 +646,7 @@ void HUD_InitClientWeapons( void )
 	HUD_PrepEntity( &g_Satchel	, &player );
 	HUD_PrepEntity( &g_Tripmine	, &player );
 	HUD_PrepEntity( &g_Snark	, &player );
+#endif // defined ( POKE646_CLIENT_DLL )
 }
 
 /*
@@ -684,6 +712,42 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	// FIXME, make this a method in each weapon?  where you pass in an entity_state_t *?
 	switch ( from->client.m_iId )
 	{
+#if defined ( POKE646_CLIENT_DLL )
+	case WEAPON_HEATERPIPE:
+		pWeapon = &g_HeaterPipe;
+		break;
+
+	case WEAPON_SHOTGUN:
+		pWeapon = &g_Shotgun;
+		break;
+
+	case WEAPON_CMLWBR:
+		pWeapon = &g_Cmlwbr;
+		break;
+
+	case WEAPON_PIPEBOMB:
+		pWeapon = &g_PipeBomb;
+		break;
+
+#if !defined ( VENDETTA )
+	case WEAPON_BRADNAILER:
+		pWeapon = &g_Bradnailer;
+		break;
+
+	case WEAPON_NAILGUN:
+		pWeapon = &g_Nailgun;
+		break;
+
+	case WEAPON_XS:
+		pWeapon = &g_Xs;
+		break;
+#else
+	case WEAPON_PAR21:
+		pWeapon = &g_Par21;
+		break;
+#endif // !defined ( VENDETTA )
+
+#else
 		case WEAPON_CROWBAR:
 			pWeapon = &g_Crowbar;
 			break;
@@ -739,6 +803,7 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		case WEAPON_SNARK:
 			pWeapon = &g_Snark;
 			break;
+#endif // defined ( POKE646_CLIENT_DLL )
 	}
 
 	// Store pointer to our destination entity_state_t so we can get our origin, etc. from it
@@ -845,11 +910,29 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		player.m_pActiveItem = g_pWpns[ from->client.m_iId ];
 	}
 
+#if defined ( POKE646_CLIENT_DLL )
+	if ( player.m_pActiveItem->m_iId == WEAPON_BRADNAILER || player.m_pActiveItem->m_iId == WEAPON_NAILGUN )
+	{
+		player.ammo_nails = (int)from->client.vuser2[ 1 ];
+	}
+	else if ( player.m_pActiveItem->m_iId == WEAPON_XS )
+	{
+		player.ammo_xencandy = (int)from->client.vuser2[ 1 ];
+	}
+#if defined ( VENDETTA )
+	else if ( player.m_pActiveItem->m_iId == WEAPON_PAR21 )
+	{
+		player.ammo_par21		= (int)from->client.vuser2[ 1 ];
+		player.ammo_m203grens	= (int)from->client.vuser2[ 2 ];
+	}
+#endif // defined ( VENDETTA )
+#else
 	if ( player.m_pActiveItem->m_iId == WEAPON_RPG )
 	{
 		 ( ( CRpg * )player.m_pActiveItem)->m_fSpotActive = (int)from->client.vuser2[ 1 ];
 		 ( ( CRpg * )player.m_pActiveItem)->m_cActiveRockets = (int)from->client.vuser2[ 2 ];
 	}
+#endif // defined ( POKE646_CLIENT_DLL )
 	
 	// Don't go firing anything if we have died or are spectating
 	// Or if we don't have a weapon model deployed
@@ -913,11 +996,29 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	to->client.vuser2[0]				= player.ammo_hornets;
 	to->client.ammo_rockets				= player.ammo_rockets;
 
+#if defined ( POKE646_CLIENT_DLL )
+	if ( player.m_pActiveItem->m_iId == WEAPON_BRADNAILER || player.m_pActiveItem->m_iId == WEAPON_NAILGUN)
+	{
+		from->client.vuser2[ 1 ] = player.ammo_nails;
+	}
+	else if (player.m_pActiveItem->m_iId == WEAPON_XS)
+	{
+		from->client.vuser2[ 1 ] = player.ammo_xencandy;
+	}
+#if defined ( VENDETTA )
+	else if ( player.m_pActiveItem->m_iId == WEAPON_PAR21 )
+	{
+		from->client.vuser2[ 1 ] = player.ammo_par21;
+		from->client.vuser2[ 2 ] = player.ammo_m203grens;
+	}
+#endif // defined ( VENDETTA )
+#else
 	if ( player.m_pActiveItem->m_iId == WEAPON_RPG )
 	{
 		 from->client.vuser2[ 1 ] = ( ( CRpg * )player.m_pActiveItem)->m_fSpotActive;
 		 from->client.vuser2[ 2 ] = ( ( CRpg * )player.m_pActiveItem)->m_cActiveRockets;
 	}
+#endif // defined ( POKE646_CLIENT_DLL )
 
 	// Make sure that weapon animation matches what the game .dll is telling us
 	//  over the wire ( fixes some animation glitches )
@@ -925,6 +1026,7 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	{
 		int body = 2;
 
+#if !defined ( POKE646_CLIENT_DLL )
 		//Pop the model to body 0.
 		if ( pWeapon == &g_Tripmine )
 			 body = 0;
@@ -932,6 +1034,7 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		//Show laser sight/scope combo
 		if ( pWeapon == &g_Python && bIsMultiplayer() )
 			 body = 1;
+#endif // !defined ( POKE646_CLIENT_DLL )
 		
 		// Force a fixed anim down to viewmodel
 		HUD_SendWeaponAnim( to->client.weaponanim, body, 1 );
