@@ -62,7 +62,7 @@ int CHudAmmoSecondary :: Draw(float flTime)
 	int a, x, y, r, g, b, AmmoWidth;
 	UnpackRGB( r, g, b, RGB_YELLOWISH );
 #if defined ( POKE646_CLIENT_DLL )
-	a = std::max( std::min( gHUD.m_flAlpha, MIN_ALPHA ), static_cast<int>(m_fFade) );
+	a = std::max( std::min( static_cast<int>(gHUD.m_flAlpha), MIN_ALPHA ), static_cast<int>(m_fFade) );
 #else
 	a = std::max( MIN_ALPHA, static_cast<int>(m_fFade) );
 #endif // defined ( POKE646_CLIENT_DLL )
