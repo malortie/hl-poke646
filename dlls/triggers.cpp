@@ -2278,18 +2278,6 @@ void CTriggerCamera::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYP
 	if (FBitSet (pev->spawnflags, SF_CAMERA_PLAYER_TAKECONTROL ) )
 	{
 		((CBasePlayer *)pActivator)->EnableControl(FALSE);
-#if defined ( POKE646_DLL )
-#if !defined ( VENDETTA )
-		if (!(FStrEq(STRING(gpGlobals->mapname), "po_haz01") && FStrEq(STRING(pev->targetname), "cam")) &&
-			!(FStrEq(STRING(gpGlobals->mapname), "po_aud01") && FStrEq(STRING(pev->targetname), "cam")))
-#endif // #if !defined ( VENDETTA )
-		{
-			if (((CBasePlayer *)pActivator)->pev->weapons & (1 << WEAPON_SUIT))
-			{
-				((CBasePlayer *)pActivator)->HidePlayerHUD();
-			}
-		}
-#endif // defined ( POKE646_DLL )
 	}
 
 	if ( m_sPath )
@@ -2348,18 +2336,6 @@ void CTriggerCamera::FollowTarget( )
 		{
 			SET_VIEW( m_hPlayer->edict(), m_hPlayer->edict() );
 			((CBasePlayer *)((CBaseEntity *)m_hPlayer))->EnableControl(TRUE);
-#if defined ( POKE646_DLL )
-#if !defined ( VENDETTA )
-			if (!(FStrEq(STRING(gpGlobals->mapname), "po_aud01") && FStrEq(STRING(pev->targetname), "cam")) &&
-				!(FStrEq(STRING(gpGlobals->mapname), "credits")  && FStrEq(STRING(pev->targetname), "credits_cam")))
-#endif // #if !defined ( VENDETTA )
-			{
-				if (((CBasePlayer *)((CBaseEntity *)m_hPlayer))->pev->weapons & (1 << WEAPON_SUIT))
-				{
-					((CBasePlayer *)((CBaseEntity *)m_hPlayer))->ShowPlayerHUD();
-				}
-			}
-#endif // defined ( POKE646_DLL )
 		}
 		SUB_UseTargets( this, USE_TOGGLE, 0 );
 		pev->avelocity = Vector( 0, 0, 0 );

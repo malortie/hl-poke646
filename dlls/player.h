@@ -367,11 +367,12 @@ public:
 	// HUD visibility
 	void ShowPlayerHUD( BOOL bInstant = FALSE );
 	void HidePlayerHUD( BOOL bInstant = FALSE );
+	void UpdatePlayerHUDVisibility( BOOL bInstant = FALSE );
 
-	BOOL m_fHudVisible;
-	BOOL m_fUpdateHudVisibility;
 #endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 	
+	BOOL m_fRestoreHUD;
+	BOOL m_bFirstTimeSpawn;
 };
 
 #define AUTOAIM_2DEGREES  0.0348994967025

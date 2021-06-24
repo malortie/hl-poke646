@@ -30,9 +30,6 @@
 #include "gamerules.h"
 
 extern int gmsgItemPickup;
-#if defined ( POKE646_DLL )
-extern int gmsgStartUp;
-#endif // defined ( POKE646_DLL )
 
 class CWorldItem : public CBaseEntity
 {
@@ -190,13 +187,6 @@ class CItemSuit : public CItem
 	{
 		if ( pPlayer->pev->weapons & (1<<WEAPON_SUIT) )
 			return FALSE;
-
-#if defined ( POKE646_DLL )
-		//
-		// Make HUD completely transparent and slowly increase it's alpha.
-		//
-		pPlayer->ShowPlayerHUD();
-#endif // defined ( POKE646_DLL )
 
 #if !defined ( POKE646_DLL )
 		if ( pev->spawnflags & SF_SUIT_SHORTLOGON )

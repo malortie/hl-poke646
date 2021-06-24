@@ -133,9 +133,8 @@ TYPEDESCRIPTION	CBasePlayer::m_playerSaveData[] =
 	DEFINE_FIELD(CBasePlayer, m_flExertRate, FIELD_FLOAT),
 	DEFINE_FIELD(CBasePlayer, m_flExertUpdateStart, FIELD_TIME),
 
-	DEFINE_FIELD(CBasePlayer, m_fHudVisible, FIELD_BOOLEAN),
-	DEFINE_FIELD(CBasePlayer, m_fUpdateHudVisibility, FIELD_BOOLEAN),
 #endif // defined ( POKE646_DLL )
+	DEFINE_FIELD(CBasePlayer, m_bFirstTimeSpawn, FIELD_BOOLEAN),
 	
 	//DEFINE_FIELD( CBasePlayer, m_fDeadTime, FIELD_FLOAT ), // only used in multiplayer games
 	//DEFINE_FIELD( CBasePlayer, m_fGameHUDInitialized, FIELD_INTEGER ), // only used in multiplayer games
@@ -3112,10 +3111,10 @@ void CBasePlayer::Spawn( void )
 	m_bSong05_Played =
 	m_bSong06_Played = FALSE;
 
-	m_fHudVisible = FALSE;
-	m_fUpdateHudVisibility = FALSE;
 	m_flMusicCheckWait = gpGlobals->time + 0.1f; // Give a bit of time before attempting to use MP3 player.
 #endif // defined ( POKE646_DLL )
+	m_fRestoreHUD = FALSE;
+	m_bFirstTimeSpawn = TRUE;
 
 	g_pGameRules->PlayerSpawn( this );
 }
@@ -3244,10 +3243,10 @@ int CBasePlayer::Restore( CRestore &restore )
 #endif
 
 #if defined ( POKE646_DLL )
-	m_fUpdateHudVisibility = TRUE;
 
 	m_flMusicCheckWait = gpGlobals->time + 0.5f;
 #endif // defined ( POKE646_DLL )
+	m_fRestoreHUD = TRUE;
 
 	return status;
 }
@@ -4190,91 +4189,23 @@ void CBasePlayer :: UpdateClientData( void )
 		InitStatusBar();
 	}
 
-#if defined ( POKE646_DLL )
-	//
-	// Poke646 & Vendetta - Give suit to toggle hud on map po_aud01 or po_orl01
-	//
-	if (!(pev->weapons & (1 << WEAPON_SUIT)))
+	if (m_bFirstTimeSpawn)
 	{
-#if defined ( VENDETTA )
-		if (FStrEq(STRING(gpGlobals->mapname), "pv_orl01"))
-		{
-			pev->weapons |= (1 << WEAPON_SUIT);
+		m_bFirstTimeSpawn = FALSE;
 
-			//
-			// Make HUD completely transparent and slowly increase it's alpha.
-			//
-			ShowPlayerHUD();
-		}
-#else
-		if (FStrEq(STRING(gpGlobals->mapname), "po_haz01"))
-		{
-			pev->weapons |= (1 << WEAPON_SUIT);
+		pev->weapons |= (1 << WEAPON_SUIT); // Give suit to allow HUD to be drawn.
 
-			// Force HUD update.
-			m_fHudVisible = TRUE;
-
-			//
-			// Make HUD completely transparent.
-			//
-			HidePlayerHUD(TRUE);
-		}
-		else if (FStrEq(STRING(gpGlobals->mapname), "po_aud01"))
-		{
-			pev->weapons |= (1 << WEAPON_SUIT);
-
-			//
-			// Make HUD completely transparent and slowly increase it's alpha.
-			//
-			ShowPlayerHUD();
-		}
-		else if (FStrEq(STRING(gpGlobals->mapname), "credits"))
-		{
-			pev->weapons = 0;
-
-			//
-			// Make HUD completely transparent and slowly increase it's alpha.
-			//
-			HidePlayerHUD(TRUE);
-		}
-#endif // defined ( VENDETTA )
+		// Poke646 - Player spawned for the first time. Update the HUD visibility.
+		UpdatePlayerHUDVisibility();
 	}
 
-	// Update HUD visibility.
-	if (m_fUpdateHudVisibility)
+	if (m_fRestoreHUD)
 	{
-		// If player is frozen, tell client to hide HUD,
-		// if visible.
-		if ((pev->flags & FL_FROZEN) && m_fHudVisible )
-		{
-			if (pev->weapons & (1 << WEAPON_SUIT))
-			{
-				HidePlayerHUD();
-			}
-		}
-		// If player is not frozen, tell client to show HUD,
-		// if not visible.
-		else if (!(pev->flags & FL_FROZEN) && !m_fHudVisible)
-		{
-			if (pev->weapons & (1 << WEAPON_SUIT))
-			{
-				ShowPlayerHUD();
-			}
-		}
-		else
-		{
-			if (pev->weapons & (1 << WEAPON_SUIT))
-			{
-				m_fHudVisible = FALSE;
-
-				ShowPlayerHUD(TRUE);
-			}
-		}
-
-		m_fUpdateHudVisibility = FALSE;
+		m_fRestoreHUD = FALSE;
+		// Poke646 - Update HUD visibility.
+		UpdatePlayerHUDVisibility(TRUE);
 	}
 
-#endif // defined ( POKE646_DLL )
 
 	if ( m_iHideHUD != m_iClientHideHUD )
 	{
@@ -4531,6 +4462,8 @@ void CBasePlayer :: EnableControl(BOOL fControl)
 	else
 		pev->flags &= ~FL_FROZEN;
 
+	// Poke646 - Update HUD visibility.
+	UpdatePlayerHUDVisibility();
 }
 
 
@@ -5012,10 +4945,9 @@ void CBasePlayer::UpdateExertLevel(void)
 
 void CBasePlayer::ShowPlayerHUD(BOOL bInstant)
 {
-	if (m_fHudVisible)
+	// Only send if we have the suit.
+	if (!(pev->weapons & (1 << WEAPON_SUIT)))
 		return;
-
-	m_fHudVisible = TRUE;
 
 	MESSAGE_BEGIN(MSG_ONE, gmsgStartUp, NULL, pev);
 		WRITE_BYTE(255);	// Target alpha
@@ -5028,10 +4960,9 @@ void CBasePlayer::ShowPlayerHUD(BOOL bInstant)
 
 void CBasePlayer::HidePlayerHUD(BOOL bInstant)
 {
-	if (!m_fHudVisible)
+	// Only send if we have the suit.
+	if (!(pev->weapons & (1 << WEAPON_SUIT)))
 		return;
-
-	m_fHudVisible = FALSE;
 
 	MESSAGE_BEGIN(MSG_ONE, gmsgStartUp, NULL, pev);
 		WRITE_BYTE(0);		// Target alpha
@@ -5043,6 +4974,17 @@ void CBasePlayer::HidePlayerHUD(BOOL bInstant)
 }
 
 #endif // defined ( POKE646_DLL )
+void CBasePlayer::UpdatePlayerHUDVisibility(BOOL bInstant)
+{
+	if (pev->flags & FL_FROZEN)
+	{
+		HidePlayerHUD(bInstant);
+	}
+	else
+	{
+		ShowPlayerHUD(bInstant);
+	}
+}
 
 //=========================================================
 // Dead HEV suit prop

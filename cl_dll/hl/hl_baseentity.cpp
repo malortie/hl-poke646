@@ -307,6 +307,7 @@ void CBasePlayer::DecrementExertLevel(int amount) { }
 void CBasePlayer::ShowPlayerHUD(BOOL bInstant) {}
 void CBasePlayer::HidePlayerHUD(BOOL bInstant) {}
 #endif // defined ( POKE646_CLIENT_DLL )
+void CBasePlayer::UpdatePlayerHUDVisibility(BOOL bInstant) {}
 
 void ClearMultiDamage(void) { }
 void ApplyMultiDamage(entvars_t *pevInflictor, entvars_t *pevAttacker ) { }
