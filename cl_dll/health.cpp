@@ -170,12 +170,12 @@ void CHudHealth::GetPainColor( int &r, int &g, int &b )
 	{
 #if defined ( POKE646_CLIENT_DLL )
 		UnpackRGB(r, g, b, RGB_YELLOWISH);
-		g = b =  255 * fabs(sin(gEngfuncs.GetClientTime() * M_PI * 2.0f));
 #else
 		r = 250;
 		g = 0;
 		b = 0;
 #endif // defined ( POKE646_CLIENT_DLL )
+		g = b =  255 * static_cast<int>(std::abs(std::sin(gEngfuncs.GetClientTime() * M_PI * 2.0f)));
 	}
 #endif 
 }
