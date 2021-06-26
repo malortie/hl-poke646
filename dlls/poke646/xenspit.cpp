@@ -333,8 +333,8 @@ void CXenLargeSpit::CycleThink(void)
 		if (pSpit)
 		{
 			float cs, sn, dist;
-			cs = cos(pSpit->m_flCycle * 2 * M_PI);
-			sn = sin(pSpit->m_flCycle * 2 * M_PI);
+			cs = std::cos(pSpit->m_flCycle * 2 * M_PI);
+			sn = std::sin(pSpit->m_flCycle * 2 * M_PI);
 			dist = std::max(2, 2 * m_iChildCount);
 
 			// ALERT(at_console, "cs: %.2f. sn: %.2f\n", cs, sn);
