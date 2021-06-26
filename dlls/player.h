@@ -341,14 +341,6 @@ public:
 	float m_flNextChatTime;
 
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
-	// Music
-	BOOL m_bSong01_Played;
-	BOOL m_bSong02_Played;
-	BOOL m_bSong03_Played;
-	BOOL m_bSong04_Played;
-	BOOL m_bSong05_Played;
-	BOOL m_bSong06_Played;
-	float m_flMusicCheckWait;
 
 	//
 	// Exert

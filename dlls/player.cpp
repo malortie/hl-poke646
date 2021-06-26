@@ -119,14 +119,6 @@ TYPEDESCRIPTION	CBasePlayer::m_playerSaveData[] =
 	DEFINE_FIELD(CBasePlayer, m_iFOV, FIELD_INTEGER),
 
 #if defined ( POKE646_DLL )
-	// Music
-	DEFINE_FIELD(CBasePlayer, m_bSong01_Played, FIELD_BOOLEAN),
-	DEFINE_FIELD(CBasePlayer, m_bSong02_Played, FIELD_BOOLEAN),
-	DEFINE_FIELD(CBasePlayer, m_bSong03_Played, FIELD_BOOLEAN),
-	DEFINE_FIELD(CBasePlayer, m_bSong04_Played, FIELD_BOOLEAN),
-	DEFINE_FIELD(CBasePlayer, m_bSong05_Played, FIELD_BOOLEAN),
-	DEFINE_FIELD(CBasePlayer, m_bSong06_Played, FIELD_BOOLEAN),
-	DEFINE_FIELD(CBasePlayer, m_flMusicCheckWait, FIELD_TIME),
 
 	// Player exert.
 	DEFINE_FIELD(CBasePlayer, m_iExertLevel, FIELD_INTEGER),
@@ -2031,105 +2023,6 @@ void CBasePlayer::PreThink(void)
 		pev->velocity = g_vecZero;
 	}
 
-#if defined ( POKE646_DLL )
-	// Only try to play music if wait time has elapsed.
-	if (m_flMusicCheckWait <= gpGlobals->time)
-	{
-		if (!m_bSong01_Played)
-		{
-#if defined ( VENDETTA )
-			if (FStrEq(STRING(gpGlobals->mapname), "pv_intro"))
-			{
-				CLIENT_COMMAND(edict(), "mp3 play media/int.mp3\n");
-				m_bSong01_Played = TRUE;
-			}
-#else
-			if (FStrEq(STRING(gpGlobals->mapname), "po_haz01"))
-			{
-				CLIENT_COMMAND(edict(), "mp3 play media/hazard.mp3\n");
-				m_bSong01_Played = TRUE;
-			}
-#endif // defined ( VENDETTA )
-		}
-		if (!m_bSong02_Played)
-		{
-#if defined ( VENDETTA )
-			if (FStrEq(STRING(gpGlobals->mapname), "pv_orl01"))
-			{
-				CLIENT_COMMAND(edict(), "mp3 play media/orl.mp3\n");
-				m_bSong02_Played = TRUE;
-			}
-#else
-			if (FStrEq(STRING(gpGlobals->mapname), "po_aud01"))
-			{
-				CLIENT_COMMAND(edict(), "mp3 play media/audion.mp3\n");
-				m_bSong02_Played = TRUE;
-			}
-#endif // defined ( VENDETTA )
-		}
-		if (!m_bSong03_Played)
-		{
-#if defined ( VENDETTA )
-			if (FStrEq(STRING(gpGlobals->mapname), "pv_ntc01"))
-			{
-				CLIENT_COMMAND(edict(), "mp3 play media/ntc.mp3\n");
-				m_bSong03_Played = TRUE;
-			}
-#else
-			if (FStrEq(STRING(gpGlobals->mapname), "po_sew01"))
-			{
-				CLIENT_COMMAND(edict(), "mp3 play media/sewer.mp3\n");
-				m_bSong03_Played = TRUE;
-			}
-#endif // defined ( VENDETTA )
-		}
-		if (!m_bSong04_Played)
-		{
-#if defined ( VENDETTA )
-			if (FStrEq(STRING(gpGlobals->mapname), "pv_ntc05"))
-			{
-				CLIENT_COMMAND(edict(), "mp3 play media/asl.mp3\n");
-				m_bSong04_Played = TRUE;
-			}
-#else
-			if (FStrEq(STRING(gpGlobals->mapname), "po_lib01"))
-			{
-				CLIENT_COMMAND(edict(), "mp3 play media/library.mp3\n");
-				m_bSong04_Played = TRUE;
-			}
-#endif // defined ( VENDETTA )
-		}
-		if (!m_bSong05_Played)
-		{
-#if defined ( VENDETTA )
-			if (FStrEq(STRING(gpGlobals->mapname), "pv_outro"))
-			{
-				CLIENT_COMMAND(edict(), "mp3 play media/out.mp3\n");
-				m_bSong05_Played = TRUE;
-			}
-#else
-			if (FStrEq(STRING(gpGlobals->mapname), "po_eas01"))
-			{
-				CLIENT_COMMAND(edict(), "mp3 play media/eastend.mp3\n");
-				m_bSong05_Played = TRUE;
-			}
-#endif // defined ( VENDETTA )
-		}
-		if (!m_bSong06_Played)
-		{
-#if defined ( VENDETTA )
-			m_bSong06_Played = TRUE;
-#else
-			if (FStrEq(STRING(gpGlobals->mapname), "credits"))
-			{
-				CLIENT_COMMAND(edict(), "mp3 play media/credits.mp3\n");
-				m_bSong06_Played = TRUE;
-			}
-
-#endif // defined ( VENDETTA )
-		}
-	}
-#endif // defined ( POKE646_DLL )
 }
 /* Time based Damage works as follows: 
 	1) There are several types of timebased damage:
@@ -3103,16 +2996,6 @@ void CBasePlayer::Spawn( void )
 	
 	m_flNextChatTime = gpGlobals->time;
 
-#if defined ( POKE646_DLL )
-	m_bSong01_Played =
-	m_bSong02_Played =
-	m_bSong03_Played =
-	m_bSong04_Played =
-	m_bSong05_Played =
-	m_bSong06_Played = FALSE;
-
-	m_flMusicCheckWait = gpGlobals->time + 0.1f; // Give a bit of time before attempting to use MP3 player.
-#endif // defined ( POKE646_DLL )
 	m_fRestoreHUD = FALSE;
 	m_bFirstTimeSpawn = TRUE;
 
@@ -3242,10 +3125,6 @@ int CBasePlayer::Restore( CRestore &restore )
 	m_flNextAttack = UTIL_WeaponTimeBase();
 #endif
 
-#if defined ( POKE646_DLL )
-
-	m_flMusicCheckWait = gpGlobals->time + 0.5f;
-#endif // defined ( POKE646_DLL )
 	m_fRestoreHUD = TRUE;
 
 	return status;
