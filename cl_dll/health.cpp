@@ -200,20 +200,20 @@ int CHudHealth::Draw(float flTime)
 		m_fFade -= (gHUD.m_flTimeDelta * 20);
 		if (m_fFade <= 0)
 		{
-			a = min(gHUD.m_flAlpha, MIN_ALPHA);
+			a = std::min(static_cast<int>(gHUD.m_flAlpha), MIN_ALPHA);
 			m_fFade = 0;
 		}
 
 		// Fade the health number back to dim
-		a = min(gHUD.m_flAlpha, MIN_ALPHA) + (m_fFade / FADE_TIME) * 128;
+		a = std::min(static_cast<int>(gHUD.m_flAlpha), MIN_ALPHA) + (m_fFade / FADE_TIME) * 128;
 
 	}
 	else
-		a = min(gHUD.m_flAlpha, MIN_ALPHA);
+		a = std::min(static_cast<int>(gHUD.m_flAlpha), MIN_ALPHA);
 
 	// If health is getting low, make it bright red
 	if (m_iHealth <= 25)
-		a = min(gHUD.m_flAlpha, 255);
+		a = std::min(static_cast<int>(gHUD.m_flAlpha), 255);
 
 	GetPainColor( r, g, b );
 	ScaleColors(r, g, b, a );

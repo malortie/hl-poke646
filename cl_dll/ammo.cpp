@@ -983,9 +983,9 @@ int DrawBar(int x, int y, int width, int height, float f)
 		r = 255 - g;
 		b = 0;
 
-		ScaleColors(r, g, b, min(gHUD.m_flAlpha, 255));
+		ScaleColors(r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 255));
 
-		FillRGBA(x, y, w, height, r, g, b, min(gHUD.m_flAlpha, 255));
+		FillRGBA(x, y, w, height, r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 255));
 		x += w;
 		width -= w;
 	}
@@ -994,7 +994,7 @@ int DrawBar(int x, int y, int width, int height, float f)
 		UnpackRGB(r, g, b, RGB_YELLOWISH);
 	}
 
-	FillRGBA(x, y, width, height, r, g, b, min(gHUD.m_flAlpha, 128));
+	FillRGBA(x, y, width, height, r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 128));
 
 	return (x + width);
 #else
@@ -1101,11 +1101,11 @@ int CHudAmmo::DrawWList(float flTime)
 		UnpackRGB(r,g,b, RGB_YELLOWISH);
 	
 		if ( iActiveSlot == i )
-			a = min(gHUD.m_flAlpha, 255);
+			a = std::min(static_cast<int>(gHUD.m_flAlpha), 255);
 		else
-			a = min(gHUD.m_flAlpha, 192);
+			a = std::min(static_cast<int>(gHUD.m_flAlpha), 192);
 
-		ScaleColors(r, g, b, min(gHUD.m_flAlpha, 128)); // 255
+		ScaleColors(r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 128)); // 255
 		SPR_Set(gHUD.GetSprite(m_HUD_bucket0 + i), r, g, b );
 
 		// make active slot wide enough to accomodate gun pictures
@@ -1126,7 +1126,7 @@ int CHudAmmo::DrawWList(float flTime)
 	}
 
 
-	a = min(gHUD.m_flAlpha, 128); //!!!
+	a = std::min(static_cast<int>(gHUD.m_flAlpha), 128); //!!!
 
 	y = 10;
 
@@ -1153,7 +1153,7 @@ int CHudAmmo::DrawWList(float flTime)
 
 			if ( gpActiveSel == p )
 			{
-				ScaleColors(r, g, b, min(gHUD.m_flAlpha, 192));
+				ScaleColors(r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 192));
 
 				SPR_Set(p->hActive, r, g, b );
 				SPR_DrawAdditive(0, x, y, &p->rcActive);
@@ -1163,9 +1163,9 @@ int CHudAmmo::DrawWList(float flTime)
 				// Draw Weapon if Red if no ammo
 
 				if ( gWR.HasAmmo(p) )
-					ScaleColors(r, g, b, min(gHUD.m_flAlpha, 192));
+					ScaleColors(r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 192));
 				else
-					ScaleColors(r, g, b, min(gHUD.m_flAlpha, 64));
+					ScaleColors(r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 64));
 
 				SPR_Set( p->hInactive, r, g, b );
 				SPR_DrawAdditive( 0, x, y, &p->rcInactive );

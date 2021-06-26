@@ -234,7 +234,7 @@ int CHud :: Redraw( float flTime, int intermission )
 	if (m_flAlpha != m_flTargetAlpha)
 	{
 		if (m_flAlpha < m_flTargetAlpha)
-			m_flAlpha = min(m_flAlpha + 2, m_flTargetAlpha);
+			m_flAlpha = std::min(m_flAlpha + 2, m_flTargetAlpha);
 		else if (m_flAlpha > m_flTargetAlpha)
 			m_flAlpha = max(m_flAlpha - 8, m_flTargetAlpha);
 	}
