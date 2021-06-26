@@ -913,9 +913,7 @@ void ClientPrecache( void )
 	if (giPrecacheGrunt)
 		UTIL_PrecacheOther("monster_human_grunt");
 
-#if defined ( POKE646_DLL )
-	PRECACHE_SOUND("player/breathe2.wav");
-#endif // defined ( POKE646_DLL )
+	PRECACHE_SOUND(PLAYER_BREATHE_SOUND);
 }
 
 /*

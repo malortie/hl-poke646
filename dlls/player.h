@@ -75,7 +75,7 @@
 
 #define PLAYER_BREATHE_LEVEL			5
 #define PLAYER_BREATHE_VOLUME_MAX		2.0f
-#define PLAYER_BREATHE_SOUND			"player/breathe2.wav"
+#define PLAYER_BREATHE_SOUND			"player/pl_breathe.wav"
 
 #endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 
