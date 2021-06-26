@@ -145,9 +145,6 @@ struct skilldata_t
 #if defined( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 	float plrDmgNail;
 
-#if defined ( VENDETTA )
-	float plrDmgPar21;
-#endif // defined ( VENDETTA )
 
 #endif // defined( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 };

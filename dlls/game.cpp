@@ -475,14 +475,6 @@ cvar_t	sk_plr_nail1 = { "sk_plr_nail1", "0" };
 cvar_t	sk_plr_nail2 = { "sk_plr_nail2", "0" };
 cvar_t	sk_plr_nail3 = { "sk_plr_nail3", "0" };
 
-#if defined ( VENDETTA )
-
-// Par21 Round
-cvar_t	sk_plr_par21_bullet1 = { "sk_plr_par21_bullet1", "0" };
-cvar_t	sk_plr_par21_bullet2 = { "sk_plr_par21_bullet2", "0" };
-cvar_t	sk_plr_par21_bullet3 = { "sk_plr_par21_bullet3", "0" };
-
-#endif // defined ( VENDETTA )
 
 #endif // defined( POKE646_DLL )
 
@@ -950,14 +942,6 @@ void GameDLLInit( void )
 	CVAR_REGISTER(&sk_plr_nail2);
 	CVAR_REGISTER(&sk_plr_nail3);
 
-#if defined ( VENDETTA )
-
-	// Par21 Round
-	CVAR_REGISTER(&sk_plr_par21_bullet1);
-	CVAR_REGISTER(&sk_plr_par21_bullet2);
-	CVAR_REGISTER(&sk_plr_par21_bullet3);
-
-#endif // defined ( VENDETTA )
 
 #endif // defined( POKE646_DLL )
 

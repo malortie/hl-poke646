@@ -1767,13 +1767,6 @@ void UpdateClientData ( const edict_t *ent, int sendweapons, struct clientdata_s
 					{
 						cd->vuser2.y = pl->ammo_xencandy;
 					}
-#if defined ( VENDETTA )
-					else if ( pl->m_pActiveItem->m_iId == WEAPON_PAR21 )
-					{
-						cd->vuser2.y = pl->ammo_par21;
-						cd->vuser2.z = pl->ammo_m203grens;
-					}
-#endif // defined ( VENDETTA )
 #else
 					if ( pl->m_pActiveItem->m_iId == WEAPON_RPG )
 					{

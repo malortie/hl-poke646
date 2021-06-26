@@ -57,13 +57,9 @@ CCrowbar g_Crowbar;
 CCmlwbr g_Cmlwbr;
 CShotgun g_Shotgun;
 CPipeBomb g_PipeBomb;
-#if !defined ( VENDETTA )
 CBradnailer g_Bradnailer;
 CNailgun g_Nailgun;
 CXenSquasher g_Xs;
-#else
-CPar21 g_Par21;
-#endif // !defined ( VENDETTA )
 #else
 CGlock g_Glock;
 CCrowbar g_Crowbar;
@@ -624,13 +620,9 @@ void HUD_InitClientWeapons( void )
 	HUD_PrepEntity( &g_Shotgun		, &player );
 	HUD_PrepEntity( &g_Cmlwbr		, &player );
 	HUD_PrepEntity( &g_PipeBomb		, &player );
-#if !defined ( VENDETTA )
 	HUD_PrepEntity( &g_Bradnailer	, &player );
 	HUD_PrepEntity( &g_Nailgun		, &player );
 	HUD_PrepEntity( &g_Xs			, &player );
-#else
-	HUD_PrepEntity( &g_Par21		, &player );
-#endif //  !defined ( VENDETTA )
 #else
 	HUD_PrepEntity( &g_Glock	, &player );
 	HUD_PrepEntity( &g_Crowbar	, &player );
@@ -729,7 +721,6 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		pWeapon = &g_PipeBomb;
 		break;
 
-#if !defined ( VENDETTA )
 	case WEAPON_BRADNAILER:
 		pWeapon = &g_Bradnailer;
 		break;
@@ -741,11 +732,6 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	case WEAPON_XS:
 		pWeapon = &g_Xs;
 		break;
-#else
-	case WEAPON_PAR21:
-		pWeapon = &g_Par21;
-		break;
-#endif // !defined ( VENDETTA )
 
 #else
 		case WEAPON_CROWBAR:
@@ -919,13 +905,6 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	{
 		player.ammo_xencandy = (int)from->client.vuser2[ 1 ];
 	}
-#if defined ( VENDETTA )
-	else if ( player.m_pActiveItem->m_iId == WEAPON_PAR21 )
-	{
-		player.ammo_par21		= (int)from->client.vuser2[ 1 ];
-		player.ammo_m203grens	= (int)from->client.vuser2[ 2 ];
-	}
-#endif // defined ( VENDETTA )
 #else
 	if ( player.m_pActiveItem->m_iId == WEAPON_RPG )
 	{
@@ -1005,13 +984,6 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	{
 		from->client.vuser2[ 1 ] = player.ammo_xencandy;
 	}
-#if defined ( VENDETTA )
-	else if ( player.m_pActiveItem->m_iId == WEAPON_PAR21 )
-	{
-		from->client.vuser2[ 1 ] = player.ammo_par21;
-		from->client.vuser2[ 2 ] = player.ammo_m203grens;
-	}
-#endif // defined ( VENDETTA )
 #else
 	if ( player.m_pActiveItem->m_iId == WEAPON_RPG )
 	{

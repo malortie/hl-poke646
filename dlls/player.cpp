@@ -1169,10 +1169,6 @@ void CBasePlayer::TabulateAmmo()
 #if defined ( POKE646_DLL )
 	ammo_nails = AmmoInventory( GetAmmoIndex( "nails" ) );
 	ammo_xencandy = AmmoInventory( GetAmmoIndex( "xencandy" ) );
-#if defined ( VENDETTA )
-	ammo_par21 = AmmoInventory(GetAmmoIndex("par21"));
-	ammo_m203grens = AmmoInventory(GetAmmoIndex("M203grenades"));
-#endif // defined ( VENDETTA )
 #endif // defined ( POKE646_DLL )
 }
 
@@ -3609,19 +3605,12 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 		GiveNamedItem( "weapon_cmlwbr" );
 		GiveNamedItem( "ammo_bolts" );
 		GiveNamedItem( "weapon_pipebomb" );
-#if !defined ( VENDETTA )
 		GiveNamedItem( "weapon_bradnailer" );
 		GiveNamedItem( "ammo_nailclip" );
 		GiveNamedItem( "ammo_nailround" );
 		GiveNamedItem( "weapon_nailgun" );
 		GiveNamedItem( "weapon_xs" );
 		GiveNamedItem( "ammo_xencandy" );
-#else
-		GiveNamedItem( "weapon_par21" );
-		GiveNamedItem( "ammo_par21_clip" );
-		GiveNamedItem( "ammo_par21_grenade" );
-		GiveNamedItem( "ammo_m203grenade" );
-#endif // !defined ( VENDETTA )
 
 #else
 		GiveNamedItem( "item_suit" );

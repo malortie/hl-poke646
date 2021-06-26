@@ -1581,11 +1581,6 @@ Vector CBaseEntity::FireBulletsPlayer ( ULONG cShots, Vector vecSrc, Vector vecD
 				pEntity->TraceAttack(pevAttacker, 0, vecDir, &tr, DMG_BULLET);
 				break;
 
-#if defined ( VENDETTA )
-			case BULLET_PLAYER_PAR21:
-				pEntity->TraceAttack(pevAttacker, gSkillData.plrDmgPar21, vecDir, &tr, DMG_BULLET);
-				break;
-#endif // defined ( VENDETTA )
 
 #endif // defined ( POKE646_DLL )
 			}

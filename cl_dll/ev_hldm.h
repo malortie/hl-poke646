@@ -19,9 +19,6 @@ typedef	enum
 	BULLET_PLAYER_CROWBAR, // crowbar swipe
 #if defined ( POKE646_CLIENT_DLL )
 	BULLET_PLAYER_NAIL, // nails
-#if defined ( VENDETTA )
-	BULLET_PLAYER_PAR21, // par21
-#endif // defined ( VENDETTA )
 #endif // defined ( POKE646_CLIENT_DLL )
 
 	BULLET_MONSTER_9MM,

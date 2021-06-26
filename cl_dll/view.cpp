@@ -1413,9 +1413,6 @@ int V_FindViewModelByWeaponModel(int weaponindex)
 		{ "models/p_cmlwbr.mdl",		"models/v_cmlwbr.mdl"		},
 		{ "models/p_heaterpipe.mdl",	"models/v_heaterpipe.mdl"	},
 		{ "models/p_nailgun.mdl",		"models/v_nailgun.mdl"		},
-#if defined ( VENDETTA )
-		{ "models/p_par21.mdl",			"models/v_par21.mdl"		},
-#endif // defined ( VENDETTA )
 		{ "models/p_pipebomb.mdl",		"models/v_pipebomb.mdl"		},
 		{ "models/p_pipebomb_watch.mdl","models/v_pipebomb_watch.mdl"	},
 		{ "models/p_shotgun.mdl",		"models/v_shotgun.mdl"		},

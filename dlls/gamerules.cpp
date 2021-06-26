@@ -315,10 +315,6 @@ void CGameRules::RefreshSkillData ( void )
 	// Nails
 	gSkillData.plrDmgNail = GetSkillCvar("sk_plr_nail");
 
-#if defined ( VENDETTA )
-	// Par21
-	gSkillData.plrDmgPar21 = GetSkillCvar("sk_plr_par21_bullet");
-#endif // defined ( VENDETTA )
 
 #endif // defined( POKE646_DLL )
 }

@@ -182,9 +182,6 @@ void DecalGunshot( TraceResult *pTrace, int iBulletType )
 		case BULLET_PLAYER_357:
 #if defined ( POKE646_DLL )
 		case BULLET_PLAYER_NAIL:
-#if defined ( VENDETTA )
-		case BULLET_PLAYER_PAR21:
-#endif // defined ( VENDETTA )
 #endif // defined ( POKE646_DLL )
 		default:
 			// smoke and decal
@@ -342,7 +339,6 @@ void W_Precache(void)
 	// pipebomb
 	UTIL_PrecacheOtherWeapon("weapon_pipebomb");
 
-#if !defined ( VENDETTA )
 	// bradnailer
 	UTIL_PrecacheOtherWeapon("weapon_bradnailer");
 	UTIL_PrecacheOther("ammo_nailclip");
@@ -354,13 +350,6 @@ void W_Precache(void)
 	// xen squasher
 	UTIL_PrecacheOtherWeapon("weapon_xs");
 	UTIL_PrecacheOther("ammo_xencandy");
-#else
-	// par21
-	UTIL_PrecacheOtherWeapon("weapon_par21");
-	UTIL_PrecacheOther("ammo_par21_clip");
-	UTIL_PrecacheOther("ammo_par21_grenade");
-	UTIL_PrecacheOther("ammo_m203grenade");
-#endif // !defined ( VENDETTA )
 
 #else
 	UTIL_PrecacheOther( "item_suit" );

@@ -355,10 +355,6 @@ public:
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 	int ammo_nails;
 	int ammo_xencandy;
-#if defined ( VENDETTA )
-	int ammo_par21;
-	int ammo_m203grens;
-#endif // defined ( VENDETTA )
 #endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 
 	//Special stuff for grenades and satchels.

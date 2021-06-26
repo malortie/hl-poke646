@@ -71,7 +71,6 @@ public:
 #define WEAPON_CMLWBR			6
 #define WEAPON_XS				7
 #define WEAPON_PIPEBOMB			8
-#define WEAPON_PAR21			9
 #define	WEAPON_SATCHEL			11
 #else
 #define WEAPON_NONE				0
@@ -111,7 +110,6 @@ public:
 #define CMLWBR_WEIGHT		10
 #define XS_WEIGHT			20
 #define PIPEBOMB_WEIGHT		-10
-#define PAR21_WEIGHT		15
 #define SATCHEL_WEIGHT		-10
 #else
 #define CROWBAR_WEIGHT		0
@@ -138,7 +136,6 @@ public:
 #define BOLT_MAX_CARRY			50
 #define XENCANDY_MAX_CARRY		60
 #define PIPEBOMB_MAX_CARRY		8
-#define PAR21_MAX_CARRY			150
 #define SATCHEL_MAX_CARRY		5
 #define	_9MM_MAX_CARRY			250
 #define M203_GRENADE_MAX_CARRY	10
@@ -167,7 +164,6 @@ public:
 #define CMLWBR_MAX_CLIP			5
 #define XS_MAX_CLIP				15
 #define PIPEBOMB_MAX_CLIP		WEAPON_NOCLIP
-#define PAR21_MAX_CLIP			30
 #define SATCHEL_MAX_CLIP		WEAPON_NOCLIP
 #else
 //#define CROWBAR_MAX_CLIP		WEAPON_NOCLIP
@@ -196,7 +192,6 @@ public:
 #define CMLWBR_DEFAULT_GIVE			5
 #define XS_DEFAULT_GIVE				15
 #define PIPEBOMB_DEFAULT_GIVE		1
-#define PAR21_DEFAULT_GIVE			30
 #define SATCHEL_DEFAULT_GIVE		1
 #else
 #define GLOCK_DEFAULT_GIVE			17
@@ -223,7 +218,6 @@ public:
 #define AMMO_BUCKSHOTBOX_GIVE	12
 #define AMMO_CMLWBRCLIP_GIVE	CMLWBR_MAX_CLIP
 #define AMMO_XENCANDY_GIVE		XS_MAX_CLIP
-#define AMMO_PAR21CLIP_GIVE		PAR21_MAX_CLIP
 #define AMMO_M203BOX_GIVE		2
 #else
 #define AMMO_URANIUMBOX_GIVE	20
@@ -250,9 +244,6 @@ typedef	enum
 	BULLET_PLAYER_CROWBAR, // crowbar swipe
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 	BULLET_PLAYER_NAIL, // nails
-#if defined ( VENDETTA )
-	BULLET_PLAYER_PAR21,
-#endif // defined ( VENDETTA )
 #endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 
 	BULLET_MONSTER_9MM,
@@ -1296,41 +1287,6 @@ private:
 	unsigned short m_usReload;
 };
 
-#if defined ( VENDETTA )
-
-class CPar21 : public CBasePlayerWeapon
-{
-public:
-	void Spawn(void);
-	void Precache(void);
-	int iItemSlot(void) { return 2; }
-	int GetItemInfo(ItemInfo *p);
-	int AddToPlayer(CBasePlayer *pPlayer);
-
-	void PrimaryAttack(void);
-	void SecondaryAttack(void);
-	int SecondaryAmmoIndex(void);
-	BOOL Deploy(void);
-	void Reload(void);
-	void WeaponIdle(void);
-	int m_iShell;
-
-	virtual BOOL UseDecrement(void)
-	{
-#if defined( CLIENT_WEAPONS )
-		return TRUE;
-#else
-		return FALSE;
-#endif
-	}
-
-private:
-	unsigned short m_usReload;
-	unsigned short m_usPar21;
-	unsigned short m_usM203;
-};
-
-#endif // defined ( VENDETTA )
 
 #endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 
