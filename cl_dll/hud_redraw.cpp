@@ -236,7 +236,7 @@ int CHud :: Redraw( float flTime, int intermission )
 		if (m_flAlpha < m_flTargetAlpha)
 			m_flAlpha = std::min(m_flAlpha + 2, m_flTargetAlpha);
 		else if (m_flAlpha > m_flTargetAlpha)
-			m_flAlpha = max(m_flAlpha - 8, m_flTargetAlpha);
+			m_flAlpha = std::max(m_flAlpha - 8, m_flTargetAlpha);
 	}
 #endif // defined ( POKE646_CLIENT_DLL )
 
