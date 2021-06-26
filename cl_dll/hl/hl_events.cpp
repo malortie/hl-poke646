@@ -43,7 +43,6 @@ void EV_SnarkFire( struct event_args_s *args );
 void EV_TrainPitchAdjust( struct event_args_s *args );
 
 #if defined ( POKE646_CLIENT_DLL )
-void EV_HeaterPipe(struct event_args_s *args);
 void EV_FireBradnailer(struct event_args_s *args);
 void EV_FireNailgun(struct event_args_s *args);
 void EV_FireCmlwbr(struct event_args_s *args);
@@ -93,7 +92,6 @@ void Game_HookEvents( void )
 	gEngfuncs.pfnHookEvent( "events/snarkfire.sc",				EV_SnarkFire );
 
 #if defined ( POKE646_CLIENT_DLL )
-	gEngfuncs.pfnHookEvent( "events/heaterpipe.sc",				EV_HeaterPipe );
 	gEngfuncs.pfnHookEvent( "events/bradnailer.sc",				EV_FireBradnailer );
 	gEngfuncs.pfnHookEvent( "events/nailgun.sc",				EV_FireNailgun );
 	gEngfuncs.pfnHookEvent( "events/cmlwbr.sc",					EV_FireCmlwbr );

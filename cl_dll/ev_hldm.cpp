@@ -76,7 +76,6 @@ void EV_SnarkFire( struct event_args_s *args  );
 void EV_TrainPitchAdjust( struct event_args_s *args );
 
 #if defined ( POKE646_CLIENT_DLL )
-void EV_HeaterPipe(struct event_args_s *args);
 void EV_FireBradnailer(struct event_args_s *args);
 void EV_FireNailgun(struct event_args_s *args);
 void EV_FireCmlwbr(struct event_args_s *args);
@@ -1255,7 +1254,7 @@ void EV_Crowbar( event_args_t *args )
 	VectorCopy( args->origin, origin );
 	
 	//Play Swing sound
-	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/cbar_miss1.wav", 1, ATTN_NORM, 0, PITCH_NORM); 
+	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/pipe_miss.wav", 1, ATTN_NORM, 0, PITCH_NORM); 
 
 	if ( EV_IsLocal( idx ) )
 	{
@@ -1812,55 +1811,8 @@ int EV_TFC_IsAllyTeam( int iTeam1, int iTeam2 )
 #if defined ( POKE646_CLIENT_DLL )
 
 
-//======================
-//	 HEATERPIPE START
-//======================
 
-enum heaterpipe_e {
-	HEATERPIPE_IDLE = 0,
-	HEATERPIPE_DRAW,
-	HEATERPIPE_HOLSTER,
-	HEATERPIPE_ATTACK1HIT,
-	HEATERPIPE_ATTACK1MISS,
-	HEATERPIPE_ATTACK2MISS,
-	HEATERPIPE_ATTACK2HIT,
-	HEATERPIPE_ATTACK3MISS,
-	HEATERPIPE_ATTACK3HIT,
-	HEATERPIPE_IDLE2,
-	HEATERPIPE_IDLE3,
-};
 
-//Only predict the miss sounds, hit sounds are still played 
-//server side, so players don't get the wrong idea.
-void EV_HeaterPipe(event_args_t *args)
-{
-	int idx;
-	vec3_t origin;
-
-	idx = args->entindex;
-	VectorCopy(args->origin, origin);
-
-	//Play Swing sound
-	gEngfuncs.pEventAPI->EV_PlaySound(idx, origin, CHAN_WEAPON, "weapons/pipe_miss.wav", 1, ATTN_NORM, 0, PITCH_NORM);
-
-	if (EV_IsLocal(idx))
-	{
-		gEngfuncs.pEventAPI->EV_WeaponAnimation(HEATERPIPE_ATTACK1MISS, 1);
-
-		switch ((g_iSwing++) % 3)
-		{
-		case 0:
-			gEngfuncs.pEventAPI->EV_WeaponAnimation(HEATERPIPE_ATTACK1MISS, 1); break;
-		case 1:
-			gEngfuncs.pEventAPI->EV_WeaponAnimation(HEATERPIPE_ATTACK2MISS, 1); break;
-		case 2:
-			gEngfuncs.pEventAPI->EV_WeaponAnimation(HEATERPIPE_ATTACK3MISS, 1); break;
-		}
-	}
-}
-//======================
-//	 HEATERPIPE END 
-//======================
 
 //======================
 //   BRADNAILER START

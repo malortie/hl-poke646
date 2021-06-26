@@ -26,8 +26,12 @@
 #define	CROWBAR_BODYHIT_VOLUME 128
 #define	CROWBAR_WALLHIT_VOLUME 512
 
-LINK_ENTITY_TO_CLASS( weapon_crowbar, CCrowbar );
+#define CROWBAR_FIRE_RATE_MIN	0.5f
+#define CROWBAR_FIRE_RATE_MAX	2.0f
 
+#define CROWBAR_FIRE_RATE_RATIO	0.75f
+
+LINK_ENTITY_TO_CLASS( weapon_heaterpipe, CCrowbar );
 
 
 enum gauss_e {
@@ -39,7 +43,9 @@ enum gauss_e {
 	CROWBAR_ATTACK2MISS,
 	CROWBAR_ATTACK2HIT,
 	CROWBAR_ATTACK3MISS,
-	CROWBAR_ATTACK3HIT
+	CROWBAR_ATTACK3HIT,
+	CROWBAR_IDLE2,
+	CROWBAR_IDLE3,
 };
 
 
@@ -47,7 +53,7 @@ void CCrowbar::Spawn( )
 {
 	Precache( );
 	m_iId = WEAPON_CROWBAR;
-	SET_MODEL(ENT(pev), "models/w_crowbar.mdl");
+	SET_MODEL(ENT(pev), "models/w_heaterpipe.mdl");
 	m_iClip = -1;
 
 	FallInit();// get ready to fall down.
@@ -56,15 +62,15 @@ void CCrowbar::Spawn( )
 
 void CCrowbar::Precache( void )
 {
-	PRECACHE_MODEL("models/v_crowbar.mdl");
-	PRECACHE_MODEL("models/w_crowbar.mdl");
-	PRECACHE_MODEL("models/p_crowbar.mdl");
-	PRECACHE_SOUND("weapons/cbar_hit1.wav");
-	PRECACHE_SOUND("weapons/cbar_hit2.wav");
+	PRECACHE_MODEL("models/v_heaterpipe.mdl");
+	PRECACHE_MODEL("models/w_heaterpipe.mdl");
+	PRECACHE_MODEL("models/p_heaterpipe.mdl");
+	PRECACHE_SOUND("weapons/pipe_hit1.wav");
+	PRECACHE_SOUND("weapons/pipe_hit2.wav");
 	PRECACHE_SOUND("weapons/cbar_hitbod1.wav");
 	PRECACHE_SOUND("weapons/cbar_hitbod2.wav");
 	PRECACHE_SOUND("weapons/cbar_hitbod3.wav");
-	PRECACHE_SOUND("weapons/cbar_miss1.wav");
+	PRECACHE_SOUND("weapons/pipe_miss.wav");
 
 	m_usCrowbar = PRECACHE_EVENT ( 1, "events/crowbar.sc" );
 }
@@ -78,7 +84,7 @@ int CCrowbar::GetItemInfo(ItemInfo *p)
 	p->iMaxAmmo2 = -1;
 	p->iMaxClip = WEAPON_NOCLIP;
 	p->iSlot = 0;
-	p->iPosition = 0;
+	p->iPosition = 1;
 	p->iId = WEAPON_CROWBAR;
 	p->iWeight = CROWBAR_WEIGHT;
 	return 1;
@@ -88,13 +94,15 @@ int CCrowbar::GetItemInfo(ItemInfo *p)
 
 BOOL CCrowbar::Deploy( )
 {
-	return DefaultDeploy( "models/v_crowbar.mdl", "models/p_crowbar.mdl", CROWBAR_DRAW, "crowbar" );
+	return DefaultDeploy( "models/v_heaterpipe.mdl", "models/p_heaterpipe.mdl", CROWBAR_DRAW, "crowbar" );
 }
 
 void CCrowbar::Holster( int skiplocal /* = 0 */ )
 {
 	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.5;
 	SendWeaponAnim( CROWBAR_HOLSTER );
+
+	STOP_SOUND( ENT(pev), CHAN_ITEM, PLAYER_BREATHE_SOUND );
 }
 
 
@@ -197,13 +205,38 @@ int CCrowbar::Swing( int fFirst )
 	0.0, (float *)&g_vecZero, (float *)&g_vecZero, 0, 0, 0,
 	0.0, 0, 0.0 );
 
+	if (m_pPlayer->m_iExertLevel < PLAYER_EXERT_LEVEL_MAX)
+	{
+		m_pPlayer->m_iExertLevel++;
+	}
+
+	if (m_pPlayer->m_iExertLevel > PLAYER_BREATHE_LEVEL)
+	{
+		EMIT_SOUND(ENT(pev), CHAN_ITEM, PLAYER_BREATHE_SOUND, PLAYER_BREATHE_VOLUME_MAX, ATTN_NORM);
+	}
+
+	float flNextAttackTime = CROWBAR_FIRE_RATE_MIN;
+
+	if (m_pPlayer->m_iExertLevel >= 4)
+	{
+		float flMinFireRate = CROWBAR_FIRE_RATE_MIN;
+		float flLongestFireRate = CROWBAR_FIRE_RATE_MAX - flMinFireRate;
+		flNextAttackTime = flNextAttackTime + (((m_pPlayer->m_iExertLevel - 4) * flLongestFireRate) / (PLAYER_EXERT_LEVEL_MAX - 4));
+	}
+
+	m_pPlayer->m_flExertUpdateStart = gpGlobals->time;
+	m_pPlayer->m_flExertRate = flNextAttackTime;
+
+#ifndef CLIENT_DLL
+	// ALERT(at_console, "HeaterPipe fire rate: %f\n", flNextAttackTime);
+#endif
 
 	if ( tr.flFraction >= 1.0 )
 	{
 		if (fFirst)
 		{
 			// miss
-			m_flNextPrimaryAttack = GetNextAttackDelay(0.5);
+			m_flNextPrimaryAttack = GetNextAttackDelay(flNextAttackTime);
 			
 			// player "shoot" animation
 			m_pPlayer->SetAnimation( PLAYER_ATTACK1 );
@@ -291,10 +324,10 @@ int CCrowbar::Swing( int fFirst )
 			switch( RANDOM_LONG(0,1) )
 			{
 			case 0:
-				EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM, "weapons/cbar_hit1.wav", fvolbar, ATTN_NORM, 0, 98 + RANDOM_LONG(0,3)); 
+				EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM, "weapons/pipe_hit1.wav", fvolbar, ATTN_NORM, 0, 98 + RANDOM_LONG(0,3)); 
 				break;
 			case 1:
-				EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM, "weapons/cbar_hit2.wav", fvolbar, ATTN_NORM, 0, 98 + RANDOM_LONG(0,3)); 
+				EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM, "weapons/pipe_hit2.wav", fvolbar, ATTN_NORM, 0, 98 + RANDOM_LONG(0,3)); 
 				break;
 			}
 
@@ -304,7 +337,7 @@ int CCrowbar::Swing( int fFirst )
 
 		m_pPlayer->m_iWeaponVolume = flVol * CROWBAR_WALLHIT_VOLUME;
 #endif
-		m_flNextPrimaryAttack = GetNextAttackDelay(0.25);
+		m_flNextPrimaryAttack = GetNextAttackDelay(flNextAttackTime * CROWBAR_FIRE_RATE_RATIO);
 		
 		SetThink( &CCrowbar::Smack );
 		pev->nextthink = UTIL_WeaponTimeBase() + 0.2;

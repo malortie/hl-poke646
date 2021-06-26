@@ -53,7 +53,7 @@ vec3_t previousorigin;
 
 // HLDM Weapon placeholder entities.
 #if defined ( POKE646_CLIENT_DLL )
-CHeaterPipe g_HeaterPipe;
+CCrowbar g_Crowbar;
 CCmlwbr g_Cmlwbr;
 CShotgun g_Shotgun;
 CPipeBomb g_PipeBomb;
@@ -620,7 +620,7 @@ void HUD_InitClientWeapons( void )
 
 	// Allocate slot(s) for each weapon that we are going to be predicting
 #if defined ( POKE646_CLIENT_DLL )
-	HUD_PrepEntity( &g_HeaterPipe	, &player );
+	HUD_PrepEntity( &g_Crowbar	    , &player );
 	HUD_PrepEntity( &g_Shotgun		, &player );
 	HUD_PrepEntity( &g_Cmlwbr		, &player );
 	HUD_PrepEntity( &g_PipeBomb		, &player );
@@ -713,8 +713,8 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	switch ( from->client.m_iId )
 	{
 #if defined ( POKE646_CLIENT_DLL )
-	case WEAPON_HEATERPIPE:
-		pWeapon = &g_HeaterPipe;
+	case WEAPON_CROWBAR:
+		pWeapon = &g_Crowbar;
 		break;
 
 	case WEAPON_SHOTGUN:

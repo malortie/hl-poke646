@@ -64,7 +64,7 @@ public:
 
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
 #define WEAPON_NONE				0
-#define WEAPON_HEATERPIPE		2
+#define WEAPON_CROWBAR			1
 #define	WEAPON_BRADNAILER		3
 #define WEAPON_NAILGUN			4
 #define WEAPON_SHOTGUN			5
@@ -72,7 +72,6 @@ public:
 #define WEAPON_XS				7
 #define WEAPON_PIPEBOMB			8
 #define WEAPON_PAR21			9
-#define WEAPON_CROWBAR			10
 #define	WEAPON_SATCHEL			11
 #else
 #define WEAPON_NONE				0
@@ -105,7 +104,7 @@ public:
 
 // weapon weight factors (for auto-switching)   (-1 = noswitch)
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
-#define HEATERPIPE_WEIGHT	0
+#define CROWBAR_WEIGHT		0
 #define BRADNAILER_WEIGHT	10
 #define NAILGUN_WEIGHT		15
 #define SHOTGUN_WEIGHT		15
@@ -113,7 +112,6 @@ public:
 #define XS_WEIGHT			20
 #define PIPEBOMB_WEIGHT		-10
 #define PAR21_WEIGHT		15
-#define CROWBAR_WEIGHT		0
 #define SATCHEL_WEIGHT		-10
 #else
 #define CROWBAR_WEIGHT		0
@@ -1099,24 +1097,7 @@ private:
 
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 
-class CHeaterPipe : public CCrowbar
-{
-public:
-	void Spawn(void);
-	void Precache(void);
-	void EXPORT SwingAgain(void);
-	void EXPORT Smack(void);
-	int GetItemInfo(ItemInfo *p);
 
-	void PrimaryAttack(void);
-	int Swing(int fFirst);
-	BOOL Deploy(void);
-	void Holster(int skiplocal = 0);
-	void WeaponIdle(void);
-
-private:
-	unsigned short m_usHeaterPipe;
-};
 
 class CBradnailer : public CBasePlayerWeapon
 {
