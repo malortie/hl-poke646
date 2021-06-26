@@ -5069,24 +5069,8 @@ void CStripWeapons :: Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TY
 		pPlayer = (CBasePlayer *)CBaseEntity::Instance( g_engfuncs.pfnPEntityOfEntIndex( 1 ) );
 	}
 
-#if defined ( POKE646_DLL )
-
-#if !defined ( VENDETTA )
-	if ( pPlayer )
-	{
-		if ( !FStrEq( STRING(gpGlobals->mapname), "po_xen01") )
-			pPlayer->RemoveAllItems( TRUE );
-		else
-			pPlayer->RemoveAllItems( FALSE );
-	}
-#else
-	if ( pPlayer )
-		pPlayer->RemoveAllItems( TRUE );
-#endif // !defined ( VENDETTA )
-#else
 	if ( pPlayer )
 		pPlayer->RemoveAllItems( FALSE );
-#endif // defined ( POKE646_DLL )
 }
 
 
