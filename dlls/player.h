@@ -70,12 +70,13 @@
 
 
 #define PLAYER_EXERT_LEVEL_MIN			0
-#define PLAYER_EXERT_LEVEL_MAX			50
-#define PLAYER_EXERT_RATE				0.2f
+#define PLAYER_EXERT_LEVEL_MAX			0.75f
+#define PLAYER_EXERT_RATE				0.015f
+#define PLAYER_EXERT_BASE				100
 
-#define PLAYER_BREATHE_LEVEL			5
-#define PLAYER_BREATHE_VOLUME_MAX		2.0f
+#define PLAYER_BREATHE_LEVEL			0.18f
 #define PLAYER_BREATHE_SOUND			"player/pl_breathe.wav"
+#define PLAYER_BREATHE_SOUND_DURATION	1.5f
 
 #endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 
@@ -345,16 +346,11 @@ public:
 	//
 	// Exert
 	//
-	void IncrementExertLevel( int amount );
-	void DecrementExertLevel( int amount );
-	void SetExertLevel(int level);
-	int  GetExertLevel(void) const;
-
 	void UpdateExertLevel(void);
 
-	int m_iExertLevel;
-	float m_flExertRate;
-	float m_flExertUpdateStart;
+	float m_flExertLevel;
+	float m_flNextExtertDecrement;
+	float m_flNextBreatheSound;
 
 	// HUD visibility
 	void ShowPlayerHUD( BOOL bInstant = FALSE );

@@ -102,7 +102,7 @@ void CCrowbar::Holster( int skiplocal /* = 0 */ )
 	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.5;
 	SendWeaponAnim( CROWBAR_HOLSTER );
 
-	STOP_SOUND( ENT(pev), CHAN_ITEM, PLAYER_BREATHE_SOUND );
+	STOP_SOUND( ENT(m_pPlayer->pev), CHAN_VOICE, PLAYER_BREATHE_SOUND );
 }
 
 
@@ -205,31 +205,27 @@ int CCrowbar::Swing( int fFirst )
 	0.0, (float *)&g_vecZero, (float *)&g_vecZero, 0, 0, 0,
 	0.0, 0, 0.0 );
 
-	if (m_pPlayer->m_iExertLevel < PLAYER_EXERT_LEVEL_MAX)
+	if (m_pPlayer->m_flExertLevel < PLAYER_EXERT_LEVEL_MAX)
 	{
-		m_pPlayer->m_iExertLevel++;
+		m_pPlayer->m_flExertLevel += PLAYER_EXERT_RATE;
+	}
+	else
+	{
+		// Always allow to play the breathe sound   if full exert is reached.
+		m_pPlayer->m_flNextBreatheSound = gpGlobals->time;
 	}
 
-	if (m_pPlayer->m_iExertLevel > PLAYER_BREATHE_LEVEL)
+	float flNextAttackTime = CROWBAR_FIRE_RATE_MIN + m_pPlayer->m_flExertLevel;
+
+	if (m_pPlayer->m_flExertLevel >= PLAYER_BREATHE_LEVEL)
 	{
-		EMIT_SOUND(ENT(pev), CHAN_ITEM, PLAYER_BREATHE_SOUND, PLAYER_BREATHE_VOLUME_MAX, ATTN_NORM);
+		if (m_pPlayer->m_flNextBreatheSound <= gpGlobals->time)
+		{
+			// Play breathe sound.
+			EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_VOICE, PLAYER_BREATHE_SOUND, 0.25f + m_pPlayer->m_flExertLevel, ATTN_NORM);
+			m_pPlayer->m_flNextBreatheSound = gpGlobals->time + PLAYER_BREATHE_SOUND_DURATION;
+		}
 	}
-
-	float flNextAttackTime = CROWBAR_FIRE_RATE_MIN;
-
-	if (m_pPlayer->m_iExertLevel >= 4)
-	{
-		float flMinFireRate = CROWBAR_FIRE_RATE_MIN;
-		float flLongestFireRate = CROWBAR_FIRE_RATE_MAX - flMinFireRate;
-		flNextAttackTime = flNextAttackTime + (((m_pPlayer->m_iExertLevel - 4) * flLongestFireRate) / (PLAYER_EXERT_LEVEL_MAX - 4));
-	}
-
-	m_pPlayer->m_flExertUpdateStart = gpGlobals->time;
-	m_pPlayer->m_flExertRate = flNextAttackTime;
-
-#ifndef CLIENT_DLL
-	// ALERT(at_console, "HeaterPipe fire rate: %f\n", flNextAttackTime);
-#endif
 
 	if ( tr.flFraction >= 1.0 )
 	{
@@ -237,6 +233,9 @@ int CCrowbar::Swing( int fFirst )
 		{
 			// miss
 			m_flNextPrimaryAttack = GetNextAttackDelay(flNextAttackTime);
+
+			// Delay the time before the player starts recovering from exert.
+			m_pPlayer->m_flNextExtertDecrement = gpGlobals->time + flNextAttackTime;
 			
 			// player "shoot" animation
 			m_pPlayer->SetAnimation( PLAYER_ATTACK1 );
@@ -338,6 +337,9 @@ int CCrowbar::Swing( int fFirst )
 		m_pPlayer->m_iWeaponVolume = flVol * CROWBAR_WALLHIT_VOLUME;
 #endif
 		m_flNextPrimaryAttack = GetNextAttackDelay(flNextAttackTime * CROWBAR_FIRE_RATE_RATIO);
+
+		// Delay the time before the player starts recovering from exert.
+		m_pPlayer->m_flNextExtertDecrement = gpGlobals->time + flNextAttackTime * CROWBAR_FIRE_RATE_RATIO;
 		
 		SetThink( &CCrowbar::Smack );
 		pev->nextthink = UTIL_WeaponTimeBase() + 0.2;

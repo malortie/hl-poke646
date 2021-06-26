@@ -1721,6 +1721,12 @@ void UpdateClientData ( const edict_t *ent, int sendweapons, struct clientdata_s
 
 	
 
+	if ( pl )
+	{
+		// Poke646 - Exert level
+		cd->vuser3.x = pl->m_flExertLevel * PLAYER_EXERT_BASE;
+	}
+
 #if defined( CLIENT_WEAPONS )
 	if ( sendweapons )
 	{

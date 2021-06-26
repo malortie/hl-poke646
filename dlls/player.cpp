@@ -121,9 +121,9 @@ TYPEDESCRIPTION	CBasePlayer::m_playerSaveData[] =
 #if defined ( POKE646_DLL )
 
 	// Player exert.
-	DEFINE_FIELD(CBasePlayer, m_iExertLevel, FIELD_INTEGER),
-	DEFINE_FIELD(CBasePlayer, m_flExertRate, FIELD_FLOAT),
-	DEFINE_FIELD(CBasePlayer, m_flExertUpdateStart, FIELD_TIME),
+	DEFINE_FIELD(CBasePlayer, m_flExertLevel, FIELD_FLOAT),
+	DEFINE_FIELD(CBasePlayer, m_flNextExtertDecrement, FIELD_TIME),
+	DEFINE_FIELD(CBasePlayer, m_flNextBreatheSound, FIELD_TIME),
 
 #endif // defined ( POKE646_DLL )
 	DEFINE_FIELD(CBasePlayer, m_bFirstTimeSpawn, FIELD_BOOLEAN),
@@ -2994,6 +2994,9 @@ void CBasePlayer::Spawn( void )
 
 	m_fRestoreHUD = FALSE;
 	m_bFirstTimeSpawn = TRUE;
+	m_flExertLevel = PLAYER_EXERT_LEVEL_MIN;
+	m_flNextExtertDecrement = 0.0f;
+	m_flNextBreatheSound = 0.0f;
 
 	g_pGameRules->PlayerSpawn( this );
 }
@@ -4766,49 +4769,13 @@ BOOL CBasePlayer :: SwitchWeapon( CBasePlayerItem *pWeapon )
 
 
 #if defined ( POKE646_DLL )
-
-void CBasePlayer::IncrementExertLevel(int amount)
-{
-	m_iExertLevel += std::min(amount, PLAYER_EXERT_LEVEL_MAX - m_iExertLevel);
-}
-
-void CBasePlayer::DecrementExertLevel(int amount)
-{
-	m_iExertLevel -= std::min(amount, m_iExertLevel);
-}
-
-void CBasePlayer::SetExertLevel(int level)
-{
-	m_iExertLevel = clamp(level, PLAYER_EXERT_LEVEL_MIN, PLAYER_EXERT_LEVEL_MAX);
-}
-
-int CBasePlayer::GetExertLevel(void) const
-{
-	return m_iExertLevel;
-}
-
 void CBasePlayer::UpdateExertLevel(void)
 {
-	if (m_iExertLevel > PLAYER_EXERT_LEVEL_MIN)
+	if (m_flExertLevel > 0 && m_flNextExtertDecrement <= gpGlobals->time)
 	{
-		// Slowly decrease exert level.
-		if ((gpGlobals->time - m_flExertUpdateStart) > m_flExertRate)
-		{
-			float temp = (float)m_iExertLevel * 0.0625f;
-
-			if (temp < 1)
-				temp = 1;
-
-			m_iExertLevel -= std::min(m_iExertLevel, static_cast<int>(temp));
-
-			m_flExertRate = PLAYER_EXERT_RATE;
-			m_flExertUpdateStart = gpGlobals->time;
-		}
+		m_flExertLevel = std::max(0.0f, m_flExertLevel - 0.01f);
+		m_flNextExtertDecrement = gpGlobals->time + 0.1f;
 	}
-
-#ifndef CLIENT_DLL
-	// ALERT(at_console, "Player exert level: %d\n", m_iExertLevel);
-#endif
 }
 
 void CBasePlayer::ShowPlayerHUD(BOOL bInstant)

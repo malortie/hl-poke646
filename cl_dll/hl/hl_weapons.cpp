@@ -879,6 +879,9 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	player.m_flNextAmmoBurn = from->client.fuser2;
 	player.m_flAmmoStartCharge = from->client.fuser3;
 
+	// Poke646 - Exert level
+	player.m_flExertLevel = from->client.vuser3.x / PLAYER_EXERT_BASE;
+
 	//Stores all our ammo info, so the client side weapons can use them.
 	player.ammo_9mm			= (int)from->client.vuser1[0];
 	player.ammo_357			= (int)from->client.vuser1[1];
@@ -963,6 +966,9 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	to->client.fuser2					= player.m_flNextAmmoBurn;
 	to->client.fuser3					= player.m_flAmmoStartCharge;
 	to->client.maxspeed					= player.pev->maxspeed;
+
+	// Poke646 - Exert level
+	to->client.vuser3.x = player.m_flExertLevel * PLAYER_EXERT_BASE;
 
 	//HL Weapons
 	to->client.vuser1[0]				= player.ammo_9mm;

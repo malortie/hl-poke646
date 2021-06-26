@@ -302,8 +302,7 @@ int CBasePlayer :: GiveAmmo( int iCount, char *szName, int iMax ) { return 0; }
 void CBasePlayer::AddPoints( int score, BOOL bAllowNegativeScore ) { } 
 void CBasePlayer::AddPointsToTeam( int score, BOOL bAllowNegativeScore ) { } 
 #if defined ( POKE646_CLIENT_DLL )
-void CBasePlayer::IncrementExertLevel(int amount) { }
-void CBasePlayer::DecrementExertLevel(int amount) { }
+void CBasePlayer::UpdateExertLevel(void) {}
 void CBasePlayer::ShowPlayerHUD(BOOL bInstant) {}
 void CBasePlayer::HidePlayerHUD(BOOL bInstant) {}
 #endif // defined ( POKE646_CLIENT_DLL )
