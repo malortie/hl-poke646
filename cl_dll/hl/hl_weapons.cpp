@@ -900,11 +900,7 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	}
 
 #if defined ( POKE646_CLIENT_DLL )
-	if ( player.m_pActiveItem->m_iId == WEAPON_BRADNAILER || player.m_pActiveItem->m_iId == WEAPON_NAILGUN )
-	{
-		player.ammo_nails = (int)from->client.vuser2[ 1 ];
-	}
-	else if ( player.m_pActiveItem->m_iId == WEAPON_XS )
+	if ( player.m_pActiveItem->m_iId == WEAPON_XS )
 	{
 		player.ammo_xencandy = (int)from->client.vuser2[ 1 ];
 	}
@@ -982,11 +978,7 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	to->client.ammo_rockets				= player.ammo_rockets;
 
 #if defined ( POKE646_CLIENT_DLL )
-	if ( player.m_pActiveItem->m_iId == WEAPON_BRADNAILER || player.m_pActiveItem->m_iId == WEAPON_NAILGUN)
-	{
-		from->client.vuser2[ 1 ] = player.ammo_nails;
-	}
-	else if (player.m_pActiveItem->m_iId == WEAPON_XS)
+	if (player.m_pActiveItem->m_iId == WEAPON_XS)
 	{
 		from->client.vuser2[ 1 ] = player.ammo_xencandy;
 	}

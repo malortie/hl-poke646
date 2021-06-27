@@ -353,7 +353,6 @@ public:
 	int ammo_hornets;
 	int ammo_argrens;
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
-	int ammo_nails;
 	int ammo_xencandy;
 #endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 

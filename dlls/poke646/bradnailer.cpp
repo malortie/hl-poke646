@@ -256,7 +256,7 @@ void CBradnailer::Reload(void)
 	if (m_flNextPrimaryAttack > UTIL_WeaponTimeBase())
 		return;
 
-	if (m_pPlayer->ammo_nails <= 0)
+	if (m_pPlayer->ammo_9mm <= 0)
 		return;
 
 	int iAnim = (m_iClip == 0) ? BRADNAILER_RELOAD : BRADNAILER_RELOAD_NOT_EMPTY;

@@ -1763,11 +1763,7 @@ void UpdateClientData ( const edict_t *ent, int sendweapons, struct clientdata_s
 					cd->vuser4.z	= pl->m_rgAmmo[gun->m_iSecondaryAmmoType];
 					
 #if defined ( POKE646_DLL )
-					if ( pl->m_pActiveItem->m_iId == WEAPON_BRADNAILER || pl->m_pActiveItem->m_iId == WEAPON_NAILGUN )
-					{
-						cd->vuser2.y = pl->ammo_nails;
-					}
-					else if ( pl->m_pActiveItem->m_iId == WEAPON_XS )
+					if ( pl->m_pActiveItem->m_iId == WEAPON_XS )
 					{
 						cd->vuser2.y = pl->ammo_xencandy;
 					}

@@ -196,7 +196,7 @@ void CNailgun::PrimaryAttack()
 
 void CNailgun::Reload(void)
 {
-	if (m_pPlayer->ammo_nails <= 0)
+	if (m_pPlayer->ammo_9mm <= 0)
 		return;
 
 	int iAnim = NAILGUN_RELOAD;
