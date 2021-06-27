@@ -82,7 +82,7 @@ void CNailgun::Precache(void)
 int CNailgun::GetItemInfo(ItemInfo *p)
 {
 	p->pszName = STRING(pev->classname);
-	p->pszAmmo1 = "nails";
+	p->pszAmmo1 = "nail";
 	p->iMaxAmmo1 = NAILS_MAX_CARRY;
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = -1;
@@ -253,7 +253,7 @@ class CNailAmmoClip : public CBasePlayerAmmo
 	}
 	BOOL AddAmmo(CBaseEntity *pOther)
 	{
-		int bResult = (pOther->GiveAmmo(AMMO_NAILCLIP_GIVE, "nails", NAILS_MAX_CARRY) != -1);
+		int bResult = (pOther->GiveAmmo(AMMO_NAILCLIP_GIVE, "nail", NAILS_MAX_CARRY) != -1);
 		if (bResult)
 		{
 			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
@@ -279,7 +279,7 @@ class CNailAmmoRound : public CBasePlayerAmmo
 	}
 	BOOL AddAmmo(CBaseEntity *pOther)
 	{
-		int bResult = (pOther->GiveAmmo(AMMO_NAILROUND_GIVE, "nails", NAILS_MAX_CARRY) != -1);
+		int bResult = (pOther->GiveAmmo(AMMO_NAILROUND_GIVE, "nail", NAILS_MAX_CARRY) != -1);
 		if (bResult)
 		{
 			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
