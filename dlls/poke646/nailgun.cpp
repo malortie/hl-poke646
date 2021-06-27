@@ -76,7 +76,7 @@ void CNailgun::Precache(void)
 	m_usNailgun = PRECACHE_EVENT(1, "events/nailgun.sc");
 	m_usReload = PRECACHE_EVENT(1, "events/reload.sc");
 
-	UTIL_PrecacheOther( "nail" );
+	UTIL_PrecacheOther( "nailgun_nail" );
 }
 
 int CNailgun::GetItemInfo(ItemInfo *p)

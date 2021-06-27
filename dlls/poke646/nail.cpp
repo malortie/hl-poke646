@@ -25,13 +25,13 @@
 #include	"nail.h"
 
 
-LINK_ENTITY_TO_CLASS(nail, CNail);
+LINK_ENTITY_TO_CLASS(nailgun_nail, CNail);
 
 CNail *CNail::NailCreate(void)
 {
 	// Create a new entity with CCrossbowBolt private data
 	CNail *pBolt = GetClassPtr((CNail *)NULL);
-	pBolt->pev->classname = MAKE_STRING("nail");
+	pBolt->pev->classname = MAKE_STRING("nailgun_nail");
 	pBolt->Spawn();
 
 	return pBolt;
