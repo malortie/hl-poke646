@@ -76,7 +76,6 @@ void EV_SnarkFire( struct event_args_s *args  );
 void EV_TrainPitchAdjust( struct event_args_s *args );
 
 #if defined ( POKE646_CLIENT_DLL )
-void EV_FireBradnailer(struct event_args_s *args);
 void EV_FireNailgun(struct event_args_s *args);
 void EV_FireCmlwbr(struct event_args_s *args);
 void EV_SpinXS(struct event_args_s *args);
@@ -534,9 +533,6 @@ void EV_FireGlock1( event_args_t *args )
 	vec3_t velocity;
 	int empty;
 
-	vec3_t ShellVelocity;
-	vec3_t ShellOrigin;
-	int shell;
 	vec3_t vecSrc, vecAiming;
 	vec3_t up, right, forward;
 	
@@ -548,27 +544,23 @@ void EV_FireGlock1( event_args_t *args )
 	empty = args->bparam1;
 	AngleVectors( angles, forward, right, up );
 
-	shell = gEngfuncs.pEventAPI->EV_FindModelIndex ("models/shell.mdl");// brass shell
-
 	if ( EV_IsLocal( idx ) )
 	{
-		EV_MuzzleFlash();
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( empty ? GLOCK_SHOOT_EMPTY : GLOCK_SHOOT, 2 );
 
 		V_PunchAxis( 0, -2.0 );
 	}
 
-	EV_GetDefaultShellInfo( args, origin, velocity, ShellVelocity, ShellOrigin, forward, right, up, 20, -12, 4 );
-
-	EV_EjectBrass ( ShellOrigin, ShellVelocity, angles[ YAW ], shell, TE_BOUNCE_SHELL ); 
-
-	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/pl_gun3.wav", gEngfuncs.pfnRandomFloat(0.92, 1.0), ATTN_NORM, 0, 98 + gEngfuncs.pfnRandomLong( 0, 3 ) );
+	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/bradnailer.wav", gEngfuncs.pfnRandomFloat(0.92, 1.0), ATTN_NORM, 0, 98 + gEngfuncs.pfnRandomLong( 0, 3 ) );
 
 	EV_GetGunPosition( args, vecSrc, origin );
+
+	// Adjust tracer source.
+	vecSrc = vecSrc + forward * 8 + right * 3 + up * -2;
 	
 	VectorCopy( forward, vecAiming );
 
-	EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_9MM, 0, 0, args->fparam1, args->fparam2 );
+	EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_NAIL, 1, &tracerCount[idx-1], args->fparam1, args->fparam2 );
 }
 
 void EV_FireGlock2( event_args_t *args )
@@ -578,9 +570,6 @@ void EV_FireGlock2( event_args_t *args )
 	vec3_t angles;
 	vec3_t velocity;
 	
-	vec3_t ShellVelocity;
-	vec3_t ShellOrigin;
-	int shell;
 	vec3_t vecSrc, vecAiming;
 	vec3_t vecSpread;
 	vec3_t up, right, forward;
@@ -592,28 +581,24 @@ void EV_FireGlock2( event_args_t *args )
 
 	AngleVectors( angles, forward, right, up );
 
-	shell = gEngfuncs.pEventAPI->EV_FindModelIndex ("models/shell.mdl");// brass shell
-
 	if ( EV_IsLocal( idx ) )
 	{
 		// Add muzzle flash to current weapon model
-		EV_MuzzleFlash();
-		gEngfuncs.pEventAPI->EV_WeaponAnimation( GLOCK_SHOOT, 2 );
+		gEngfuncs.pEventAPI->EV_WeaponAnimation( GLOCK_FASTSHOOT, 2 );
 
 		V_PunchAxis( 0, -2.0 );
 	}
 
-	EV_GetDefaultShellInfo( args, origin, velocity, ShellVelocity, ShellOrigin, forward, right, up, 20, -12, 4 );
-
-	EV_EjectBrass ( ShellOrigin, ShellVelocity, angles[ YAW ], shell, TE_BOUNCE_SHELL ); 
-
-	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/pl_gun3.wav", gEngfuncs.pfnRandomFloat(0.92, 1.0), ATTN_NORM, 0, 98 + gEngfuncs.pfnRandomLong( 0, 3 ) );
+	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/bradnailer.wav", gEngfuncs.pfnRandomFloat(0.92, 1.0), ATTN_NORM, 0, 98 + gEngfuncs.pfnRandomLong( 0, 3 ) );
 
 	EV_GetGunPosition( args, vecSrc, origin );
+
+	// Adjust tracer source.
+	vecSrc = vecSrc + forward * 2 + up * -2;
 	
 	VectorCopy( forward, vecAiming );
 
-	EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_9MM, 0, &tracerCount[idx-1], args->fparam1, args->fparam2 );
+	EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_NAIL, 1, &tracerCount[idx-1], args->fparam1, args->fparam2 );
 	
 }
 //======================
@@ -1793,75 +1778,6 @@ int EV_TFC_IsAllyTeam( int iTeam1, int iTeam2 )
 
 
 
-
-
-//======================
-//   BRADNAILER START
-//======================
-
-enum bradnailer_e {
-	BRADNAILER_IDLE1 = 0,
-	BRADNAILER_IDLE2,
-	BRADNAILER_IDLE3,
-	BRADNAILER_SHOOT,
-	BRADNAILER_SHOOT_EMPTY,
-	BRADNAILER_RELOAD,
-	BRADNAILER_RELOAD_NOT_EMPTY,
-	BRADNAILER_DRAW,
-	BRADNAILER_HOLSTER,
-	BRADNAILER_ADD_SILENCER,
-	BRADNAILER_UPRIGHT_TO_TILT,
-	BRADNAILER_TILT_TO_UPRIGHT,
-	BRADNAILER_FASTSHOOT,
-};
-
-void EV_FireBradnailer(event_args_t *args)
-{
-	int idx;
-	vec3_t origin;
-	vec3_t angles;
-	vec3_t velocity;
-	int fastshoot = args->bparam1;
-
-	vec3_t vecSrc, vecAiming;
-	vec3_t up, right, forward;
-
-	idx = args->entindex;
-	VectorCopy(args->origin, origin);
-	VectorCopy(args->angles, angles);
-	VectorCopy(args->velocity, velocity);
-
-	AngleVectors(angles, forward, right, up);
-
-	if (EV_IsLocal(idx))
-	{
-		gEngfuncs.pEventAPI->EV_WeaponAnimation(fastshoot ? BRADNAILER_FASTSHOOT : BRADNAILER_SHOOT, 2);
-
-		V_PunchAxis(0, -2.0);
-	}
-
-	gEngfuncs.pEventAPI->EV_PlaySound(idx, origin, CHAN_WEAPON, "weapons/bradnailer.wav", gEngfuncs.pfnRandomFloat(0.92, 1.0), ATTN_NORM, 0, 98 + gEngfuncs.pfnRandomLong(0, 3));
-
-	EV_GetGunPosition(args, vecSrc, origin);
-
-	// Adjust tracer source.
-	if (fastshoot)
-	{
-		vecSrc = vecSrc + forward * 4 + up * -4;
-	}
-	else
-	{
-		vecSrc = vecSrc + forward * 12 + right * 8 + up * -4;
-	}
-
-	VectorCopy(forward, vecAiming);
-
-	EV_HLDM_FireBullets(idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_NAIL, 2, &tracerCount[idx - 1], args->fparam1, args->fparam2);
-}
-
-//======================
-//	BRADNAILER END
-//======================
 
 //======================
 //	  NAILGUN START

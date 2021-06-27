@@ -53,11 +53,11 @@ vec3_t previousorigin;
 
 // HLDM Weapon placeholder entities.
 #if defined ( POKE646_CLIENT_DLL )
+CGlock g_Glock;
 CCrowbar g_Crowbar;
 CCmlwbr g_Cmlwbr;
 CShotgun g_Shotgun;
 CPipeBomb g_PipeBomb;
-CBradnailer g_Bradnailer;
 CNailgun g_Nailgun;
 CXenSquasher g_Xs;
 #else
@@ -616,11 +616,11 @@ void HUD_InitClientWeapons( void )
 
 	// Allocate slot(s) for each weapon that we are going to be predicting
 #if defined ( POKE646_CLIENT_DLL )
+	HUD_PrepEntity( &g_Glock	, &player );
 	HUD_PrepEntity( &g_Crowbar	    , &player );
 	HUD_PrepEntity( &g_Shotgun		, &player );
 	HUD_PrepEntity( &g_Cmlwbr		, &player );
 	HUD_PrepEntity( &g_PipeBomb		, &player );
-	HUD_PrepEntity( &g_Bradnailer	, &player );
 	HUD_PrepEntity( &g_Nailgun		, &player );
 	HUD_PrepEntity( &g_Xs			, &player );
 #else
@@ -709,6 +709,10 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		pWeapon = &g_Crowbar;
 		break;
 
+	case WEAPON_GLOCK:
+		pWeapon = &g_Glock;
+		break;
+
 	case WEAPON_SHOTGUN:
 		pWeapon = &g_Shotgun;
 		break;
@@ -719,10 +723,6 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 
 	case WEAPON_PIPEBOMB:
 		pWeapon = &g_PipeBomb;
-		break;
-
-	case WEAPON_BRADNAILER:
-		pWeapon = &g_Bradnailer;
 		break;
 
 	case WEAPON_NAILGUN:

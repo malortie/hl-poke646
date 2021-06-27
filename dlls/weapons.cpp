@@ -1674,6 +1674,11 @@ TYPEDESCRIPTION	CSatchel::m_SaveData[] =
 IMPLEMENT_SAVERESTORE( CSatchel, CBasePlayerWeapon );
 
 #if defined ( POKE646_DLL )
+TYPEDESCRIPTION	CGlock::m_SaveData[] = 
+{
+	DEFINE_FIELD( CGlock, m_fInAttack, FIELD_INTEGER ),
+};
+IMPLEMENT_SAVERESTORE( CGlock, CBasePlayerWeapon );
 
 TYPEDESCRIPTION	CCmlwbr::m_SaveData[] =
 {

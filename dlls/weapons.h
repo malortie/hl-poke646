@@ -65,7 +65,7 @@ public:
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
 #define WEAPON_NONE				0
 #define WEAPON_CROWBAR			1
-#define	WEAPON_BRADNAILER		3
+#define	WEAPON_GLOCK			2
 #define WEAPON_NAILGUN			4
 #define WEAPON_SHOTGUN			5
 #define WEAPON_CMLWBR			6
@@ -104,7 +104,7 @@ public:
 // weapon weight factors (for auto-switching)   (-1 = noswitch)
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
 #define CROWBAR_WEIGHT		0
-#define BRADNAILER_WEIGHT	10
+#define GLOCK_WEIGHT	10
 #define NAILGUN_WEIGHT		15
 #define SHOTGUN_WEIGHT		15
 #define CMLWBR_WEIGHT		10
@@ -158,7 +158,7 @@ public:
 #define WEAPON_NOCLIP			-1
 
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
-#define BRADNAILER_MAX_CLIP		25
+#define GLOCK_MAX_CLIP			25
 #define NAILGUN_MAX_CLIP		50
 #define SHOTGUN_MAX_CLIP		12
 #define CMLWBR_MAX_CLIP			5
@@ -186,7 +186,7 @@ public:
 
 // the default amount of ammo that comes with each gun when it spawns
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
-#define BRADNAILER_DEFAULT_GIVE		15
+#define GLOCK_DEFAULT_GIVE		15
 #define NAILGUN_DEFAULT_GIVE		50
 #define SHOTGUN_DEFAULT_GIVE		12
 #define CMLWBR_DEFAULT_GIVE			5
@@ -213,7 +213,7 @@ public:
 
 // The amount of ammo given to a player by an ammo item.
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
-#define AMMO_NAILCLIP_GIVE		BRADNAILER_MAX_CLIP
+#define AMMO_NAILCLIP_GIVE		GLOCK_MAX_CLIP
 #define AMMO_NAILROUND_GIVE		NAILGUN_MAX_CLIP
 #define AMMO_BUCKSHOTBOX_GIVE	12
 #define AMMO_CMLWBRCLIP_GIVE	CMLWBR_MAX_CLIP
@@ -546,8 +546,10 @@ public:
 
 	void PrimaryAttack( void );
 	void SecondaryAttack( void );
-	void GlockFire( float flSpread, float flCycleTime, BOOL fUseAutoAim );
+	void GlockFire( float flSpread, float flCycleTime, BOOL fUseAutoAim, BOOL fFastShoot );
 	BOOL Deploy( void );
+	BOOL CanHolster( void );
+	void Holster( int skiplocal = 0 );
 	void Reload( void );
 	void WeaponIdle( void );
 
@@ -560,8 +562,15 @@ public:
 #endif
 	}
 
+#ifndef CLIENT_DLL
+	int		Save(CSave& save);
+	int		Restore(CRestore& restore);
+	static	TYPEDESCRIPTION m_SaveData[];
+#endif
+
+	BOOL ShouldWeaponIdle(void);
+
 private:
-	int m_iShell;
 	
 
 	unsigned short m_usFireGlock1;
@@ -1090,40 +1099,6 @@ private:
 
 
 
-class CBradnailer : public CBasePlayerWeapon
-{
-public:
-	void Spawn(void);
-	void Precache(void);
-	int iItemSlot(void) { return 2; }
-	int GetItemInfo(ItemInfo *p);
-
-	void PrimaryAttack(void);
-	void SecondaryAttack(void);
-	BOOL Deploy(void);
-	BOOL CanHolster(void);
-	void Holster(int skiplocal = 0);
-	void Reload(void);
-	BOOL ShouldWeaponIdle(void);
-	void WeaponIdle(void);
-
-	virtual BOOL UseDecrement(void)
-	{
-#if defined( CLIENT_WEAPONS )
-		return TRUE;
-#else
-		return FALSE;
-#endif
-	}
-
-	void Fire(float flSpread, float flCycleTime, BOOL fUseAutoAim, BOOL fFastShoot);
-
-private:
-	int m_iShell;
-
-	unsigned short m_usReload;
-	unsigned short m_usFireBradnailer;
-};
 
 
 class CNailgun : public CBasePlayerWeapon
