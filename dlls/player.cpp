@@ -244,7 +244,7 @@ void LinkUserMessages( void )
 	gmsgShowMenu = REG_USER_MSG( "ShowMenu", -1 );
 	gmsgShake = REG_USER_MSG("ScreenShake", sizeof(ScreenShake));
 	gmsgFade = REG_USER_MSG("ScreenFade", sizeof(ScreenFade));
-	gmsgAmmoX = REG_USER_MSG("AmmoX", 2);
+	gmsgAmmoX = REG_USER_MSG("AmmoX", 3);
 	gmsgTeamNames = REG_USER_MSG( "TeamNames", -1 );
 
 	gmsgStatusText = REG_USER_MSG("StatusText", -1);
@@ -4005,12 +4005,13 @@ void CBasePlayer::SendAmmoUpdate(void)
 			m_rgAmmoLast[i] = m_rgAmmo[i];
 
 			ASSERT( m_rgAmmo[i] >= 0 );
-			ASSERT( m_rgAmmo[i] < 255 );
+			constexpr int value_limit = static_cast<int>(std::numeric_limits<short>::max());
+			ASSERT( m_rgAmmo[i] <= value_limit );
 
 			// send "Ammo" update message
 			MESSAGE_BEGIN( MSG_ONE, gmsgAmmoX, NULL, pev );
 				WRITE_BYTE( i );
-				WRITE_BYTE( std::max( std::min( m_rgAmmo[i], 254 ), 0 ) );  // clamp the value to one byte
+				WRITE_SHORT( std::max( std::min( m_rgAmmo[i], value_limit ), 0 ) );  // clamp the value to two bytes
 			MESSAGE_END();
 		}
 	}
