@@ -548,7 +548,6 @@ public:
 	void SecondaryAttack( void );
 	void GlockFire( float flSpread, float flCycleTime, BOOL fUseAutoAim, BOOL fFastShoot );
 	BOOL Deploy( void );
-	BOOL CanHolster( void );
 	void Holster( int skiplocal = 0 );
 	void Reload( void );
 	void WeaponIdle( void );

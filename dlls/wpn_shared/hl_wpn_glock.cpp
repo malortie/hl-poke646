@@ -22,6 +22,9 @@
 #include "player.h"
 #include "nail.h"
 
+#define UPRIGHT_TO_TILT_SEQUENCE_DURATION (9.0f / 20.0f)
+#define TILT_TO_UPRIGHT_SEQUENCE_DURATION (9.0f / 20.0f)
+
 enum glock_e {
 	GLOCK_IDLE1 = 0,
 	GLOCK_IDLE2,
@@ -49,6 +52,9 @@ void CGlock::Spawn( )
 	SET_MODEL(ENT(pev), "models/w_bradnailer.mdl");
 
 	m_iDefaultAmmo = GLOCK_DEFAULT_GIVE;
+
+	// Currently upright.
+	m_fInAttack = 0;
 
 	FallInit();// get ready to fall down.
 }
@@ -106,48 +112,46 @@ void CGlock::SecondaryAttack( void )
 
 	if (m_iClip <= 0)
 	{
-		Reload();
-		m_flNextSecondaryAttack = 0.15f;
+		if (m_fFireOnEmpty)
+		{
+			PlayEmptySound();
+			m_flNextSecondaryAttack = GetNextAttackDelay(0.2f);
+		}
+
 		return;
 	}
 
-	if (m_flNextSecondaryAttack > UTIL_WeaponTimeBase())
-		return;
-
 	if (m_fInAttack == 0)
 	{
-#ifndef CLIENT_DLL
-		//ALERT(at_console, "BRADNAILER_UPRIGHT_TO_TILT\n" );
-#endif
-
-		SendWeaponAnim(GLOCK_UPRIGHT_TO_TILT, UseDecrement());
+		SendWeaponAnim(GLOCK_UPRIGHT_TO_TILT);
 
 		m_fInAttack = 1;
 
-		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 0.7;
-		m_flNextSecondaryAttack = GetNextAttackDelay(0.7);
-		m_flNextPrimaryAttack = UTIL_WeaponTimeBase() + 2.0;
+		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + UPRIGHT_TO_TILT_SEQUENCE_DURATION + 0.5f;
+		m_flNextSecondaryAttack = GetNextAttackDelay(UPRIGHT_TO_TILT_SEQUENCE_DURATION);
+		// Allow primary attack to interrupt tilt.
+		m_flNextPrimaryAttack = GetNextAttackDelay(0.25f);
 		return;
 	}
 	else if (m_fInAttack == 1)
 	{
-		if (m_flTimeWeaponIdle < UTIL_WeaponTimeBase())
-		{
-#ifndef CLIENT_DLL
-			//ALERT(at_console, "Fire\n");
-#endif
-			GlockFire(0.05, 0.2, FALSE, TRUE);
+		GlockFire(0.05f, 0.2f, FALSE, TRUE);
 
-			m_fInAttack = 1;
-
-			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 0.2f;
-			m_flNextPrimaryAttack = GetNextAttackDelay(0.5);
-		}
+		m_flNextSecondaryAttack = m_flNextPrimaryAttack = GetNextAttackDelay(0.2f);
+		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 1.0f;
 	}
 }
 
 void CGlock::PrimaryAttack( void )
 {
+	// Do not allow firing if the bradnailer is tilt.
+	if (m_fInAttack != 0)
+	{
+		// Set idle time to now to allow cancellation of tilt.
+		m_flTimeWeaponIdle = UTIL_WeaponTimeBase();
+		return;
+	}
+
 	// don't fire underwater
 	if (m_pPlayer->pev->waterlevel == 3)
 	{
@@ -156,16 +160,14 @@ void CGlock::PrimaryAttack( void )
 		return;
 	}
 
-	if (m_fInAttack != 0)
-	{
-		m_flNextPrimaryAttack = GetNextAttackDelay(0.5);
-		return;
-	}
-
 	if (m_iClip <= 0)
 	{
-		Reload();
-		m_flNextPrimaryAttack = 0.15f;
+		if (m_fFireOnEmpty)
+		{
+			PlayEmptySound();
+			m_flNextPrimaryAttack = GetNextAttackDelay(0.2);
+		}
+
 		return;
 	}
 
@@ -200,7 +202,6 @@ void CGlock::GlockFire( float flSpread, float flCycleTime, BOOL fUseAutoAim, BOO
 	UTIL_MakeVectors(anglesAim);
 
 	anglesAim.x = -anglesAim.x;
-	// Vector vecSrc = m_pPlayer->GetGunPosition() - gpGlobals->v_up * 2;
 	Vector vecSrc;
 	Vector vecAiming;
 
@@ -233,17 +234,8 @@ void CGlock::GlockFire( float flSpread, float flCycleTime, BOOL fUseAutoAim, BOO
 	pNail->pev->origin = vecSrc;
 	pNail->pev->angles = anglesAim;
 	pNail->pev->owner = m_pPlayer->edict();
-
-	if (m_pPlayer->pev->waterlevel == 3)
-	{
-		pNail->pev->velocity = vecAiming * NAIL_WATER_VELOCITY;
-		pNail->pev->speed = NAIL_WATER_VELOCITY;
-	}
-	else
-	{
-		pNail->pev->velocity = vecAiming * NAIL_AIR_VELOCITY;
-		pNail->pev->speed = NAIL_AIR_VELOCITY;
-	}
+	pNail->pev->velocity = vecAiming * NAIL_AIR_VELOCITY;
+	pNail->pev->speed = NAIL_AIR_VELOCITY;
 	pNail->pev->avelocity.z = 10;
 #endif
 
@@ -252,10 +244,16 @@ void CGlock::GlockFire( float flSpread, float flCycleTime, BOOL fUseAutoAim, BOO
 
 void CGlock::Reload( void )
 {
+	// Do not allow reload if the bradnailer is tilt.
 	if (m_fInAttack != 0)
+	{
+		// Set idle time to now to allow cancellation of tilt.
+		m_flTimeWeaponIdle = UTIL_WeaponTimeBase();
 		return;
+	}
 
-	if (m_flNextPrimaryAttack > UTIL_WeaponTimeBase())
+	// Do not allow reload if we are not ready to fire.
+	if (m_flNextPrimaryAttack > UTIL_WeaponTimeBase() || m_flNextSecondaryAttack > UTIL_WeaponTimeBase())
 		return;
 
 	if ( m_pPlayer->ammo_9mm <= 0 )
@@ -270,7 +268,6 @@ void CGlock::Reload( void )
 
 	if (iResult)
 	{
-		m_fInAttack = 0;
 		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + UTIL_SharedRandomFloat( m_pPlayer->random_seed, 10, 15 );
 	}
 }
@@ -288,53 +285,42 @@ void CGlock::WeaponIdle( void )
 
 	if (m_fInAttack != 0)
 	{
-#ifndef CLIENT_DLL
-		//ALERT(at_console, "BRADNAILER_TILT_TO_UPRIGHT\n");
-#endif
-
-		SendWeaponAnim(GLOCK_TILT_TO_UPRIGHT, UseDecrement());
+		SendWeaponAnim(GLOCK_TILT_TO_UPRIGHT);
 
 		m_fInAttack = 0;
-		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 0.5f;
-		m_flNextPrimaryAttack = m_flNextSecondaryAttack = GetNextAttackDelay(0.5f);
+		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + TILT_TO_UPRIGHT_SEQUENCE_DURATION;
+		m_flNextPrimaryAttack = m_flNextSecondaryAttack = GetNextAttackDelay(TILT_TO_UPRIGHT_SEQUENCE_DURATION);
 	}
 	else
 	{
-		// only idle if the slid isn't back
-		if (m_iClip != 0)
-		{
-			int iAnim;
-			float flRand = UTIL_SharedRandomFloat( m_pPlayer->random_seed, 0.0, 1.0 );
+		int iAnim;
+		float flRand = UTIL_SharedRandomFloat( m_pPlayer->random_seed, 0.0, 1.0 );
 
-			if (flRand <= 0.3 + 0 * 0.75)
-			{
-				iAnim = GLOCK_IDLE3;
-				m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 49.0 / 16;
-			}
-			else if (flRand <= 0.6 + 0 * 0.875)
-			{
-				iAnim = GLOCK_IDLE1;
-				m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 60.0 / 16.0;
-			}
-			else
-			{
-				iAnim = GLOCK_IDLE2;
-				m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 40.0 / 16.0;
-			}
-			SendWeaponAnim( iAnim, 1 );
+		if (flRand <= 0.3 + 0 * 0.75)
+		{
+			iAnim = GLOCK_IDLE3;
+			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 52.0 / 14.0;
 		}
+		else if (flRand <= 0.6 + 0 * 0.875)
+		{
+			iAnim = GLOCK_IDLE1;
+			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 63.0 / 16.0;
+		}
+		else
+		{
+			iAnim = GLOCK_IDLE2;
+			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 43.0 / 16.0;
+		}
+		SendWeaponAnim( iAnim, 1 );
 	}
 }
 
 BOOL CGlock::ShouldWeaponIdle( void )
 {
-	return (m_iClip == 0) || ((m_fInAttack != 0) && (m_pPlayer->pev->button & IN_ATTACK));
+	// Always call idle if the bradnailer is tilt.
+	return m_fInAttack != 0;
 }
 
-BOOL CGlock::CanHolster( void )
-{
-	return (m_fInAttack == 0);
-}
 
 void CGlock::Holster( int skiplocal /*= 0*/ )
 {
