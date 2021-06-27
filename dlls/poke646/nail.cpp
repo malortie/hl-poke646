@@ -110,7 +110,7 @@ void CNail::NailTouch(CBaseEntity *pOther)
 		{
 			// if what we hit is static architecture, can stay around for a while.
 			Vector vecDir = pev->velocity.Normalize();
-			UTIL_SetOrigin(pev, pev->origin - vecDir * 12);
+			UTIL_SetOrigin(pev, pev->origin - vecDir * RANDOM_LONG(7,9));
 			pev->angles = UTIL_VecToAngles(vecDir);
 			pev->solid = SOLID_NOT;
 			pev->movetype = MOVETYPE_FLY;
