@@ -96,6 +96,14 @@ BOOL CGlock::Deploy( )
 
 void CGlock::SecondaryAttack( void )
 {
+	// don't fire underwater
+	if (m_pPlayer->pev->waterlevel == 3)
+	{
+		PlayEmptySound();
+		m_flNextSecondaryAttack = GetNextAttackDelay(0.2f);
+		return;
+	}
+
 	if (m_iClip <= 0)
 	{
 		Reload();
@@ -140,6 +148,14 @@ void CGlock::SecondaryAttack( void )
 
 void CGlock::PrimaryAttack( void )
 {
+	// don't fire underwater
+	if (m_pPlayer->pev->waterlevel == 3)
+	{
+		PlayEmptySound();
+		m_flNextPrimaryAttack = GetNextAttackDelay(0.2f);
+		return;
+	}
+
 	if (m_fInAttack != 0)
 	{
 		m_flNextPrimaryAttack = GetNextAttackDelay(0.5);
