@@ -117,7 +117,7 @@ void CNail::NailTouch(CBaseEntity *pOther)
 			pev->velocity = Vector(0, 0, 0);
 			pev->avelocity.z = 0;
 			pev->angles.z = RANDOM_LONG(0, 360);
-			pev->nextthink = gpGlobals->time + 10.0;
+			pev->nextthink = gpGlobals->time + 2.0;
 		}
 
 		/*if (UTIL_PointContents(pev->origin) != CONTENTS_WATER)
