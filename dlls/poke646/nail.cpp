@@ -130,4 +130,9 @@ void CNail::NailTouch(CBaseEntity *pOther)
 void CNail::NailThink(void)
 {
 	pev->nextthink = gpGlobals->time + 0.1;
+
+	if (pev->waterlevel == 0)
+		return;
+
+	UTIL_BubbleTrail( pev->origin - pev->velocity * 0.1, pev->origin, 1 );
 }
