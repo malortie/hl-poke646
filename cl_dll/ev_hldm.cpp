@@ -756,7 +756,7 @@ void EV_FireMP5( event_args_t *args )
 	EV_GetGunPosition( args, vecSrc, origin );
 
 	// Adjust tracer source.
-	vecSrc = vecSrc + forward * 8 + right * 16 + up * -16;
+	vecSrc = vecSrc + forward * 8 + right * 4 + up * -4;
 
 	VectorCopy( forward, vecAiming );
 
