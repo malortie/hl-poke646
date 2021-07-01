@@ -218,21 +218,8 @@ float EV_HLDM_PlayTextureSound( int idx, pmtrace_t *ptr, float *vecSrc, float *v
 		if (iBulletType == BULLET_PLAYER_CROWBAR)
 			return 0.0; // crowbar already makes this sound
 		fvol = 1.0;	fvolbar = 0.2;
-#if defined ( POKE646_CLIENT_DLL )
-		if (iBulletType == BULLET_PLAYER_NAIL)
-		{
-			rgsz[0] = "weapons/brad_hit1.wav";
-			rgsz[1] = "weapons/brad_hit2.wav";
-		}
-		else
-		{
-			rgsz[0] = "weapons/bullet_hit1.wav";
-			rgsz[1] = "weapons/bullet_hit2.wav";
-		}
-#else
 		rgsz[0] = "weapons/bullet_hit1.wav";
 		rgsz[1] = "weapons/bullet_hit2.wav";
-#endif // defined ( POKE646_CLIENT_DLL )
 		fattn = 1.0;
 		cnt = 2;
 		break;
@@ -357,9 +344,6 @@ void EV_HLDM_DecalGunshot( pmtrace_t *pTrace, int iBulletType )
 		case BULLET_MONSTER_MP5:
 		case BULLET_PLAYER_BUCKSHOT:
 		case BULLET_PLAYER_357:
-#if defined ( POKE646_CLIENT_DLL )
-		//case BULLET_PLAYER_NAIL:
-#endif // defined ( POKE646_CLIENT_DLL )
 		default:
 			// smoke and decal
 			EV_HLDM_GunshotDecalTrace( pTrace, EV_HLDM_DamageDecal( pe ) );
@@ -399,9 +383,7 @@ int EV_HLDM_CheckTracer( int idx, float *vecSrc, float *end, float *forward, flo
 		switch( iBulletType )
 		{
 		case BULLET_PLAYER_MP5:
-#if defined ( POKE646_CLIENT_DLL )
-		case BULLET_PLAYER_NAIL:
-#endif // defined ( POKE646_CLIENT_DLL )
+		case BULLET_PLAYER_9MM: // Poke646 - Nail shooters create tracers.
 		case BULLET_MONSTER_MP5:
 		case BULLET_MONSTER_9MM:
 		case BULLET_MONSTER_12MM:
@@ -480,8 +462,9 @@ void EV_HLDM_FireBullets( int idx, float *forward, float *right, float *up, int 
 			default:
 			case BULLET_PLAYER_9MM:		
 				
-				EV_HLDM_PlayTextureSound( idx, &tr, vecSrc, vecEnd, iBulletType );
-				EV_HLDM_DecalGunshot( &tr, iBulletType );
+				// Poke646 - No trace imact effect.
+				//EV_HLDM_PlayTextureSound( idx, &tr, vecSrc, vecEnd, iBulletType );
+				//EV_HLDM_DecalGunshot( &tr, iBulletType );
 			
 					break;
 			case BULLET_PLAYER_MP5:		
@@ -503,17 +486,6 @@ void EV_HLDM_FireBullets( int idx, float *forward, float *right, float *up, int 
 				EV_HLDM_DecalGunshot( &tr, iBulletType );
 				
 				break;
-#if defined ( POKE646_CLIENT_DLL )
-			case BULLET_PLAYER_NAIL:
-				if (!tracer)
-				{
-					EV_HLDM_PlayTextureSound(idx, &tr, vecSrc, vecEnd, iBulletType);
-					// EV_HLDM_DecalGunshot(&tr, iBulletType);
-				}
-				break;
-
-
-#endif // defined ( POKE646_CLIENT_DLL )
 			}
 		}
 
@@ -559,7 +531,7 @@ void EV_FireGlock1( event_args_t *args )
 	
 	VectorCopy( forward, vecAiming );
 
-	EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_NAIL, 1, &tracerCount[idx-1], args->fparam1, args->fparam2 );
+	EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_9MM, 1, &tracerCount[idx-1], args->fparam1, args->fparam2 );
 }
 
 void EV_FireGlock2( event_args_t *args )
@@ -597,7 +569,7 @@ void EV_FireGlock2( event_args_t *args )
 	
 	VectorCopy( forward, vecAiming );
 
-	EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_NAIL, 1, &tracerCount[idx-1], args->fparam1, args->fparam2 );
+	EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_9MM, 1, &tracerCount[idx-1], args->fparam1, args->fparam2 );
 	
 }
 //======================
@@ -762,11 +734,11 @@ void EV_FireMP5( event_args_t *args )
 
 	if ( gEngfuncs.GetMaxClients() > 1 )
 	{
-		EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_NAIL, 1, &tracerCount[idx-1], args->fparam1, args->fparam2 );
+		EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_9MM, 1, &tracerCount[idx-1], args->fparam1, args->fparam2 );
 	}
 	else
 	{
-		EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_NAIL, 1, &tracerCount[idx-1], args->fparam1, args->fparam2 );
+		EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_9MM, 1, &tracerCount[idx-1], args->fparam1, args->fparam2 );
 	}
 }
 

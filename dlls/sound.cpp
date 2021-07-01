@@ -1745,21 +1745,8 @@ float TEXTURETYPE_PlaySound(TraceResult *ptr,  Vector vecSrc, Vector vecEnd, int
 		if (iBulletType == BULLET_PLAYER_CROWBAR)
 			return 0.0; // crowbar already makes this sound
 		fvol = 1.0;	fvolbar = 0.2;
-#if defined ( POKE646_DLL )
-		if ( iBulletType == BULLET_PLAYER_NAIL )
-		{
-			rgsz[0] = "weapons/brad_hit1.wav";
-			rgsz[1] = "weapons/brad_hit2.wav";
-		}
-		else
-		{
-			rgsz[0] = "weapons/bullet_hit1.wav";
-			rgsz[1] = "weapons/bullet_hit2.wav";
-		}
-#else
 		rgsz[0] = "weapons/bullet_hit1.wav";
 		rgsz[1] = "weapons/bullet_hit2.wav";
-#endif // defined ( POKE646_DLL )
 		fattn = 1.0;
 		cnt = 2;
 		break;

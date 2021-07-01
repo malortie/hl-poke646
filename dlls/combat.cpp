@@ -1549,7 +1549,8 @@ Vector CBaseEntity::FireBulletsPlayer ( ULONG cShots, Vector vecSrc, Vector vecD
 			{
 			default:
 			case BULLET_PLAYER_9MM:		
-				pEntity->TraceAttack(pevAttacker, gSkillData.plrDmg9MM, vecDir, &tr, DMG_BULLET); 
+				// Poke646 - Nail entity already inflicts damage.
+				//pEntity->TraceAttack(pevAttacker, gSkillData.plrDmg9MM, vecDir, &tr, DMG_BULLET); 
 				break;
 
 			case BULLET_PLAYER_MP5:		
@@ -1576,13 +1577,6 @@ Vector CBaseEntity::FireBulletsPlayer ( ULONG cShots, Vector vecSrc, Vector vecD
 
 				break;
 
-#if defined ( POKE646_DLL )
-			case BULLET_PLAYER_NAIL:
-				pEntity->TraceAttack(pevAttacker, 0, vecDir, &tr, DMG_BULLET);
-				break;
-
-
-#endif // defined ( POKE646_DLL )
 			}
 		}
 		// make bullet trails

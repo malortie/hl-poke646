@@ -142,11 +142,6 @@ struct skilldata_t
 	float plrLeg;
 	float plrArm;
 
-#if defined( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
-	float plrDmgNail;
-
-
-#endif // defined( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 };
 
 extern	DLL_GLOBAL	skilldata_t	gSkillData;

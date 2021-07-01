@@ -311,12 +311,6 @@ void CGameRules::RefreshSkillData ( void )
 	gSkillData.plrLeg = GetSkillCvar( "sk_player_leg" );
 	gSkillData.plrArm = GetSkillCvar( "sk_player_arm" );
 
-#if defined( POKE646_DLL )
-	// Nails
-	gSkillData.plrDmgNail = GetSkillCvar("sk_plr_nail");
-
-
-#endif // defined( POKE646_DLL )
 }
 
 //=========================================================

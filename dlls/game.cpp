@@ -468,15 +468,6 @@ cvar_t	sk_player_leg1	= { "sk_player_leg1","1" };
 cvar_t	sk_player_leg2	= { "sk_player_leg2","1" };
 cvar_t	sk_player_leg3	= { "sk_player_leg3","1" };
 
-#if defined( POKE646_DLL )
-
-// Nails
-cvar_t	sk_plr_nail1 = { "sk_plr_nail1", "0" };
-cvar_t	sk_plr_nail2 = { "sk_plr_nail2", "0" };
-cvar_t	sk_plr_nail3 = { "sk_plr_nail3", "0" };
-
-
-#endif // defined( POKE646_DLL )
 
 
 // END Cvars for Skill Level settings
@@ -935,15 +926,6 @@ void GameDLLInit( void )
 	CVAR_REGISTER ( &sk_player_leg2 );
 	CVAR_REGISTER ( &sk_player_leg3 );
 
-#if defined( POKE646_DLL )
-
-	// Nails
-	CVAR_REGISTER(&sk_plr_nail1);
-	CVAR_REGISTER(&sk_plr_nail2);
-	CVAR_REGISTER(&sk_plr_nail3);
-
-
-#endif // defined( POKE646_DLL )
 
 // END REGISTER CVARS FOR SKILL LEVEL STUFF
 

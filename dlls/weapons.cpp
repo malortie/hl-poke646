@@ -175,14 +175,12 @@ void DecalGunshot( TraceResult *pTrace, int iBulletType )
 		switch( iBulletType )
 		{
 		case BULLET_PLAYER_9MM:
+			break; // Poke646 - Nail does not cast decals.
 		case BULLET_MONSTER_9MM:
 		case BULLET_PLAYER_MP5:
 		case BULLET_MONSTER_MP5:
 		case BULLET_PLAYER_BUCKSHOT:
 		case BULLET_PLAYER_357:
-#if defined ( POKE646_DLL )
-		case BULLET_PLAYER_NAIL:
-#endif // defined ( POKE646_DLL )
 		default:
 			// smoke and decal
 			UTIL_GunshotDecalTrace( pTrace, DamageDecal( pEntity, DMG_BULLET ) );
