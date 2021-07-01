@@ -662,6 +662,8 @@ public:
 #endif
 	}
 
+	BOOL ShouldWeaponIdle( void );
+
 private:
 	unsigned short m_usMP5;
 	unsigned short m_usMP52;

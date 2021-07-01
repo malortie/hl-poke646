@@ -190,7 +190,10 @@ void CMP5::PrimaryAttack()
 	if ( m_flNextPrimaryAttack < UTIL_WeaponTimeBase() )
 		m_flNextPrimaryAttack = UTIL_WeaponTimeBase() + 0.1;
 
-	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + UTIL_SharedRandomFloat( m_pPlayer->random_seed, 10, 15 );
+	if (m_iClip == 0)
+		m_flTimeWeaponIdle = UTIL_WeaponTimeBase(); // Immediately play empty idle animation.
+	else
+		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + UTIL_SharedRandomFloat( m_pPlayer->random_seed, 10, 15 );
 }
 
 
@@ -284,6 +287,10 @@ void CMP5::WeaponIdle( void )
 	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + UTIL_SharedRandomFloat( m_pPlayer->random_seed, 10, 15 ); // how long till we do this again.
 }
 
+BOOL CMP5::ShouldWeaponIdle( void )
+{
+	return m_iClip == 0;
+}
 
 
 class CMP5AmmoClip : public CBasePlayerAmmo
