@@ -134,14 +134,14 @@ void CMP5::PrimaryAttack()
 	if (m_pPlayer->pev->waterlevel == 3)
 	{
 		PlayEmptySound( );
-		m_flNextPrimaryAttack = 0.15;
+		m_flNextPrimaryAttack = GetNextAttackDelay(0.15f);
 		return;
 	}
 
 	if (m_iClip <= 0)
 	{
 		PlayEmptySound();
-		m_flNextPrimaryAttack = 0.15;
+		m_flNextPrimaryAttack = GetNextAttackDelay(0.15f);
 		return;
 	}
 
@@ -202,7 +202,7 @@ void CMP5::SecondaryAttack( void )
 	if (m_pPlayer->pev->waterlevel == 3)
 	{
 		PlayEmptySound( );
-		m_flNextPrimaryAttack = 0.15;
+		m_flNextPrimaryAttack = GetNextAttackDelay(0.15f);
 		return;
 	}
 
@@ -240,7 +240,7 @@ void CMP5::SecondaryAttack( void )
 	PLAYBACK_EVENT( flags, m_pPlayer->edict(), m_usMP52 );
 	
 	m_flNextPrimaryAttack = GetNextAttackDelay(1);
-	m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 1;
+	m_flNextSecondaryAttack = GetNextAttackDelay(1);
 	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 5;// idle pretty soon after shooting.
 
 	if (!m_pPlayer->m_rgAmmo[m_iSecondaryAmmoType])
@@ -281,7 +281,7 @@ void CMP5::WeaponIdle( void )
 
 	SendWeaponAnim( iAnim );
 
-	m_flTimeWeaponIdle = UTIL_SharedRandomFloat( m_pPlayer->random_seed, 10, 15 ); // how long till we do this again.
+	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + UTIL_SharedRandomFloat( m_pPlayer->random_seed, 10, 15 ); // how long till we do this again.
 }
 
 
