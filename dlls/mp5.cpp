@@ -180,17 +180,8 @@ void CMP5::PrimaryAttack()
 	pNail->pev->origin = vecSrc;
 	pNail->pev->angles = anglesAim;
 	pNail->pev->owner = m_pPlayer->edict();
-
-	if (m_pPlayer->pev->waterlevel == 3)
-	{
-		pNail->pev->velocity = vecAiming * NAIL_WATER_VELOCITY;
-		pNail->pev->speed = NAIL_WATER_VELOCITY;
-	}
-	else
-	{
-		pNail->pev->velocity = vecAiming * NAIL_AIR_VELOCITY;
-		pNail->pev->speed = NAIL_AIR_VELOCITY;
-	}
+	pNail->pev->velocity = vecAiming * NAIL_AIR_VELOCITY;
+	pNail->pev->speed = NAIL_AIR_VELOCITY;
 	pNail->pev->avelocity.z = 10;
 #endif
 
