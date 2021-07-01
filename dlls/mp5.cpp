@@ -202,7 +202,7 @@ void CMP5::SecondaryAttack( void )
 	if (m_pPlayer->pev->waterlevel == 3)
 	{
 		PlayEmptySound( );
-		m_flNextPrimaryAttack = GetNextAttackDelay(0.15f);
+		m_flNextSecondaryAttack = GetNextAttackDelay(0.15f);
 		return;
 	}
 
