@@ -66,7 +66,7 @@ public:
 #define WEAPON_NONE				0
 #define WEAPON_CROWBAR			1
 #define	WEAPON_GLOCK			2
-#define WEAPON_NAILGUN			4
+#define WEAPON_MP5				3
 #define WEAPON_SHOTGUN			5
 #define WEAPON_CMLWBR			6
 #define WEAPON_XS				7
@@ -105,7 +105,7 @@ public:
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
 #define CROWBAR_WEIGHT		0
 #define GLOCK_WEIGHT	10
-#define NAILGUN_WEIGHT		15
+#define MP5_WEIGHT			15
 #define SHOTGUN_WEIGHT		15
 #define CMLWBR_WEIGHT		10
 #define XS_WEIGHT			20
@@ -159,7 +159,7 @@ public:
 
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
 #define GLOCK_MAX_CLIP			25
-#define NAILGUN_MAX_CLIP		50
+#define MP5_MAX_CLIP			50
 #define SHOTGUN_MAX_CLIP		12
 #define CMLWBR_MAX_CLIP			5
 #define XS_MAX_CLIP				15
@@ -187,7 +187,7 @@ public:
 // the default amount of ammo that comes with each gun when it spawns
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
 #define GLOCK_DEFAULT_GIVE		15
-#define NAILGUN_DEFAULT_GIVE		50
+#define MP5_DEFAULT_GIVE		50
 #define SHOTGUN_DEFAULT_GIVE		12
 #define CMLWBR_DEFAULT_GIVE			5
 #define XS_DEFAULT_GIVE				15
@@ -214,7 +214,7 @@ public:
 // The amount of ammo given to a player by an ammo item.
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
 #define AMMO_NAILCLIP_GIVE		GLOCK_MAX_CLIP
-#define AMMO_NAILROUND_GIVE		NAILGUN_MAX_CLIP
+#define AMMO_NAILROUND_GIVE		MP5_MAX_CLIP
 #define AMMO_BUCKSHOTBOX_GIVE	12
 #define AMMO_CMLWBRCLIP_GIVE	CMLWBR_MAX_CLIP
 #define AMMO_XENCANDY_GIVE		XS_MAX_CLIP
@@ -641,7 +641,7 @@ class CMP5 : public CBasePlayerWeapon
 public:
 	void Spawn( void );
 	void Precache( void );
-	int iItemSlot( void ) { return 3; }
+	int iItemSlot( void ) { return 2; }
 	int GetItemInfo(ItemInfo *p);
 	int AddToPlayer( CBasePlayer *pPlayer );
 
@@ -652,7 +652,6 @@ public:
 	void Reload( void );
 	void WeaponIdle( void );
 	float m_flNextAnimTime;
-	int m_iShell;
 
 	virtual BOOL UseDecrement( void )
 	{ 
@@ -1100,35 +1099,8 @@ private:
 
 
 
-class CNailgun : public CBasePlayerWeapon
-{
-public:
-	void Spawn(void);
-	void Precache(void);
-	int iItemSlot(void) { return 2; }
-	int GetItemInfo(ItemInfo *p);
-	int AddToPlayer(CBasePlayer *pPlayer);
 
-	void PrimaryAttack(void);
-	BOOL Deploy(void);
-	void Reload(void);
-	void WeaponIdle(void);
 
-	int m_iShell;
-
-	virtual BOOL UseDecrement(void)
-	{
-#if defined( CLIENT_WEAPONS )
-		return TRUE;
-#else
-		return FALSE;
-#endif
-	}
-
-private:
-	unsigned short m_usReload;
-	unsigned short m_usNailgun;
-};
 
 class CCmlwbr : public CBasePlayerWeapon
 {

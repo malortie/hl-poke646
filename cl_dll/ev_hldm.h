@@ -76,6 +76,9 @@ enum mp5_e
 	MP5_FIRE1,
 	MP5_FIRE2,
 	MP5_FIRE3,
+	MP5_DEPLOY_EMPTY,
+	MP5_LONGIDLE_EMPTY,
+	MP5_IDLE1_EMPTY,
 };
 
 enum python_e {

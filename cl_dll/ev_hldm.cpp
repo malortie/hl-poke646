@@ -76,7 +76,6 @@ void EV_SnarkFire( struct event_args_s *args  );
 void EV_TrainPitchAdjust( struct event_args_s *args );
 
 #if defined ( POKE646_CLIENT_DLL )
-void EV_FireNailgun(struct event_args_s *args);
 void EV_FireCmlwbr(struct event_args_s *args);
 void EV_SpinXS(struct event_args_s *args);
 void EV_FireXS(struct event_args_s *args);
@@ -734,55 +733,40 @@ void EV_FireMP5( event_args_t *args )
 	vec3_t angles;
 	vec3_t velocity;
 
-	vec3_t ShellVelocity;
-	vec3_t ShellOrigin;
-	int shell;
 	vec3_t vecSrc, vecAiming;
 	vec3_t up, right, forward;
 	float flSpread = 0.01;
 
-	idx = args->entindex;
+ 	idx = args->entindex;
 	VectorCopy( args->origin, origin );
 	VectorCopy( args->angles, angles );
 	VectorCopy( args->velocity, velocity );
 
 	AngleVectors( angles, forward, right, up );
 
-	shell = gEngfuncs.pEventAPI->EV_FindModelIndex ("models/shell.mdl");// brass shell
-	
 	if ( EV_IsLocal( idx ) )
 	{
-		// Add muzzle flash to current weapon model
-		EV_MuzzleFlash();
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( MP5_FIRE1 + gEngfuncs.pfnRandomLong(0,2), 2 );
 
 		V_PunchAxis( 0, gEngfuncs.pfnRandomFloat( -2, 2 ) );
 	}
 
-	EV_GetDefaultShellInfo( args, origin, velocity, ShellVelocity, ShellOrigin, forward, right, up, 20, -12, 4 );
-
-	EV_EjectBrass ( ShellOrigin, ShellVelocity, angles[ YAW ], shell, TE_BOUNCE_SHELL ); 
-
-	switch( gEngfuncs.pfnRandomLong( 0, 1 ) )
-	{
-	case 0:
-		gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/hks1.wav", 1, ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong( 0, 0xf ) );
-		break;
-	case 1:
-		gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/hks2.wav", 1, ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong( 0, 0xf ) );
-		break;
-	}
+	gEngfuncs.pEventAPI->EV_PlaySound(idx, origin, CHAN_WEAPON, "weapons/nailgun.wav", 1, ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong(0, 0xf));
 
 	EV_GetGunPosition( args, vecSrc, origin );
+
+	// Adjust tracer source.
+	vecSrc = vecSrc + forward * 8 + right * 16 + up * -16;
+
 	VectorCopy( forward, vecAiming );
 
 	if ( gEngfuncs.GetMaxClients() > 1 )
 	{
-		EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_MP5, 2, &tracerCount[idx-1], args->fparam1, args->fparam2 );
+		EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_NAIL, 1, &tracerCount[idx-1], args->fparam1, args->fparam2 );
 	}
 	else
 	{
-		EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_MP5, 2, &tracerCount[idx-1], args->fparam1, args->fparam2 );
+		EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_NAIL, 1, &tracerCount[idx-1], args->fparam1, args->fparam2 );
 	}
 }
 
@@ -1779,64 +1763,6 @@ int EV_TFC_IsAllyTeam( int iTeam1, int iTeam2 )
 
 
 
-//======================
-//	  NAILGUN START
-//======================
-
-enum nailgun_e
-{
-	NAILGUN_LONGIDLE = 0,
-	NAILGUN_IDLE1,
-	NAILGUN_LAUNCH,
-	NAILGUN_RELOAD,
-	NAILGUN_DEPLOY,
-	NAILGUN_FIRE1,
-	NAILGUN_FIRE2,
-	NAILGUN_FIRE3,
-	NAILGUN_DEPLOY_EMPTY,
-	NAILGUN_LONGIDLE_EMPTY,
-	NAILGUN_IDLE1_EMPTY,
-};
-
-void EV_FireNailgun(event_args_t *args)
-{
-	int idx;
-	vec3_t origin;
-	vec3_t angles;
-	vec3_t velocity;
-
-	vec3_t vecSrc, vecAiming;
-	vec3_t up, right, forward;
-
-	idx = args->entindex;
-	VectorCopy(args->origin, origin);
-	VectorCopy(args->angles, angles);
-	VectorCopy(args->velocity, velocity);
-
-	AngleVectors(angles, forward, right, up);
-
-	if (EV_IsLocal(idx))
-	{
-		gEngfuncs.pEventAPI->EV_WeaponAnimation(NAILGUN_FIRE1 + gEngfuncs.pfnRandomLong(0, 2), 2);
-
-		V_PunchAxis(0, gEngfuncs.pfnRandomFloat(-2, 2));
-	}
-
-	gEngfuncs.pEventAPI->EV_PlaySound(idx, origin, CHAN_WEAPON, "weapons/nailgun.wav", 1, ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong(0, 0xf));
-
-	EV_GetGunPosition(args, vecSrc, origin);
-
-	// Adjust tracer source.
-	vecSrc = vecSrc + forward * 8 + right * 16 + up * -16;
-
-	VectorCopy(forward, vecAiming);
-
-	EV_HLDM_FireBullets(idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_NAIL, 1, &tracerCount[idx - 1], args->fparam1, args->fparam2);
-}
-
-//======================
-//	  NAILGUN END
-//======================
 
 //======================
 //	  CMLWBR START 

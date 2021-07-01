@@ -22,6 +22,7 @@
 #include "player.h"
 #include "soundent.h"
 #include "gamerules.h"
+#include "nail.h"
 
 enum mp5_e
 {
@@ -33,12 +34,14 @@ enum mp5_e
 	MP5_FIRE1,
 	MP5_FIRE2,
 	MP5_FIRE3,
+	MP5_DEPLOY_EMPTY,
+	MP5_LONGIDLE_EMPTY,
+	MP5_IDLE1_EMPTY,
 };
 
 
 
-LINK_ENTITY_TO_CLASS( weapon_mp5, CMP5 );
-LINK_ENTITY_TO_CLASS( weapon_9mmAR, CMP5 );
+LINK_ENTITY_TO_CLASS( weapon_nailgun, CMP5 );
 
 
 //=========================================================
@@ -50,9 +53,9 @@ int CMP5::SecondaryAmmoIndex( void )
 
 void CMP5::Spawn( )
 {
-	pev->classname = MAKE_STRING("weapon_9mmAR"); // hack to allow for old names
+	pev->classname = MAKE_STRING("weapon_nailgun"); // hack to allow for old names
 	Precache( );
-	SET_MODEL(ENT(pev), "models/w_9mmAR.mdl");
+	SET_MODEL(ENT(pev), "models/w_nailgun.mdl");
 	m_iId = WEAPON_MP5;
 
 	m_iDefaultAmmo = MP5_DEFAULT_GIVE;
@@ -63,43 +66,37 @@ void CMP5::Spawn( )
 
 void CMP5::Precache( void )
 {
-	PRECACHE_MODEL("models/v_9mmAR.mdl");
-	PRECACHE_MODEL("models/w_9mmAR.mdl");
-	PRECACHE_MODEL("models/p_9mmAR.mdl");
+	PRECACHE_MODEL("models/v_nailgun.mdl");
+	PRECACHE_MODEL("models/w_nailgun.mdl");
+	PRECACHE_MODEL("models/p_nailgun.mdl");
 
-	m_iShell = PRECACHE_MODEL ("models/shell.mdl");// brass shellTE_MODEL
-
-	PRECACHE_MODEL("models/grenade.mdl");	// grenade
-
-	PRECACHE_MODEL("models/w_9mmARclip.mdl");
+	PRECACHE_MODEL("models/w_nailclip.mdl");
+	PRECACHE_MODEL("models/w_nailround.mdl");
 	PRECACHE_SOUND("items/9mmclip1.wav");              
 
 	PRECACHE_SOUND("items/clipinsert1.wav");
 	PRECACHE_SOUND("items/cliprelease1.wav");
 
-	PRECACHE_SOUND ("weapons/hks1.wav");// H to the K
-	PRECACHE_SOUND ("weapons/hks2.wav");// H to the K
-	PRECACHE_SOUND ("weapons/hks3.wav");// H to the K
-
-	PRECACHE_SOUND( "weapons/glauncher.wav" );
-	PRECACHE_SOUND( "weapons/glauncher2.wav" );
+	PRECACHE_SOUND("weapons/nailgun.wav");
 
 	PRECACHE_SOUND ("weapons/357_cock1.wav");
 
 	m_usMP5 = PRECACHE_EVENT( 1, "events/mp5.sc" );
 	m_usMP52 = PRECACHE_EVENT( 1, "events/mp52.sc" );
+
+	UTIL_PrecacheOther( "nailgun_nail" );
 }
 
 int CMP5::GetItemInfo(ItemInfo *p)
 {
 	p->pszName = STRING(pev->classname);
-	p->pszAmmo1 = "9mm";
-	p->iMaxAmmo1 = _9MM_MAX_CARRY;
-	p->pszAmmo2 = "ARgrenades";
-	p->iMaxAmmo2 = M203_GRENADE_MAX_CARRY;
+	p->pszAmmo1 = "nail";
+	p->iMaxAmmo1 = NAILS_MAX_CARRY;
+	p->pszAmmo2 = NULL;
+	p->iMaxAmmo2 = -1;
 	p->iMaxClip = MP5_MAX_CLIP;
-	p->iSlot = 2;
-	p->iPosition = 0;
+	p->iSlot = 1;
+	p->iPosition = 1;
 	p->iFlags = 0;
 	p->iId = m_iId = WEAPON_MP5;
 	p->iWeight = MP5_WEIGHT;
@@ -121,7 +118,13 @@ int CMP5::AddToPlayer( CBasePlayer *pPlayer )
 
 BOOL CMP5::Deploy( )
 {
-	return DefaultDeploy( "models/v_9mmAR.mdl", "models/p_9mmAR.mdl", MP5_DEPLOY, "mp5" );
+	int iAnim;
+	if (m_iClip == 0)
+		iAnim = MP5_DEPLOY_EMPTY;
+	else
+		iAnim = MP5_DEPLOY;
+
+	return DefaultDeploy( "models/v_nailgun.mdl", "models/p_nailgun.mdl", iAnim, "mp5" );
 }
 
 
@@ -153,24 +156,15 @@ void CMP5::PrimaryAttack()
 	// player "shoot" animation
 	m_pPlayer->SetAnimation( PLAYER_ATTACK1 );
 
-	Vector vecSrc	 = m_pPlayer->GetGunPosition( );
-	Vector vecAiming = m_pPlayer->GetAutoaimVector( AUTOAIM_5DEGREES );
-	Vector vecDir;
+	Vector anglesAim = m_pPlayer->pev->v_angle + m_pPlayer->pev->punchangle;
+	UTIL_MakeVectors(anglesAim);
 
-#ifdef CLIENT_DLL
-	if ( !bIsMultiplayer() )
-#else
-	if ( !g_pGameRules->IsMultiplayer() )
-#endif
-	{
-		// optimized multiplayer. Widened to make it easier to hit a moving player
-		vecDir = m_pPlayer->FireBulletsPlayer( 1, vecSrc, vecAiming, VECTOR_CONE_6DEGREES, 8192, BULLET_PLAYER_MP5, 2, 0, m_pPlayer->pev, m_pPlayer->random_seed );
-	}
-	else
-	{
-		// single player spread
-		vecDir = m_pPlayer->FireBulletsPlayer( 1, vecSrc, vecAiming, VECTOR_CONE_3DEGREES, 8192, BULLET_PLAYER_MP5, 2, 0, m_pPlayer->pev, m_pPlayer->random_seed );
-	}
+	anglesAim.x = -anglesAim.x;
+	Vector vecSrc = m_pPlayer->GetGunPosition( ) + gpGlobals->v_forward * 8 + gpGlobals->v_right * 4 + gpGlobals->v_up * -4;
+	Vector vecAiming = m_pPlayer->GetAutoaimVector( AUTOAIM_5DEGREES );
+
+	Vector vecDir;
+	vecDir = m_pPlayer->FireBulletsPlayer( 1, vecSrc, vecAiming, VECTOR_CONE_3DEGREES, 8192, BULLET_PLAYER_NAIL, 0, 0, m_pPlayer->pev, m_pPlayer->random_seed );
 
   int flags;
 #if defined( CLIENT_WEAPONS )
@@ -181,9 +175,24 @@ void CMP5::PrimaryAttack()
 
 	PLAYBACK_EVENT_FULL( flags, m_pPlayer->edict(), m_usMP5, 0.0, (float *)&g_vecZero, (float *)&g_vecZero, vecDir.x, vecDir.y, 0, 0, 0, 0 );
 
-	if (!m_iClip && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0)
-		// HEV suit - indicate out of ammo condition
-		m_pPlayer->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
+#ifndef CLIENT_DLL
+	CNail *pNail = CNail::NailCreate();
+	pNail->pev->origin = vecSrc;
+	pNail->pev->angles = anglesAim;
+	pNail->pev->owner = m_pPlayer->edict();
+
+	if (m_pPlayer->pev->waterlevel == 3)
+	{
+		pNail->pev->velocity = vecAiming * NAIL_WATER_VELOCITY;
+		pNail->pev->speed = NAIL_WATER_VELOCITY;
+	}
+	else
+	{
+		pNail->pev->velocity = vecAiming * NAIL_AIR_VELOCITY;
+		pNail->pev->speed = NAIL_AIR_VELOCITY;
+	}
+	pNail->pev->avelocity.z = 10;
+#endif
 
 	m_flNextPrimaryAttack = GetNextAttackDelay(0.1);
 
@@ -197,6 +206,7 @@ void CMP5::PrimaryAttack()
 
 void CMP5::SecondaryAttack( void )
 {
+	return; // Poke646 - No secondary attack.
 	// don't fire underwater
 	if (m_pPlayer->pev->waterlevel == 3)
 	{
@@ -269,12 +279,12 @@ void CMP5::WeaponIdle( void )
 	switch ( RANDOM_LONG( 0, 1 ) )
 	{
 	case 0:	
-		iAnim = MP5_LONGIDLE;	
+		iAnim = (m_iClip == 0) ? MP5_LONGIDLE_EMPTY : MP5_LONGIDLE;
 		break;
 	
 	default:
 	case 1:
-		iAnim = MP5_IDLE1;
+		iAnim = (m_iClip == 0) ? MP5_IDLE1_EMPTY : MP5_IDLE1;
 		break;
 	}
 
@@ -290,17 +300,17 @@ class CMP5AmmoClip : public CBasePlayerAmmo
 	void Spawn( void )
 	{ 
 		Precache( );
-		SET_MODEL(ENT(pev), "models/w_9mmARclip.mdl");
+		SET_MODEL(ENT(pev), "models/w_nailclip.mdl");
 		CBasePlayerAmmo::Spawn( );
 	}
 	void Precache( void )
 	{
-		PRECACHE_MODEL ("models/w_9mmARclip.mdl");
+		PRECACHE_MODEL ("models/w_nailclip.mdl");
 		PRECACHE_SOUND("items/9mmclip1.wav");
 	}
 	BOOL AddAmmo( CBaseEntity *pOther ) 
 	{ 
-		int bResult = (pOther->GiveAmmo( AMMO_MP5CLIP_GIVE, "9mm", _9MM_MAX_CARRY) != -1);
+		int bResult = (pOther->GiveAmmo( AMMO_NAILCLIP_GIVE, "nail", NAILS_MAX_CARRY) != -1);
 		if (bResult)
 		{
 			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
@@ -308,8 +318,7 @@ class CMP5AmmoClip : public CBasePlayerAmmo
 		return bResult;
 	}
 };
-LINK_ENTITY_TO_CLASS( ammo_mp5clip, CMP5AmmoClip );
-LINK_ENTITY_TO_CLASS( ammo_9mmAR, CMP5AmmoClip );
+LINK_ENTITY_TO_CLASS( ammo_nailclip, CMP5AmmoClip );
 
 
 
@@ -318,17 +327,17 @@ class CMP5Chainammo : public CBasePlayerAmmo
 	void Spawn( void )
 	{ 
 		Precache( );
-		SET_MODEL(ENT(pev), "models/w_chainammo.mdl");
+		SET_MODEL(ENT(pev), "models/w_nailround.mdl");
 		CBasePlayerAmmo::Spawn( );
 	}
 	void Precache( void )
 	{
-		PRECACHE_MODEL ("models/w_chainammo.mdl");
+		PRECACHE_MODEL ("models/w_nailround.mdl");
 		PRECACHE_SOUND("items/9mmclip1.wav");
 	}
 	BOOL AddAmmo( CBaseEntity *pOther ) 
 	{ 
-		int bResult = (pOther->GiveAmmo( AMMO_CHAINBOX_GIVE, "9mm", _9MM_MAX_CARRY) != -1);
+		int bResult = (pOther->GiveAmmo( AMMO_NAILROUND_GIVE, "nail", NAILS_MAX_CARRY) != -1);
 		if (bResult)
 		{
 			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
@@ -336,8 +345,9 @@ class CMP5Chainammo : public CBasePlayerAmmo
 		return bResult;
 	}
 };
-LINK_ENTITY_TO_CLASS( ammo_9mmbox, CMP5Chainammo );
+LINK_ENTITY_TO_CLASS( ammo_nailround, CMP5Chainammo );
 
+/* Poke646 - No MP5 grenade ammo.
 
 class CMP5AmmoGrenade : public CBasePlayerAmmo
 {
@@ -365,6 +375,7 @@ class CMP5AmmoGrenade : public CBasePlayerAmmo
 };
 LINK_ENTITY_TO_CLASS( ammo_mp5grenades, CMP5AmmoGrenade );
 LINK_ENTITY_TO_CLASS( ammo_ARgrenades, CMP5AmmoGrenade );
+*/
 
 
 

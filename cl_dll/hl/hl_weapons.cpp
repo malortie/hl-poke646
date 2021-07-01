@@ -55,10 +55,10 @@ vec3_t previousorigin;
 #if defined ( POKE646_CLIENT_DLL )
 CGlock g_Glock;
 CCrowbar g_Crowbar;
+CMP5 g_MP5;
 CCmlwbr g_Cmlwbr;
 CShotgun g_Shotgun;
 CPipeBomb g_PipeBomb;
-CNailgun g_Nailgun;
 CXenSquasher g_Xs;
 #else
 CGlock g_Glock;
@@ -618,10 +618,10 @@ void HUD_InitClientWeapons( void )
 #if defined ( POKE646_CLIENT_DLL )
 	HUD_PrepEntity( &g_Glock	, &player );
 	HUD_PrepEntity( &g_Crowbar	    , &player );
+	HUD_PrepEntity( &g_MP5			, &player );
 	HUD_PrepEntity( &g_Shotgun		, &player );
 	HUD_PrepEntity( &g_Cmlwbr		, &player );
 	HUD_PrepEntity( &g_PipeBomb		, &player );
-	HUD_PrepEntity( &g_Nailgun		, &player );
 	HUD_PrepEntity( &g_Xs			, &player );
 #else
 	HUD_PrepEntity( &g_Glock	, &player );
@@ -713,6 +713,10 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		pWeapon = &g_Glock;
 		break;
 
+	case WEAPON_MP5:
+		pWeapon = &g_MP5;
+		break;
+
 	case WEAPON_SHOTGUN:
 		pWeapon = &g_Shotgun;
 		break;
@@ -723,10 +727,6 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 
 	case WEAPON_PIPEBOMB:
 		pWeapon = &g_PipeBomb;
-		break;
-
-	case WEAPON_NAILGUN:
-		pWeapon = &g_Nailgun;
 		break;
 
 	case WEAPON_XS:
