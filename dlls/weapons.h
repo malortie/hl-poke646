@@ -702,14 +702,13 @@ public:
 	static	TYPEDESCRIPTION m_SaveData[];
 #endif
 
-	BOOL IsDrawn(void);
-	void SetDrawn(BOOL bDrawn);
 
 	void ToggleZoom(void);
 	void ZoomIn(int iFOV);
 	void ZoomOut(void);
 
-	void DoReload();
+	BOOL IsDrawn(void);
+	void SetDrawn(BOOL bDrawn);
 	void DrawBack(void);
 	void Undraw();
 
