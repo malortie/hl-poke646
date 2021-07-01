@@ -289,6 +289,7 @@ void CMP5::WeaponIdle( void )
 
 BOOL CMP5::ShouldWeaponIdle( void )
 {
+	// Used to allow empty idle sequence to play immediately when clip is empty.
 	return m_iClip == 0;
 }
 
