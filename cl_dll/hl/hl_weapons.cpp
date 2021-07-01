@@ -56,7 +56,7 @@ vec3_t previousorigin;
 CGlock g_Glock;
 CCrowbar g_Crowbar;
 CMP5 g_MP5;
-CCmlwbr g_Cmlwbr;
+CCrossbow g_Crossbow;
 CShotgun g_Shotgun;
 CPipeBomb g_PipeBomb;
 CXenSquasher g_Xs;
@@ -620,7 +620,7 @@ void HUD_InitClientWeapons( void )
 	HUD_PrepEntity( &g_Crowbar	    , &player );
 	HUD_PrepEntity( &g_MP5			, &player );
 	HUD_PrepEntity( &g_Shotgun		, &player );
-	HUD_PrepEntity( &g_Cmlwbr		, &player );
+	HUD_PrepEntity( &g_Crossbow		, &player );
 	HUD_PrepEntity( &g_PipeBomb		, &player );
 	HUD_PrepEntity( &g_Xs			, &player );
 #else
@@ -717,12 +717,12 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		pWeapon = &g_MP5;
 		break;
 
-	case WEAPON_SHOTGUN:
-		pWeapon = &g_Shotgun;
+	case WEAPON_CROSSBOW:
+		pWeapon = &g_Crossbow;
 		break;
 
-	case WEAPON_CMLWBR:
-		pWeapon = &g_Cmlwbr;
+	case WEAPON_SHOTGUN:
+		pWeapon = &g_Shotgun;
 		break;
 
 	case WEAPON_PIPEBOMB:

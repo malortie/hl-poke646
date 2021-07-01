@@ -76,7 +76,6 @@ void EV_SnarkFire( struct event_args_s *args  );
 void EV_TrainPitchAdjust( struct event_args_s *args );
 
 #if defined ( POKE646_CLIENT_DLL )
-void EV_FireCmlwbr(struct event_args_s *args);
 void EV_SpinXS(struct event_args_s *args);
 void EV_FireXS(struct event_args_s *args);
 void EV_Reload(struct event_args_s *args);
@@ -1201,18 +1200,18 @@ void EV_Crowbar( event_args_t *args )
 //	  CROSSBOW START
 //======================
 enum crossbow_e {
-	CROSSBOW_IDLE1 = 0,	// full
-	CROSSBOW_IDLE2,		// empty
-	CROSSBOW_FIDGET1,	// full
-	CROSSBOW_FIDGET2,	// empty
-	CROSSBOW_FIRE1,		// full
-	CROSSBOW_FIRE2,		// reload
-	CROSSBOW_FIRE3,		// empty
-	CROSSBOW_RELOAD,	// from empty
-	CROSSBOW_DRAW1,		// full
-	CROSSBOW_DRAW2,		// empty
-	CROSSBOW_HOLSTER1,	// full
-	CROSSBOW_HOLSTER2,	// empty
+	CROSSBOW_IDLE1 = 0,	// drawn
+	CROSSBOW_IDLE2,		// undrawn
+	CROSSBOW_FIDGET1,	// drawn
+	CROSSBOW_FIDGET2,	// undrawn
+	CROSSBOW_FIRE1,
+	CROSSBOW_RELOAD,	// drawn
+	CROSSBOW_DRAWBACK,
+	CROSSBOW_UNDRAW,
+	CROSSBOW_DRAW1,		// drawn
+	CROSSBOW_DRAW2,		// undrawn
+	CROSSBOW_HOLSTER1,	// drawn
+	CROSSBOW_HOLSTER2,	// undrawn
 };
 
 //=====================
@@ -1228,6 +1227,7 @@ void EV_BoltCallback ( struct tempent_s *ent, float frametime, float currenttime
 
 void EV_FireCrossbow2( event_args_t *args )
 {
+#if 0 // Poke646 - No crossbow fire event 2.
 	vec3_t vecSrc, vecEnd;
 	vec3_t up, right, forward;
 	pmtrace_t tr;
@@ -1311,6 +1311,7 @@ void EV_FireCrossbow2( event_args_t *args )
 	}
 
 	gEngfuncs.pEventAPI->EV_PopPMStates();
+#endif // Poke646 - No crossbow fire event 2.
 }
 
 //TODO: Fully predict the fliying bolt.
@@ -1322,16 +1323,12 @@ void EV_FireCrossbow( event_args_t *args )
 	idx = args->entindex;
 	VectorCopy( args->origin, origin );
 	
-	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/xbow_fire1.wav", 1, ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong(0,0xF) );
-	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_ITEM, "weapons/xbow_reload1.wav", gEngfuncs.pfnRandomFloat(0.95, 1.0), ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong(0,0xF) );
+	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/cmlwbr_fire.wav", 1, ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong(0,0xF) );
 
 	//Only play the weapon anims if I shot it. 
 	if ( EV_IsLocal( idx ) )
 	{
-		if ( args->iparam1 )
-			gEngfuncs.pEventAPI->EV_WeaponAnimation( CROSSBOW_FIRE1, 1 );
-		else if ( args->iparam2 )
-			gEngfuncs.pEventAPI->EV_WeaponAnimation( CROSSBOW_FIRE3, 1 );
+		gEngfuncs.pEventAPI->EV_WeaponAnimation( CROSSBOW_FIRE1, 1 );
 
 		V_PunchAxis( 0, -2.0 );
 	}
@@ -1736,47 +1733,6 @@ int EV_TFC_IsAllyTeam( int iTeam1, int iTeam2 )
 
 
 
-//======================
-//	  CMLWBR START 
-//======================
-
-enum cmlwbr_e {
-	CMLWBR_IDLE1 = 0,	// drawn
-	CMLWBR_IDLE2,		// undrawn
-	CMLWBR_FIDGET1,		// drawn
-	CMLWBR_FIDGET2,		// undrawn
-	CMLWBR_FIRE1,
-	CMLWBR_RELOAD,		// drawn
-	CMLWBR_DRAWBACK,
-	CMLWBR_UNDRAW,
-	CMLWBR_DRAW1,		// drawn
-	CMLWBR_DRAW2,		// undrawn
-	CMLWBR_HOLSTER1,	// drawn
-	CMLWBR_HOLSTER2,	// undrawn
-};
-
-//TODO: Fully predict the fliying bolt.
-void EV_FireCmlwbr(event_args_t *args)
-{
-	int idx;
-	vec3_t origin;
-
-	idx = args->entindex;
-	VectorCopy(args->origin, origin);
-
-	gEngfuncs.pEventAPI->EV_PlaySound(idx, origin, CHAN_WEAPON, "weapons/cmlwbr_fire.wav", 1, ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong(0, 0xF));
-
-	//Only play the weapon anims if I shot it. 
-	if (EV_IsLocal(idx))
-	{
-		gEngfuncs.pEventAPI->EV_WeaponAnimation(CMLWBR_FIRE1, 1);
-
-		V_PunchAxis(0, -2.0);
-	}
-}
-//======================
-//	   CMLWBR END
-//======================
 
 
 //======================

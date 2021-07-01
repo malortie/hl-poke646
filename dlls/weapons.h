@@ -67,8 +67,8 @@ public:
 #define WEAPON_CROWBAR			1
 #define	WEAPON_GLOCK			2
 #define WEAPON_MP5				3
-#define WEAPON_SHOTGUN			5
-#define WEAPON_CMLWBR			6
+#define WEAPON_SHOTGUN			4
+#define WEAPON_CROSSBOW			5
 #define WEAPON_XS				7
 #define WEAPON_PIPEBOMB			8
 #define	WEAPON_SATCHEL			11
@@ -107,7 +107,7 @@ public:
 #define GLOCK_WEIGHT	10
 #define MP5_WEIGHT			15
 #define SHOTGUN_WEIGHT		15
-#define CMLWBR_WEIGHT		10
+#define CROSSBOW_WEIGHT		10
 #define XS_WEIGHT			20
 #define PIPEBOMB_WEIGHT		-10
 #define SATCHEL_WEIGHT		-10
@@ -161,7 +161,7 @@ public:
 #define GLOCK_MAX_CLIP			25
 #define MP5_MAX_CLIP			50
 #define SHOTGUN_MAX_CLIP		12
-#define CMLWBR_MAX_CLIP			5
+#define CROSSBOW_MAX_CLIP		5
 #define XS_MAX_CLIP				15
 #define PIPEBOMB_MAX_CLIP		WEAPON_NOCLIP
 #define SATCHEL_MAX_CLIP		WEAPON_NOCLIP
@@ -189,7 +189,7 @@ public:
 #define GLOCK_DEFAULT_GIVE		15
 #define MP5_DEFAULT_GIVE		50
 #define SHOTGUN_DEFAULT_GIVE		12
-#define CMLWBR_DEFAULT_GIVE			5
+#define CROSSBOW_DEFAULT_GIVE		5
 #define XS_DEFAULT_GIVE				15
 #define PIPEBOMB_DEFAULT_GIVE		1
 #define SATCHEL_DEFAULT_GIVE		1
@@ -216,7 +216,7 @@ public:
 #define AMMO_NAILCLIP_GIVE		GLOCK_MAX_CLIP
 #define AMMO_NAILROUND_GIVE		MP5_MAX_CLIP
 #define AMMO_BUCKSHOTBOX_GIVE	12
-#define AMMO_CMLWBRCLIP_GIVE	CMLWBR_MAX_CLIP
+#define AMMO_CROSSBOWCLIP_GIVE	CROSSBOW_MAX_CLIP
 #define AMMO_XENCANDY_GIVE		XS_MAX_CLIP
 #define AMMO_M203BOX_GIVE		2
 #else
@@ -683,6 +683,7 @@ public:
 	void Holster( int skiplocal = 0 );
 	void Reload( void );
 	void WeaponIdle( void );
+	BOOL ShouldWeaponIdle( void );
 
 	int m_fInZoom; // don't save this
 
@@ -694,6 +695,23 @@ public:
 		return FALSE;
 #endif
 	}
+
+#ifndef CLIENT_DLL
+	int		Save(CSave& save);
+	int		Restore(CRestore& restore);
+	static	TYPEDESCRIPTION m_SaveData[];
+#endif
+
+	BOOL IsDrawn(void);
+	void SetDrawn(BOOL bDrawn);
+
+	void ToggleZoom(void);
+	void ZoomIn(int iFOV);
+	void ZoomOut(void);
+
+	void DoReload();
+	void DrawBack(void);
+	void Undraw();
 
 private:
 	unsigned short m_usCrossbow;
@@ -1101,57 +1119,6 @@ private:
 
 
 
-class CCmlwbr : public CBasePlayerWeapon
-{
-public:
-
-#ifndef CLIENT_DLL
-	int		Save(CSave &save);
-	int		Restore(CRestore &restore);
-	static	TYPEDESCRIPTION m_SaveData[];
-#endif
-
-	void Spawn(void);
-	void Precache(void);
-	int iItemSlot() { return 3; }
-	int GetItemInfo(ItemInfo *p);
-
-	void FireBolt(void);
-	void PrimaryAttack(void);
-	void SecondaryAttack(void);
-	int AddToPlayer(CBasePlayer *pPlayer);
-	BOOL Deploy();
-	void Holster(int skiplocal = 0);
-	void Reload(void);
-	void WeaponIdle(void);
-	BOOL ShouldWeaponIdle(void);
-
-	int m_fInZoom; // don't save this
-
-	virtual BOOL UseDecrement(void)
-	{
-#if defined( CLIENT_WEAPONS )
-		return TRUE;
-#else
-		return FALSE;
-#endif
-	}
-
-	BOOL IsDrawn(void);
-	void SetDrawn(BOOL bDrawn);
-
-	void ToggleZoom(void);
-	void ZoomIn(int iFOV);
-	void ZoomOut(void);
-
-	void DoReload();
-	void DrawBack(void);
-	void Undraw();
-
-private:
-	unsigned short m_usReload;
-	unsigned short m_usCmlwbr;
-};
 
 class CXenSquasher : public CBasePlayerWeapon
 {

@@ -1678,12 +1678,12 @@ TYPEDESCRIPTION	CGlock::m_SaveData[] =
 };
 IMPLEMENT_SAVERESTORE( CGlock, CBasePlayerWeapon );
 
-TYPEDESCRIPTION	CCmlwbr::m_SaveData[] =
+TYPEDESCRIPTION	CCrossbow::m_SaveData[] =
 {
-	DEFINE_FIELD(CCmlwbr, m_fInAttack, FIELD_INTEGER),
-	DEFINE_FIELD(CCmlwbr, m_fInZoom, FIELD_INTEGER),
+	DEFINE_FIELD(CCrossbow, m_fInAttack, FIELD_INTEGER),
+	DEFINE_FIELD(CCrossbow, m_fInZoom, FIELD_INTEGER),
 };
-IMPLEMENT_SAVERESTORE(CCmlwbr, CBasePlayerWeapon);
+IMPLEMENT_SAVERESTORE(CCrossbow, CBasePlayerWeapon);
 
 TYPEDESCRIPTION	CXenSquasher::m_SaveData[] =
 {
