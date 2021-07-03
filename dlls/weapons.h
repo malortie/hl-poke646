@@ -69,9 +69,6 @@ public:
 #define WEAPON_MP5				3
 #define WEAPON_SHOTGUN			4
 #define WEAPON_CROSSBOW			5
-#define WEAPON_XS				7
-#define WEAPON_PIPEBOMB			8
-#define	WEAPON_SATCHEL			11
 #else
 #define WEAPON_NONE				0
 #define WEAPON_CROWBAR			1
@@ -90,6 +87,8 @@ public:
 #define	WEAPON_SATCHEL			14
 #define	WEAPON_SNARK			15
 #endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
+#define WEAPON_XS				6
+#define	WEAPON_SATCHEL			7
 
 #define WEAPON_ALLWEAPONS		(~(1<<WEAPON_SUIT))
 
@@ -109,7 +108,6 @@ public:
 #define SHOTGUN_WEIGHT		15
 #define CROSSBOW_WEIGHT		10
 #define XS_WEIGHT			20
-#define PIPEBOMB_WEIGHT		-10
 #define SATCHEL_WEIGHT		-10
 #else
 #define CROWBAR_WEIGHT		0
@@ -135,8 +133,7 @@ public:
 #define BUCKSHOT_MAX_CARRY		80
 #define BOLT_MAX_CARRY			50
 #define XENCANDY_MAX_CARRY		60
-#define PIPEBOMB_MAX_CARRY		8
-#define SATCHEL_MAX_CARRY		5
+#define SATCHEL_MAX_CARRY		8
 #define	_9MM_MAX_CARRY			250
 #define M203_GRENADE_MAX_CARRY	10
 #else
@@ -163,7 +160,6 @@ public:
 #define SHOTGUN_MAX_CLIP		12
 #define CROSSBOW_MAX_CLIP		5
 #define XS_MAX_CLIP				15
-#define PIPEBOMB_MAX_CLIP		WEAPON_NOCLIP
 #define SATCHEL_MAX_CLIP		WEAPON_NOCLIP
 #else
 //#define CROWBAR_MAX_CLIP		WEAPON_NOCLIP
@@ -191,7 +187,6 @@ public:
 #define SHOTGUN_DEFAULT_GIVE		12
 #define CROSSBOW_DEFAULT_GIVE		5
 #define XS_DEFAULT_GIVE				15
-#define PIPEBOMB_DEFAULT_GIVE		1
 #define SATCHEL_DEFAULT_GIVE		1
 #else
 #define GLOCK_DEFAULT_GIVE			17
@@ -1171,33 +1166,6 @@ private:
 	unsigned short m_usXSSpin;
 };
 
-class CPipeBomb : public CSatchel
-{
-public:
-
-#ifndef CLIENT_DLL
-	int		Save(CSave &save);
-	int		Restore(CRestore &restore);
-	static	TYPEDESCRIPTION m_SaveData[];
-#endif
-
-	void Spawn(void);
-	void Precache(void);
-	int GetItemInfo(ItemInfo *p);
-	int AddToPlayer(CBasePlayer *pPlayer);
-	void PrimaryAttack(void);
-	void SecondaryAttack(void);
-	BOOL Deploy(void);
-
-	void Holster(int skiplocal = 0);
-	void WeaponIdle(void);
-	void Throw(void);
-	void Redraw(void);
-	BOOL ShouldWeaponIdle(void);
-
-private:
-	unsigned short m_usReload;
-};
 
 
 #endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )

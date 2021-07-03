@@ -1697,10 +1697,5 @@ TYPEDESCRIPTION	CXenSquasher::m_SaveData[] =
 };
 IMPLEMENT_SAVERESTORE(CXenSquasher, CBasePlayerWeapon);
 
-TYPEDESCRIPTION	CPipeBomb::m_SaveData[] =
-{
-	DEFINE_FIELD(CPipeBomb, m_thrownByPlayer, FIELD_INTEGER),
-};
-IMPLEMENT_SAVERESTORE(CPipeBomb, CSatchel);
 #endif // defined ( POKE646_DLL )
 

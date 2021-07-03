@@ -58,7 +58,6 @@ CCrowbar g_Crowbar;
 CMP5 g_MP5;
 CCrossbow g_Crossbow;
 CShotgun g_Shotgun;
-CPipeBomb g_PipeBomb;
 CXenSquasher g_Xs;
 #else
 CGlock g_Glock;
@@ -621,7 +620,6 @@ void HUD_InitClientWeapons( void )
 	HUD_PrepEntity( &g_MP5			, &player );
 	HUD_PrepEntity( &g_Shotgun		, &player );
 	HUD_PrepEntity( &g_Crossbow		, &player );
-	HUD_PrepEntity( &g_PipeBomb		, &player );
 	HUD_PrepEntity( &g_Xs			, &player );
 #else
 	HUD_PrepEntity( &g_Glock	, &player );
@@ -725,10 +723,6 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		pWeapon = &g_Shotgun;
 		break;
 
-	case WEAPON_PIPEBOMB:
-		pWeapon = &g_PipeBomb;
-		break;
-
 	case WEAPON_XS:
 		pWeapon = &g_Xs;
 		break;
@@ -785,6 +779,9 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		case WEAPON_TRIPMINE:
 			pWeapon = &g_Tripmine;
 			break;
+	case WEAPON_SATCHEL:
+		pWeapon = &g_Satchel;
+		break;
 
 		case WEAPON_SNARK:
 			pWeapon = &g_Snark;
