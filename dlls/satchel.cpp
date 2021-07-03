@@ -103,7 +103,7 @@ void CSatchelCharge :: Spawn( void )
 
 	pev->dmg = gSkillData.plrDmgSatchel;
 	// ResetSequenceInfo( );
-	pev->sequence = 1;
+	pev->sequence = 0;
 }
 
 
