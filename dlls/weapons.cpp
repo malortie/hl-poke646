@@ -1682,7 +1682,7 @@ TYPEDESCRIPTION	CCrossbow::m_SaveData[] =
 {
 	DEFINE_FIELD(CCrossbow, m_fInAttack, FIELD_INTEGER),
 	DEFINE_FIELD(CCrossbow, m_fInSpecialReload, FIELD_INTEGER),
-	DEFINE_FIELD(CCrossbow, m_fInZoom, FIELD_BOOLEAN),
+	DEFINE_FIELD(CCrossbow, m_fInZoom, FIELD_INTEGER),
 	DEFINE_FIELD(CCrossbow, m_bFirstTimeDrawback, FIELD_BOOLEAN),
 };
 IMPLEMENT_SAVERESTORE(CCrossbow, CBasePlayerWeapon);
