@@ -356,8 +356,8 @@ void CShotgun::Reload( void )
 	{
 		SendWeaponAnim( SHOTGUN_START_RELOAD );
 		m_fInSpecialReload = 1;
-		m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.6;
-		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 0.6;
+		m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 10.0f / 20.0f;
+		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 10.0f / 20.0f;
 		m_flNextPrimaryAttack = GetNextAttackDelay(1.0);
 		m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 1.0;
 		return;
@@ -376,13 +376,8 @@ void CShotgun::Reload( void )
 
 		SendWeaponAnim( SHOTGUN_RELOAD );
 
-#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
-		m_flNextReload = UTIL_WeaponTimeBase() + 0.3;
-		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 0.3;
-#else
-		m_flNextReload = UTIL_WeaponTimeBase() + 0.5;
-		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 0.5;
-#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
+		m_flNextReload = UTIL_WeaponTimeBase() + 10.0f / 35.0f;
+		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 10.0f / 35.0f;
 	}
 	else
 	{
