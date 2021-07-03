@@ -142,11 +142,12 @@ void CShotgun::PrimaryAttack()
 		return;
 	}
 
-	if (m_iClip <= 0)
+	if (m_iClip < 2)
 	{
-		Reload();
-		if (m_iClip == 0)
-			PlayEmptySound();
+		PlayEmptySound();
+		// Only attempt to reload if we have ammo.
+		if ( m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] )
+			Reload();
 		return;
 	}
 
