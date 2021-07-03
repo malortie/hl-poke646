@@ -430,8 +430,10 @@ void CShotgun::WeaponIdle( void )
 				// reload debounce has timed out
 				SendWeaponAnim( SHOTGUN_PUMP );
 				
+				/* Poke 646 - No pump sound.
 				// play cocking sound
 				EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM, "weapons/scock1.wav", 1, ATTN_NORM, 0, 95 + RANDOM_LONG(0,0x1f));
+				*/
 				m_fInSpecialReload = 0;
 				m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 1.5;
 			}
