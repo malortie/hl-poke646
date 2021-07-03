@@ -405,7 +405,7 @@ void CShotgun::WeaponIdle( void )
 	}
 #endif // !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
 
-	if (m_flTimeWeaponIdle <  UTIL_WeaponTimeBase() )
+	if (m_flTimeWeaponIdle <=  UTIL_WeaponTimeBase() )
 	{
 		if (m_iClip == 0 && m_fInSpecialReload == 0 && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType])
 		{
