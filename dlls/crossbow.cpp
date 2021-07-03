@@ -255,6 +255,8 @@ void CCrossbow::Spawn( )
 
 	m_fInSpecialReload = 0;
 
+	m_bFirstTimeDrawback = TRUE;
+
 	FallInit();// get ready to fall down.
 }
 
@@ -544,8 +546,8 @@ void CCrossbow::WeaponIdle( void )
 
 BOOL CCrossbow::ShouldWeaponIdle(void)
 {
-	// Idle if reload is pending.
-	return m_fInSpecialReload != 0;
+	// Idle if we must drawback for the first time, or if reload is pending.
+	return m_bFirstTimeDrawback || m_fInSpecialReload != 0;
 }
 
 BOOL CCrossbow::IsDrawn(void)
@@ -615,6 +617,8 @@ void CCrossbow::DrawBack(void)
 	EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_AUTO, "weapons/cmlwbr_drawback.wav", RANDOM_FLOAT(0.95, 1.0), ATTN_NORM, 0, 93 + RANDOM_LONG(0, 0xF));
 
 	SetDrawn(TRUE);
+
+	m_bFirstTimeDrawback = FALSE; // Drawback is now done for the first time.
 
 	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + DRAWBACK_SEQUENCE_DURATION;
 	m_flNextPrimaryAttack = m_flNextSecondaryAttack = GetNextAttackDelay(DRAWBACK_SEQUENCE_DURATION);

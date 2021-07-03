@@ -686,6 +686,7 @@ public:
 	BOOL ShouldWeaponIdle( void );
 
 	int m_fInZoom; // don't save this
+	BOOL m_bFirstTimeDrawback;
 
 	virtual BOOL UseDecrement( void )
 	{ 

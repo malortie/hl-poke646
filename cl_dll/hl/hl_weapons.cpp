@@ -900,15 +900,18 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	}
 
 #if defined ( POKE646_CLIENT_DLL )
-	if ( player.m_pActiveItem->m_iId == WEAPON_XS )
+	if ( player.m_pActiveItem->m_iId == WEAPON_CROSSBOW )
 	{
-		player.ammo_xencandy = (int)from->client.vuser2[ 1 ];
+		 ( ( CCrossbow * )player.m_pActiveItem)->m_fInZoom = static_cast<int>(from->client.vuser2[ 1 ]);
+		 ( ( CCrossbow * )player.m_pActiveItem)->m_bFirstTimeDrawback = static_cast<BOOL>(from->client.vuser2[ 2 ]);
 	}
 #else
 	if ( player.m_pActiveItem->m_iId == WEAPON_RPG )
+	else if ( player.m_pActiveItem->m_iId == WEAPON_XS )
 	{
 		 ( ( CRpg * )player.m_pActiveItem)->m_fSpotActive = (int)from->client.vuser2[ 1 ];
 		 ( ( CRpg * )player.m_pActiveItem)->m_cActiveRockets = (int)from->client.vuser2[ 2 ];
+		player.ammo_xencandy = (int)from->client.vuser2[ 1 ];
 	}
 #endif // defined ( POKE646_CLIENT_DLL )
 	
@@ -978,15 +981,18 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	to->client.ammo_rockets				= player.ammo_rockets;
 
 #if defined ( POKE646_CLIENT_DLL )
-	if (player.m_pActiveItem->m_iId == WEAPON_XS)
+	if ( player.m_pActiveItem->m_iId == WEAPON_CROSSBOW )
 	{
-		from->client.vuser2[ 1 ] = player.ammo_xencandy;
+		 to->client.vuser2[ 1 ] = ( ( CCrossbow * )player.m_pActiveItem)->m_fInZoom;
+		 to->client.vuser2[ 2 ] = ( ( CCrossbow * )player.m_pActiveItem)->m_bFirstTimeDrawback;
 	}
 #else
 	if ( player.m_pActiveItem->m_iId == WEAPON_RPG )
+	else if (player.m_pActiveItem->m_iId == WEAPON_XS)
 	{
 		 from->client.vuser2[ 1 ] = ( ( CRpg * )player.m_pActiveItem)->m_fSpotActive;
 		 from->client.vuser2[ 2 ] = ( ( CRpg * )player.m_pActiveItem)->m_cActiveRockets;
+		from->client.vuser2[ 1 ] = player.ammo_xencandy;
 	}
 #endif // defined ( POKE646_CLIENT_DLL )
 

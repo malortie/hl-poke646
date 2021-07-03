@@ -1763,15 +1763,18 @@ void UpdateClientData ( const edict_t *ent, int sendweapons, struct clientdata_s
 					cd->vuser4.z	= pl->m_rgAmmo[gun->m_iSecondaryAmmoType];
 					
 #if defined ( POKE646_DLL )
-					if ( pl->m_pActiveItem->m_iId == WEAPON_XS )
+					if ( pl->m_pActiveItem->m_iId == WEAPON_CROSSBOW )
 					{
-						cd->vuser2.y = pl->ammo_xencandy;
+						cd->vuser2.y = ( ( CCrossbow * )pl->m_pActiveItem)->m_fInZoom;
+						cd->vuser2.z = ( ( CCrossbow * )pl->m_pActiveItem)->m_bFirstTimeDrawback;
 					}
 #else
 					if ( pl->m_pActiveItem->m_iId == WEAPON_RPG )
+					else if ( pl->m_pActiveItem->m_iId == WEAPON_XS )
 					{
 						cd->vuser2.y = ( ( CRpg * )pl->m_pActiveItem)->m_fSpotActive;
 						cd->vuser2.z = ( ( CRpg * )pl->m_pActiveItem)->m_cActiveRockets;
+						cd->vuser2.y = pl->ammo_xencandy;
 					}
 #endif // defined ( POKE646_DLL )
 				}
