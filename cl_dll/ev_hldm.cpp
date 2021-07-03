@@ -306,11 +306,11 @@ void EV_HLDM_GunshotDecalTrace( pmtrace_t *pTrace, char *decalName )
 				velocity,												// velocity
 				gEngfuncs.pfnRandomFloat(30, 35) / 100, 				// scale
 				modelindex, 											// model index
-				kRenderNormal, 											// rendermode
+				kRenderTransAlpha, 										// rendermode
 				kRenderFxNoDissipation, 								// renderfx
 				gEngfuncs.pfnRandomFloat(0.25, 0.5), 					// alpha
-				0.01, 													// life
-				FTENT_SPRCYCLE | FTENT_FADEOUT);						// flags
+				1.0f, 													// life
+				FTENT_SPRANIMATE);										// flags
 
 			if (pSmoke)
 			{
@@ -318,7 +318,7 @@ void EV_HLDM_GunshotDecalTrace( pmtrace_t *pTrace, char *decalName )
 				VectorAngles(velocity, angles);
 
 				pSmoke->flags |= FTENT_CLIENTCUSTOM;
-				pSmoke->entity.curstate.framerate = 4;
+				pSmoke->entity.curstate.framerate = gEngfuncs.pfnRandomFloat(26, 30);
 				pSmoke->entity.baseline.vuser1 = angles;
 				pSmoke->callback = EV_WallPuffCallback;
 			}
