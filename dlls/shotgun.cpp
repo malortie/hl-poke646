@@ -185,10 +185,8 @@ void CShotgun::PrimaryAttack()
 
 	UTIL_MakeVectors(m_pPlayer->pev->v_angle + m_pPlayer->pev->punchangle);
 
-	// Take the inverse forward unit vector and zero out z.
-	// Only horizontal impulse allowed.
+	// Take the inverse forward unit vector.
 	Vector vecImpulse = -gpGlobals->v_forward;
-	vecImpulse.z = 0;
 
 	// Send player impulse.
 	m_pPlayer->pev->velocity = m_pPlayer->pev->velocity + vecImpulse * 200;
@@ -263,6 +261,9 @@ void CShotgun::PrimaryAttack()
 
 	m_fInSpecialReload = 0;
 #endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
+	m_pPlayer->pev->velocity.x = m_pPlayer->pev->velocity.x + vecImpulse.x * 200;
+	m_pPlayer->pev->velocity.y = m_pPlayer->pev->velocity.y + vecImpulse.y * 200;
+	m_pPlayer->pev->velocity.z = m_pPlayer->pev->velocity.z + vecImpulse.z * 100; // Weaker force applied vertically.
 }
 
 
