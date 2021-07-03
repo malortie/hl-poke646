@@ -189,7 +189,6 @@ void CShotgun::PrimaryAttack()
 	Vector vecImpulse = -gpGlobals->v_forward;
 
 	// Send player impulse.
-	m_pPlayer->pev->velocity = m_pPlayer->pev->velocity + vecImpulse * 200;
 #else
 
 	// don't fire underwater
