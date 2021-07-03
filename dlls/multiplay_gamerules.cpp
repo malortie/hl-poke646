@@ -660,7 +660,7 @@ void CHalfLifeMultiplay :: PlayerKilled( CBasePlayer *pVictim, entvars_t *pKille
 		PK->m_flNextDecalTime = gpGlobals->time;
 	}
 #ifndef HLDEMO_BUILD
-	if ( pVictim->HasNamedPlayerItem("weapon_satchel") )
+	if ( pVictim->HasNamedPlayerItem("weapon_pipebomb") )
 	{
 		DeactivateSatchels( pVictim );
 	}
