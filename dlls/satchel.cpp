@@ -50,13 +50,15 @@ public:
 
 	void EXPORT SatchelSlide( CBaseEntity *pOther );
 	void EXPORT SatchelThink( void );
-	void EXPORT PickupTouch( CBaseEntity* pOther );
 
 	virtual int		Save(CSave &save);
 	virtual int		Restore(CRestore &restore);
 	static	TYPEDESCRIPTION m_SaveData[];
 
 	EHANDLE		m_hOwner;
+
+	BOOL AddSatchelAmmoToPlayer( CBasePlayer* pPlayer );
+	int GetNumSatchelDeployedByPlayer( CBasePlayer* pPlayer );
 
 public:
 	void Deactivate( void );
@@ -66,7 +68,6 @@ LINK_ENTITY_TO_CLASS( monster_satchel, CSatchelCharge );
 TYPEDESCRIPTION	CSatchelCharge::m_SaveData[] =
 {
 	DEFINE_FIELD(CSatchelCharge, m_hOwner, FIELD_EHANDLE),
-	DEFINE_FIELD(CSatchelCharge, m_thrownByPlayer, FIELD_INTEGER),
 };
 IMPLEMENT_SAVERESTORE(CSatchelCharge, CGrenade);
 
@@ -112,7 +113,7 @@ void CSatchelCharge::SatchelSlide( CBaseEntity *pOther )
 	entvars_t	*pevOther = pOther->pev;
 
 	// don't hit the guy that launched this grenade
-	if ( pOther->edict() == pev->owner )
+	if ( pOther == m_hOwner )
 		return;
 
 	// pev->avelocity = Vector (300, 300, 300);
@@ -163,16 +164,33 @@ void CSatchelCharge :: SatchelThink( void )
 	{
 		pev->velocity.z -= 8;
 	}	
-	if ((pev->flags & FL_ONGROUND) && pev->velocity.Length() <= 1)
+
+	if (m_hOwner != NULL)
 	{
-		if (pev->owner != NULL)
+		if (pev->owner != NULL && pev->owner == m_hOwner->edict())
 		{
-			m_hOwner = CBaseEntity::Instance(pev->owner);
-			pev->owner = NULL;
+			if (!Intersects(m_hOwner))
+			{
+				pev->owner = NULL;
+			}
 		}
 
-		SetThink(NULL);
-		SetTouch(&CSatchelCharge::PickupTouch);
+		if (std::abs(pev->velocity.x) <= 0 && std::abs(pev->velocity.y) <= 0)
+		{
+			if (Intersects(m_hOwner))
+			{
+				CBasePlayer* pPlayer = (CBasePlayer*)((CBaseEntity*)m_hOwner);
+				if (pPlayer)
+				{
+					if (AddSatchelAmmoToPlayer(pPlayer))
+					{
+						SetThink( &CSatchelCharge::SUB_Remove );
+						SetTouch( NULL );
+						pev->nextthink = gpGlobals->time;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -182,6 +200,7 @@ void CSatchelCharge :: Precache( void )
 	PRECACHE_SOUND("weapons/pb_bounce1.wav");
 	PRECACHE_SOUND("weapons/pb_bounce2.wav");
 	PRECACHE_SOUND("weapons/pb_bounce3.wav");
+	PRECACHE_SOUND("items/9mmclip1.wav");
 }
 
 void CSatchelCharge :: BounceSound( void )
@@ -194,42 +213,66 @@ void CSatchelCharge :: BounceSound( void )
 	}
 }
 
-void CSatchelCharge::PickupTouch(CBaseEntity* pOther)
+BOOL CSatchelCharge::AddSatchelAmmoToPlayer( CBasePlayer* pPlayer )
 {
-	if (pOther != m_hOwner || !pOther->IsPlayer())
-		return;
+	if (!pPlayer)
+		return FALSE;
 
-	CBasePlayer* pPlayer = (CBasePlayer*)pOther;
-
-	CSatchel *pSatchel = (CSatchel*)Create("weapon_pipebomb", pPlayer->pev->origin, pPlayer->pev->angles);
-	if (pSatchel)
+	CBasePlayerItem *pItem = NULL;
+	int i;
+	BOOL found = FALSE;
+ 
+	for ( i = 0 ; i < MAX_ITEM_TYPES && !found; i++ )
 	{
-		BOOL found = FALSE;
-		CBasePlayerItem* pItem = NULL;
-		for (int i = 0; i < MAX_ITEM_TYPES && !found; i++)
+		pItem = pPlayer->m_rgpPlayerItems[ i ];
+		
+		while (pItem)
 		{
-			pItem = pPlayer->m_rgpPlayerItems[i];
-
-			while (pItem)
+			if ( pItem->m_iId == WEAPON_SATCHEL )
 			{
-				if (pItem->m_iId == WEAPON_SATCHEL)
-				{
-					((CSatchel*)pItem)->m_chargeReady = 2;
-					((CSatchel*)pItem)->WeaponIdle();
-					found = TRUE;
-					break;
-				}
+				found = TRUE;
 
-				pItem = pItem->m_pNext;
+				CSatchel* pSatchel = (CSatchel*)pItem;
+				if (pSatchel && pPlayer->GiveAmmo(1, "Satchel Charge", SATCHEL_MAX_CARRY) != -1)
+				{
+					EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+
+					if (GetNumSatchelDeployedByPlayer(pPlayer) <= 1)
+					{
+						// Player has only 1 satchel deployed, which is the current instance,
+						// so make satchel weapon play redraw animation.
+						pSatchel->m_flTimeWeaponIdle = UTIL_WeaponTimeBase();
+						pSatchel->m_chargeReady = 2;
+					}
+					return TRUE;
+				}
+				break;
 			}
+			pItem = pItem->m_pNext;
 		}
 	}
 
-	SetThink( &CSatchelCharge::SUB_Remove );
-	SetTouch( NULL );
-	pev->nextthink = gpGlobals->time;
+	return FALSE;
+}
 
-	//ALERT(at_console, "Pickup touch.\n");
+int CSatchelCharge::GetNumSatchelDeployedByPlayer( CBasePlayer* pPlayer )
+{
+	if (!pPlayer)
+		return 0;
+
+	int count = 0;
+	CBaseEntity *pSatchel = NULL;
+
+	while ((pSatchel = UTIL_FindEntityInSphere( pSatchel, pPlayer->pev->origin, 4096 )) != NULL)
+	{
+		if (FClassnameIs( pSatchel->pev, "monster_satchel"))
+		{
+			CSatchelCharge* pSatchelCharge = (CSatchelCharge*)pSatchel;
+			if ( pSatchelCharge && pSatchelCharge->m_hOwner == pPlayer )
+				count++;
+		}
+	}
+	return count;
 }
 #endif // !CLIENT_DLL
 
@@ -408,21 +451,22 @@ void CSatchel::PrimaryAttack()
 		{
 		SendWeaponAnim( SATCHEL_RADIO_FIRE );
 
-		edict_t *pPlayer = m_pPlayer->edict( );
-
+#ifndef CLIENT_DLL
 		CBaseEntity *pSatchel = NULL;
 
 		while ((pSatchel = UTIL_FindEntityInSphere( pSatchel, m_pPlayer->pev->origin, 4096 )) != NULL)
 		{
 			if (FClassnameIs( pSatchel->pev, "monster_satchel"))
 			{
-				if (pSatchel->pev->owner == pPlayer || pSatchel->m_thrownByPlayer == 1)
+				CSatchelCharge* pSatchelCharge = (CSatchelCharge*)pSatchel;
+				if ( pSatchelCharge && pSatchelCharge->m_hOwner == m_pPlayer )
 				{
 					pSatchel->Use( m_pPlayer, m_pPlayer, USE_ON, 0 );
 					m_chargeReady = 2;
 				}
 			}
 		}
+#endif // !CLIENT_DLL
 
 		m_chargeReady = 2;
 		m_flNextPrimaryAttack = GetNextAttackDelay(0.5);
@@ -461,10 +505,15 @@ void CSatchel::Throw( void )
 		CBaseEntity *pSatchel = Create( "monster_satchel", vecSrc, Vector( 0, 0, 0), m_pPlayer->edict() );
 		pSatchel->pev->velocity = vecThrow;
 		pSatchel->pev->avelocity.y = 400;
-		pSatchel->m_thrownByPlayer = 1;
 
 		m_pPlayer->pev->viewmodel = MAKE_STRING("models/v_pipebomb_watch.mdl");
 		m_pPlayer->pev->weaponmodel = MAKE_STRING("models/p_pipebomb_watch.mdl");
+
+		CSatchelCharge* pSatchelCharge = (CSatchelCharge*)pSatchel;
+		if (pSatchelCharge)
+		{
+			pSatchelCharge->m_hOwner = CBaseEntity::Instance(pSatchel->pev->owner);
+		}
 #else
 		LoadVModel ( "models/v_pipebomb_watch.mdl", m_pPlayer );
 #endif
@@ -486,11 +535,6 @@ void CSatchel::Throw( void )
 
 void CSatchel::WeaponIdle( void )
 {
-	if (m_chargeReady == 2)
-	{
-		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() - 0.1;
-	}
-
 	if ( m_flTimeWeaponIdle > UTIL_WeaponTimeBase() )
 		return;
 
@@ -554,7 +598,7 @@ void DeactivateSatchels( CBasePlayer *pOwner )
 
 		if ( pSatchel )
 		{
-			if ( pSatchel->pev->owner == pOwner->edict() )
+			if ( pSatchel->m_hOwner == pOwner )
 			{
 				pSatchel->Deactivate();
 			}

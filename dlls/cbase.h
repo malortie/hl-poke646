@@ -365,9 +365,6 @@ public:
 	enum EGON_FIRESTATE { FIRE_OFF, FIRE_CHARGE };
 	int m_fireState;
 
-#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
-	int m_thrownByPlayer;
-#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 };
 
 
