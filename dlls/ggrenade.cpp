@@ -72,11 +72,11 @@ void CGrenade::Explode( TraceResult *pTrace, int bitsDamageType )
 			WRITE_COORD(pev->origin.z + 16);
 			WRITE_COORD(pev->origin.x);
 			WRITE_COORD(pev->origin.y);
-			WRITE_COORD(pev->origin.z + 16 + 384); // reach damage radius over .3 seconds
+			WRITE_COORD(pev->origin.z + 16 + 768); // reach damage radius over .3 seconds
 			WRITE_SHORT(g_sModelIndexWhite);
 			WRITE_BYTE(0); // startframe
 			WRITE_BYTE(0); // framerate
-			WRITE_BYTE(3); // life
+			WRITE_BYTE(2); // life
 			WRITE_BYTE(16);  // width
 			WRITE_BYTE(0);   // noise
 			WRITE_BYTE(255); // r
