@@ -101,7 +101,8 @@ enum gauss_e {
 	GAUSS_FIRE,
 	GAUSS_FIRE2,
 	GAUSS_HOLSTER,
-	GAUSS_DRAW
+	GAUSS_DRAW,
+	GAUSS_RELOAD,
 };
 
 void EV_HLDM_GunshotDecalTrace( pmtrace_t *pTrace, char *decalName );

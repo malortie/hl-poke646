@@ -87,7 +87,7 @@ public:
 #define	WEAPON_SATCHEL			14
 #define	WEAPON_SNARK			15
 #endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
-#define WEAPON_XS				6
+#define WEAPON_GAUSS			6
 #define	WEAPON_SATCHEL			7
 
 #define WEAPON_ALLWEAPONS		(~(1<<WEAPON_SUIT))
@@ -107,7 +107,6 @@ public:
 #define MP5_WEIGHT			15
 #define SHOTGUN_WEIGHT		15
 #define CROSSBOW_WEIGHT		10
-#define XS_WEIGHT			20
 #define SATCHEL_WEIGHT		-10
 #else
 #define CROWBAR_WEIGHT		0
@@ -129,10 +128,10 @@ public:
 
 // weapon clip/carry ammo capacities
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
+#define URANIUM_MAX_CARRY		60
 #define	NAILS_MAX_CARRY			300
 #define BUCKSHOT_MAX_CARRY		80
 #define BOLT_MAX_CARRY			50
-#define XENCANDY_MAX_CARRY		60
 #define SATCHEL_MAX_CARRY		8
 #define	_9MM_MAX_CARRY			250
 #define M203_GRENADE_MAX_CARRY	10
@@ -159,7 +158,7 @@ public:
 #define MP5_MAX_CLIP			50
 #define SHOTGUN_MAX_CLIP		12
 #define CROSSBOW_MAX_CLIP		5
-#define XS_MAX_CLIP				15
+#define GAUSS_MAX_CLIP			15
 #define SATCHEL_MAX_CLIP		WEAPON_NOCLIP
 #else
 //#define CROWBAR_MAX_CLIP		WEAPON_NOCLIP
@@ -186,7 +185,6 @@ public:
 #define MP5_DEFAULT_GIVE		50
 #define SHOTGUN_DEFAULT_GIVE		12
 #define CROSSBOW_DEFAULT_GIVE		5
-#define XS_DEFAULT_GIVE				15
 #define SATCHEL_DEFAULT_GIVE		1
 #else
 #define GLOCK_DEFAULT_GIVE			17
@@ -200,6 +198,7 @@ public:
 #define GAUSS_DEFAULT_GIVE			20
 #define EGON_DEFAULT_GIVE			20
 #define HANDGRENADE_DEFAULT_GIVE	5
+#define GAUSS_DEFAULT_GIVE			15
 #define SATCHEL_DEFAULT_GIVE		1
 #define TRIPMINE_DEFAULT_GIVE		1
 #define SNARK_DEFAULT_GIVE			5
@@ -212,7 +211,6 @@ public:
 #define AMMO_NAILROUND_GIVE		MP5_MAX_CLIP
 #define AMMO_BUCKSHOTBOX_GIVE	12
 #define AMMO_CROSSBOWCLIP_GIVE	CROSSBOW_MAX_CLIP
-#define AMMO_XENCANDY_GIVE		XS_MAX_CLIP
 #define AMMO_M203BOX_GIVE		2
 #else
 #define AMMO_URANIUMBOX_GIVE	20
@@ -850,6 +848,7 @@ public:
 
 	BOOL Deploy( void );
 	void Holster( int skiplocal = 0  );
+	void Reload( void );
 
 	void PrimaryAttack( void );
 	void SecondaryAttack( void );
@@ -1116,56 +1115,7 @@ private:
 
 
 
-class CXenSquasher : public CBasePlayerWeapon
-{
-public:
 
-#ifndef CLIENT_DLL
-	int		Save(CSave &save);
-	int		Restore(CRestore &restore);
-	static	TYPEDESCRIPTION m_SaveData[];
-#endif
-
-	void Spawn(void);
-	void Precache(void);
-	int iItemSlot(void) { return 4; }
-	int GetItemInfo(ItemInfo *p);
-	int AddToPlayer(CBasePlayer *pPlayer);
-
-	BOOL Deploy(void);
-	void Holster(int skiplocal = 0);
-	void Reload(void);
-
-	void PrimaryAttack(void);
-	void SecondaryAttack(void);
-	void WeaponIdle(void);
-
-	void StartFire(void);
-	void Fire(Vector vecOrigSrc, Vector vecDirShooting, float flDamage);
-	float GetFullChargeTime(void);
-	int m_iBalls;
-	int m_iGlow;
-	int m_iBeam;
-	int m_iSoundState; // don't save this
-
-	// was this weapon just fired primary or secondary?
-	// we need to know so we can pick the right set of effects. 
-	BOOL m_fPrimaryFire;
-
-	virtual BOOL UseDecrement(void)
-	{
-#if defined( CLIENT_WEAPONS )
-		return TRUE;
-#else
-		return FALSE;
-#endif
-	}
-
-private:
-	unsigned short m_usReload;
-	unsigned short m_usXSFire;
-	unsigned short m_usXSSpin;
-};
 
 
 

@@ -24,6 +24,7 @@
 #include "soundent.h"
 #include "shake.h"
 #include "gamerules.h"
+#include "xenspit.h"
 
 
 #define	GAUSS_PRIMARY_CHARGE_VOLUME	256// how loud gauss is while charging
@@ -38,10 +39,11 @@ enum gauss_e {
 	GAUSS_FIRE,
 	GAUSS_FIRE2,
 	GAUSS_HOLSTER,
-	GAUSS_DRAW
+	GAUSS_DRAW,
+	GAUSS_RELOAD,
 };
 
-LINK_ENTITY_TO_CLASS( weapon_gauss, CGauss );
+LINK_ENTITY_TO_CLASS( weapon_xs, CGauss );
 
 float CGauss::GetFullChargeTime( void )
 {
@@ -65,7 +67,7 @@ void CGauss::Spawn( )
 {
 	Precache( );
 	m_iId = WEAPON_GAUSS;
-	SET_MODEL(ENT(pev), "models/w_gauss.mdl");
+	SET_MODEL(ENT(pev), "models/w_xs.mdl");
 
 	m_iDefaultAmmo = GAUSS_DEFAULT_GIVE;
 
@@ -75,17 +77,18 @@ void CGauss::Spawn( )
 
 void CGauss::Precache( void )
 {
-	PRECACHE_MODEL("models/w_gauss.mdl");
-	PRECACHE_MODEL("models/v_gauss.mdl");
-	PRECACHE_MODEL("models/p_gauss.mdl");
+	PRECACHE_MODEL("models/w_xs.mdl");
+	PRECACHE_MODEL("models/v_xs.mdl");
+	PRECACHE_MODEL("models/p_xs.mdl");
 
 	PRECACHE_SOUND("items/9mmclip1.wav");
 
-	PRECACHE_SOUND("weapons/gauss2.wav");
-	PRECACHE_SOUND("weapons/electro4.wav");
-	PRECACHE_SOUND("weapons/electro5.wav");
-	PRECACHE_SOUND("weapons/electro6.wav");
-	PRECACHE_SOUND("ambience/pulsemachine.wav");
+	PRECACHE_SOUND("weapons/xs_moan1.wav");
+	PRECACHE_SOUND("weapons/xs_moan2.wav");
+	PRECACHE_SOUND("weapons/xs_moan3.wav");
+	PRECACHE_SOUND("weapons/xs_reload.wav");
+	PRECACHE_SOUND("weapons/xs_shot.wav");
+	PRECACHE_SOUND("weapons/xs_windup.wav");
 	
 	m_iGlow = PRECACHE_MODEL( "sprites/hotglow.spr" );
 	m_iBalls = PRECACHE_MODEL( "sprites/hotglow.spr" );
@@ -93,6 +96,11 @@ void CGauss::Precache( void )
 
 	m_usGaussFire = PRECACHE_EVENT( 1, "events/gauss.sc" );
 	m_usGaussSpin = PRECACHE_EVENT( 1, "events/gaussspin.sc" );
+
+	PRECACHE_MODEL("sprites/glow02.spr");
+
+	UTIL_PrecacheOther("xensmallspit");
+	UTIL_PrecacheOther("xenlargespit");
 }
 
 int CGauss::AddToPlayer( CBasePlayer *pPlayer )
@@ -114,9 +122,9 @@ int CGauss::GetItemInfo(ItemInfo *p)
 	p->iMaxAmmo1 = URANIUM_MAX_CARRY;
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = -1;
-	p->iMaxClip = WEAPON_NOCLIP;
+	p->iMaxClip = GAUSS_MAX_CLIP;
 	p->iSlot = 3;
-	p->iPosition = 1;
+	p->iPosition = 0;
 	p->iId = m_iId = WEAPON_GAUSS;
 	p->iFlags = 0;
 	p->iWeight = GAUSS_WEIGHT;
@@ -127,11 +135,13 @@ int CGauss::GetItemInfo(ItemInfo *p)
 BOOL CGauss::Deploy( )
 {
 	m_pPlayer->m_flPlayAftershock = 0.0;
-	return DefaultDeploy( "models/v_gauss.mdl", "models/p_gauss.mdl", GAUSS_DRAW, "gauss" );
+	return DefaultDeploy( "models/v_xs.mdl", "models/p_xs.mdl", GAUSS_DRAW, "gauss" );
 }
 
 void CGauss::Holster( int skiplocal /* = 0 */ )
 {
+	m_fInReload = FALSE;
+
 	PLAYBACK_EVENT_FULL( FEV_RELIABLE | FEV_GLOBAL, m_pPlayer->edict(), m_usGaussFire, 0.01, (float *)&m_pPlayer->pev->origin, (float *)&m_pPlayer->pev->angles, 0.0, 0.0, 0, 0, 0, 1 );
 	
 	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.5;
@@ -151,7 +161,7 @@ void CGauss::PrimaryAttack()
 		return;
 	}
 
-	if ( m_pPlayer->m_rgAmmo[ m_iPrimaryAmmoType ] < 2 )
+	if ( m_iClip <= 0 )
 	{
 		PlayEmptySound( );
 		m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.5;
@@ -161,12 +171,12 @@ void CGauss::PrimaryAttack()
 	m_pPlayer->m_iWeaponVolume = GAUSS_PRIMARY_FIRE_VOLUME;
 	m_fPrimaryFire = TRUE;
 
-	m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] -= 2;
+	m_iClip--;
 
 	StartFire();
 	m_fInAttack = 0;
 	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 1.0;
-	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.2;
+	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.45;
 }
 
 void CGauss::SecondaryAttack()
@@ -176,7 +186,7 @@ void CGauss::SecondaryAttack()
 	{
 		if ( m_fInAttack != 0 )
 		{
-			EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/electro4.wav", 1.0, ATTN_NORM, 0, 80 + RANDOM_LONG(0,0x3f));
+			EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/xs_moan2.wav", 1.0, ATTN_NORM, 0, 80 + RANDOM_LONG(0,0x3f));
 			SendWeaponAnim( GAUSS_IDLE );
 			m_fInAttack = 0;
 		}
@@ -191,7 +201,7 @@ void CGauss::SecondaryAttack()
 
 	if ( m_fInAttack == 0 )
 	{
-		if ( m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0 )
+		if ( m_iClip <= 0 )
 		{
 			EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/357_cock1.wav", 0.8, ATTN_NORM);
 			m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.5;
@@ -200,7 +210,7 @@ void CGauss::SecondaryAttack()
 
 		m_fPrimaryFire = FALSE;
 
-		m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType]--;// take one ammo just to start the spin
+		m_iClip--;// take one ammo just to start the spin
 		m_pPlayer->m_flNextAmmoBurn = UTIL_WeaponTimeBase();
 
 		// spin up
@@ -235,17 +245,17 @@ void CGauss::SecondaryAttack()
 	if ( g_pGameRules->IsMultiplayer() )
 #endif
 			{
-				m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType]--;
+				m_iClip--;
 				m_pPlayer->m_flNextAmmoBurn = UTIL_WeaponTimeBase() + 0.1;
 			}
 			else
 			{
-				m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType]--;
+				m_iClip--;
 				m_pPlayer->m_flNextAmmoBurn = UTIL_WeaponTimeBase() + 0.3;
 			}
 		}
 
-		if ( m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0 )
+		if ( m_iClip <= 0 )
 		{
 			// out of ammo! force the gun to fire
 			StartFire();
@@ -280,16 +290,16 @@ void CGauss::SecondaryAttack()
 		if ( m_pPlayer->m_flStartCharge < gpGlobals->time - 10 )
 		{
 			// Player charged up too long. Zap him.
-			EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/electro4.wav", 1.0, ATTN_NORM, 0, 80 + RANDOM_LONG(0,0x3f));
-			EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM,   "weapons/electro6.wav", 1.0, ATTN_NORM, 0, 75 + RANDOM_LONG(0,0x3f));
+			EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/xs_moan1.wav", 1.0, ATTN_NORM, 0, 80 + RANDOM_LONG(0,0x3f));
+			EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM,   "weapons/xs_moan3.wav", 1.0, ATTN_NORM, 0, 75 + RANDOM_LONG(0,0x3f));
 			
 			m_fInAttack = 0;
 			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 1.0;
 			m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 1.0;
 				
 #ifndef CLIENT_DLL
-			m_pPlayer->TakeDamage( VARS(eoNullEntity), VARS(eoNullEntity), 50, DMG_SHOCK );
-			UTIL_ScreenFade( m_pPlayer, Vector(255,128,0), 2, 0.5, 128, FFADE_IN );
+			m_pPlayer->TakeDamage( VARS(eoNullEntity), VARS(eoNullEntity), 50, DMG_POISON );
+			UTIL_ScreenFade( m_pPlayer, Vector(161,188,0), 2, 0.5, 128, FFADE_IN );
 #endif
 			SendWeaponAnim( GAUSS_IDLE );
 			
@@ -311,7 +321,7 @@ void CGauss::StartFire( void )
 	
 	UTIL_MakeVectors( m_pPlayer->pev->v_angle + m_pPlayer->pev->punchangle );
 	Vector vecAiming = gpGlobals->v_forward;
-	Vector vecSrc = m_pPlayer->GetGunPosition( ); // + gpGlobals->v_up * -8 + gpGlobals->v_right * 8;
+	Vector vecSrc = m_pPlayer->GetGunPosition() + gpGlobals->v_forward * 16;
 	
 	if ( gpGlobals->time - m_pPlayer->m_flStartCharge > GetFullChargeTime() )
 	{
@@ -400,142 +410,52 @@ void CGauss::Fire( Vector vecOrigSrc, Vector vecDir, float flDamage )
 //	ALERT( at_console, "%f %f\n", tr.flFraction, flMaxFrac );
 
 #ifndef CLIENT_DLL
-	while (flDamage > 10 && nMaxHits > 0)
+	if ( m_fPrimaryFire )
 	{
-		nMaxHits--;
+		CXenSmallSpit::ShootStraight(m_pPlayer->pev, vecSrc, m_pPlayer->pev->v_angle, vecDir * 800);
+	}
+	else
+	{
+		UTIL_MakeVectors(m_pPlayer->pev->v_angle + m_pPlayer->pev->punchangle);
 
-		// ALERT( at_console, "." );
-		UTIL_TraceLine(vecSrc, vecDest, dont_ignore_monsters, pentIgnore, &tr);
+		CXenLargeSpit* pLargeSpit = CXenLargeSpit::Shoot(m_pPlayer->pev, vecSrc, m_pPlayer->pev->v_angle, gpGlobals->v_forward);
+		pLargeSpit->pev->velocity = gpGlobals->v_forward * 800;
+		pLargeSpit->pev->scale = 0.2f;
 
-		if (tr.fAllSolid)
-			break;
+		int iNumProjectiles = std::max(1, static_cast<int>(flDamage * XENSPIT_MAX_PROJECTILES / 200));
 
-		CBaseEntity *pEntity = CBaseEntity::Instance(tr.pHit);
+		float cycle = 0;
+		float cycleGap = 1.0f / (float)iNumProjectiles;
 
-		if (pEntity == NULL)
-			break;
+		cycle = cycleGap;
 
-		if ( fFirstBeam )
+		CXenSmallSpit* pSpit = NULL;
+		for (int i = 0; i < iNumProjectiles; i++)
 		{
-			m_pPlayer->pev->effects |= EF_MUZZLEFLASH;
-			fFirstBeam = 0;
-	
-			nTotal += 26;
-		}
-		
-		if (pEntity->pev->takedamage)
-		{
-			ClearMultiDamage();
-			pEntity->TraceAttack( m_pPlayer->pev, flDamage, vecDir, &tr, DMG_BULLET );
-			ApplyMultiDamage(m_pPlayer->pev, m_pPlayer->pev);
-		}
+			pSpit = CXenSmallSpit::ShootCycle(m_pPlayer->pev, vecSrc, m_pPlayer->pev->v_angle, gpGlobals->v_forward, pLargeSpit, cycle);
+			pSpit->pev->velocity = g_vecZero;
+			pSpit->pev->scale = 0.25f;
+			pLargeSpit->m_pChildren[i] = pSpit;
+			pLargeSpit->m_iChildCount++;
 
-		if ( pEntity->ReflectGauss() )
-		{
-			float n;
-
-			pentIgnore = NULL;
-
-			n = -DotProduct(tr.vecPlaneNormal, vecDir);
-
-			if (n < 0.5) // 60 degrees
-			{
-				// ALERT( at_console, "reflect %f\n", n );
-				// reflect
-				Vector r;
-			
-				r = 2.0 * tr.vecPlaneNormal * n + vecDir;
-				flMaxFrac = flMaxFrac - tr.flFraction;
-				vecDir = r;
-				vecSrc = tr.vecEndPos + vecDir * 8;
-				vecDest = vecSrc + vecDir * 8192;
-
-				// explode a bit
-				m_pPlayer->RadiusDamage( tr.vecEndPos, pev, m_pPlayer->pev, flDamage * n, CLASS_NONE, DMG_BLAST );
-
-				nTotal += 34;
-				
-				// lose energy
-				if (n == 0) n = 0.1;
-				flDamage = flDamage * (1 - n);
-			}
-			else
-			{
-				nTotal += 13;
-
-				// limit it to one hole punch
-				if (fHasPunched)
-					break;
-				fHasPunched = 1;
-
-				// try punching through wall if secondary attack (primary is incapable of breaking through)
-				if ( !m_fPrimaryFire )
-				{
-					UTIL_TraceLine( tr.vecEndPos + vecDir * 8, vecDest, dont_ignore_monsters, pentIgnore, &beam_tr);
-					if (!beam_tr.fAllSolid)
-					{
-						// trace backwards to find exit point
-						UTIL_TraceLine( beam_tr.vecEndPos, tr.vecEndPos, dont_ignore_monsters, pentIgnore, &beam_tr);
-
-						float n = (beam_tr.vecEndPos - tr.vecEndPos).Length( );
-
-						if (n < flDamage)
-						{
-							if (n == 0) n = 1;
-							flDamage -= n;
-
-							// ALERT( at_console, "punch %f\n", n );
-							nTotal += 21;
-
-							// exit blast damage
-							//m_pPlayer->RadiusDamage( beam_tr.vecEndPos + vecDir * 8, pev, m_pPlayer->pev, flDamage, CLASS_NONE, DMG_BLAST );
-							float damage_radius;
-							
-
-							if ( g_pGameRules->IsMultiplayer() )
-							{
-								damage_radius = flDamage * 1.75;  // Old code == 2.5
-							}
-							else
-							{
-								damage_radius = flDamage * 2.5;
-							}
-
-							::RadiusDamage( beam_tr.vecEndPos + vecDir * 8, pev, m_pPlayer->pev, flDamage, damage_radius, CLASS_NONE, DMG_BLAST );
-
-							CSoundEnt::InsertSound ( bits_SOUND_COMBAT, pev->origin, NORMAL_EXPLOSION_VOLUME, 3.0 );
-
-							nTotal += 53;
-
-							vecSrc = beam_tr.vecEndPos + vecDir;
-						}
-					}
-					else
-					{
-						 //ALERT( at_console, "blocked %f\n", n );
-						flDamage = 0;
-					}
-				}
-				else
-				{
-					//ALERT( at_console, "blocked solid\n" );
-					
-					flDamage = 0;
-				}
-
-			}
-		}
-		else
-		{
-			vecSrc = tr.vecEndPos + vecDir;
-			pentIgnore = ENT( pEntity->pev );
+			cycle += cycleGap;
 		}
 	}
 #endif
 	// ALERT( at_console, "%d bytes\n", nTotal );
 }
 
+void CGauss::Reload( void )
+{
+	if ( m_pPlayer->ammo_uranium <= 0 )
+		return;
 
+	BOOL bResult = DefaultReload( GAUSS_MAX_CLIP, GAUSS_RELOAD, 4.0 );
+	if ( bResult )
+	{
+		EMIT_SOUND( ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/xs_reload.wav", 0.8, ATTN_NORM );
+	}
+}
 
 
 void CGauss::WeaponIdle( void )
@@ -547,9 +467,9 @@ void CGauss::WeaponIdle( void )
 	{
 		switch (RANDOM_LONG(0,3))
 		{
-		case 0:	EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/electro4.wav", RANDOM_FLOAT(0.7, 0.8), ATTN_NORM); break;
-		case 1:	EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/electro5.wav", RANDOM_FLOAT(0.7, 0.8), ATTN_NORM); break;
-		case 2:	EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/electro6.wav", RANDOM_FLOAT(0.7, 0.8), ATTN_NORM); break;
+		case 0:	EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/xs_moan1.wav", RANDOM_FLOAT(0.7, 0.8), ATTN_NORM); break;
+		case 1:	EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/xs_moan2.wav", RANDOM_FLOAT(0.7, 0.8), ATTN_NORM); break;
+		case 2:	EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/xs_moan3.wav", RANDOM_FLOAT(0.7, 0.8), ATTN_NORM); break;
 		case 3:	break; // no sound
 		}
 		m_pPlayer->m_flPlayAftershock = 0.0;
@@ -571,17 +491,17 @@ void CGauss::WeaponIdle( void )
 		if (flRand <= 0.5)
 		{
 			iAnim = GAUSS_IDLE;
-			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + UTIL_SharedRandomFloat( m_pPlayer->random_seed, 10, 15 );
+			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 63.0f / 15.0f;
 		}
 		else if (flRand <= 0.75)
 		{
 			iAnim = GAUSS_IDLE2;
-			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + UTIL_SharedRandomFloat( m_pPlayer->random_seed, 10, 15 );
+			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 63.0f / 15.0f;
 		}
 		else
 		{
 			iAnim = GAUSS_FIDGET;
-			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 3;
+			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 93.0f / 30.0f;
 		}
 
 		return;
@@ -600,13 +520,17 @@ class CGaussAmmo : public CBasePlayerAmmo
 	void Spawn( void )
 	{ 
 		Precache( );
-		SET_MODEL(ENT(pev), "models/w_gaussammo.mdl");
+		SET_MODEL(ENT(pev), "models/w_xencandy.mdl");
 		CBasePlayerAmmo::Spawn( );
+
+		SetThink(&CGaussAmmo::FallThink);
+		pev->nextthink = gpGlobals->time + 0.1;
 	}
 	void Precache( void )
 	{
-		PRECACHE_MODEL ("models/w_gaussammo.mdl");
+		PRECACHE_MODEL ("models/w_xencandy.mdl");
 		PRECACHE_SOUND("items/9mmclip1.wav");
+		PRECACHE_SOUND("items/weapondrop1.wav");
 	}
 	BOOL AddAmmo( CBaseEntity *pOther ) 
 	{ 
@@ -617,7 +541,29 @@ class CGaussAmmo : public CBasePlayerAmmo
 		}
 		return FALSE;
 	}
+	void EXPORT FallThink(void)
+	{
+		pev->nextthink = gpGlobals->time + 0.1;
+
+		if (pev->flags & FL_ONGROUND)
+		{
+			// clatter if we have an owner (i.e., dropped by someone)
+			// don't clatter if the gun is waiting to respawn (if it's waiting, it is invisible!)
+			if (!FNullEnt(pev->owner))
+			{
+				int pitch = 95 + RANDOM_LONG(0, 29);
+				EMIT_SOUND_DYN(ENT(pev), CHAN_VOICE, "items/weapondrop1.wav", 1, ATTN_NORM, 0, pitch);
+			}
+
+			// lie flat
+			pev->angles.x = 0;
+			pev->angles.z = 0;
+
+			UTIL_SetOrigin(pev, pev->origin);// link into world.
+			SetThink(NULL);
+		}
+	}
 };
-LINK_ENTITY_TO_CLASS( ammo_gaussclip, CGaussAmmo );
+LINK_ENTITY_TO_CLASS( ammo_xencandy, CGaussAmmo );
 
 #endif

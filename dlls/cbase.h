@@ -352,9 +352,6 @@ public:
 	int ammo_uranium;
 	int ammo_hornets;
 	int ammo_argrens;
-#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
-	int ammo_xencandy;
-#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 
 	//Special stuff for grenades and satchels.
 	float m_flStartThrow;

@@ -1166,9 +1166,6 @@ void CBasePlayer::TabulateAmmo()
 	ammo_rockets = AmmoInventory( GetAmmoIndex( "rockets" ) );
 	ammo_uranium = AmmoInventory( GetAmmoIndex( "uranium" ) );
 	ammo_hornets = AmmoInventory( GetAmmoIndex( "Hornets" ) );
-#if defined ( POKE646_DLL )
-	ammo_xencandy = AmmoInventory( GetAmmoIndex( "xencandy" ) );
-#endif // defined ( POKE646_DLL )
 }
 
 

@@ -58,7 +58,6 @@ CCrowbar g_Crowbar;
 CMP5 g_MP5;
 CCrossbow g_Crossbow;
 CShotgun g_Shotgun;
-CXenSquasher g_Xs;
 #else
 CGlock g_Glock;
 CCrowbar g_Crowbar;
@@ -620,7 +619,6 @@ void HUD_InitClientWeapons( void )
 	HUD_PrepEntity( &g_MP5			, &player );
 	HUD_PrepEntity( &g_Shotgun		, &player );
 	HUD_PrepEntity( &g_Crossbow		, &player );
-	HUD_PrepEntity( &g_Xs			, &player );
 #else
 	HUD_PrepEntity( &g_Glock	, &player );
 	HUD_PrepEntity( &g_Crowbar	, &player );
@@ -723,8 +721,8 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		pWeapon = &g_Shotgun;
 		break;
 
-	case WEAPON_XS:
-		pWeapon = &g_Xs;
+	case WEAPON_GAUSS:
+		pWeapon = &g_Gauss;
 		break;
 
 #else
@@ -904,11 +902,9 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	}
 #else
 	if ( player.m_pActiveItem->m_iId == WEAPON_RPG )
-	else if ( player.m_pActiveItem->m_iId == WEAPON_XS )
 	{
 		 ( ( CRpg * )player.m_pActiveItem)->m_fSpotActive = (int)from->client.vuser2[ 1 ];
 		 ( ( CRpg * )player.m_pActiveItem)->m_cActiveRockets = (int)from->client.vuser2[ 2 ];
-		player.ammo_xencandy = (int)from->client.vuser2[ 1 ];
 	}
 #endif // defined ( POKE646_CLIENT_DLL )
 	
@@ -985,11 +981,9 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	}
 #else
 	if ( player.m_pActiveItem->m_iId == WEAPON_RPG )
-	else if (player.m_pActiveItem->m_iId == WEAPON_XS)
 	{
 		 from->client.vuser2[ 1 ] = ( ( CRpg * )player.m_pActiveItem)->m_fSpotActive;
 		 from->client.vuser2[ 2 ] = ( ( CRpg * )player.m_pActiveItem)->m_cActiveRockets;
-		from->client.vuser2[ 1 ] = player.ammo_xencandy;
 	}
 #endif // defined ( POKE646_CLIENT_DLL )
 

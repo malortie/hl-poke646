@@ -76,8 +76,6 @@ void EV_SnarkFire( struct event_args_s *args  );
 void EV_TrainPitchAdjust( struct event_args_s *args );
 
 #if defined ( POKE646_CLIENT_DLL )
-void EV_SpinXS(struct event_args_s *args);
-void EV_FireXS(struct event_args_s *args);
 void EV_Reload(struct event_args_s *args);
 #endif // defined ( POKE646_CLIENT_DLL )
 }
@@ -850,7 +848,7 @@ void EV_SpinGauss( event_args_t *args )
 
 	iSoundState = args->bparam1 ? SND_CHANGE_PITCH : 0;
 
-	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "ambience/pulsemachine.wav", 1.0, ATTN_NORM, iSoundState, pitch );
+	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/xs_windup.wav", 1.0, ATTN_NORM, iSoundState, pitch );
 }
 
 /*
@@ -863,7 +861,7 @@ void EV_StopPreviousGauss( int idx )
 {
 	// Make sure we don't have a gauss spin event in the queue for this guy
 	gEngfuncs.pEventAPI->EV_KillEvents( idx, "events/gaussspin.sc" );
-	gEngfuncs.pEventAPI->EV_StopSound( idx, CHAN_WEAPON, "ambience/pulsemachine.wav" );
+	gEngfuncs.pEventAPI->EV_StopSound( idx, CHAN_WEAPON, "weapons/xs_windup.wav" );
 }
 
 extern float g_flApplyVel;
@@ -923,8 +921,9 @@ void EV_FireGauss( event_args_t *args )
 			 
 	}
 
-	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/gauss2.wav", 0.5 + flDamage * (1.0 / 400.0), ATTN_NORM, 0, 85 + gEngfuncs.pfnRandomLong( 0, 0x1f ) );
+	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/xs_shot.wav", 0.5 + flDamage * (1.0 / 400.0), ATTN_NORM, 0, 85 + gEngfuncs.pfnRandomLong( 0, 0x1f ) );
 
+#if 0 // Poke646 - No beam.
 	while (flDamage > 10 && nMaxHits > 0)
 	{
 		nMaxHits--;
@@ -1139,6 +1138,7 @@ void EV_FireGauss( event_args_t *args )
 			VectorAdd( tr.endpos, forward, vecSrc );
 		}
 	}
+#endif // Poke646 - No beam.
 }
 //======================
 //	   GAUSS END 
@@ -1735,116 +1735,6 @@ int EV_TFC_IsAllyTeam( int iTeam1, int iTeam2 )
 
 
 
-//======================
-//	 XENSQUASHER START 
-//======================
-
-enum xensquasher_e {
-	XS_IDLE = 0,
-	XS_IDLE2,
-	XS_FIDGET,
-	XS_SPINUP,
-	XS_SPIN,
-	XS_FIRE,
-	XS_FIRE2,
-	XS_HOLSTER,
-	XS_DRAW,
-	XS_RELOAD,
-};
-
-void EV_SpinXS(event_args_t *args)
-{
-	int idx;
-	vec3_t origin;
-	vec3_t angles;
-	vec3_t velocity;
-	int iSoundState = 0;
-
-	int pitch;
-
-	idx = args->entindex;
-	VectorCopy(args->origin, origin);
-	VectorCopy(args->angles, angles);
-	VectorCopy(args->velocity, velocity);
-
-	pitch = args->iparam1;
-
-	iSoundState = args->bparam1 ? SND_CHANGE_PITCH : 0;
-
-	gEngfuncs.pEventAPI->EV_PlaySound(idx, origin, CHAN_WEAPON, "weapons/xs_windup.wav", 1.0, ATTN_NORM, iSoundState, pitch);
-}
-
-/*
-==============================
-EV_StopPreviousXS
-
-==============================
-*/
-void EV_StopPreviousXS(int idx)
-{
-	// Make sure we don't have a gauss spin event in the queue for this guy
-	gEngfuncs.pEventAPI->EV_KillEvents(idx, "events/xsspin.sc");
-	gEngfuncs.pEventAPI->EV_StopSound(idx, CHAN_WEAPON, "weapons/xs_windup.wav");
-}
-
-void EV_FireXS(event_args_t *args)
-{
-	int idx;
-	vec3_t origin;
-	vec3_t angles;
-	vec3_t velocity;
-	float flDamage = args->fparam1;
-	int primaryfire = args->bparam1;
-
-	int m_fPrimaryFire = args->bparam1;
-	int m_iWeaponVolume = GAUSS_PRIMARY_FIRE_VOLUME;
-	vec3_t vecSrc;
-	vec3_t vecDest;
-	pmtrace_t tr, beam_tr;
-	float flMaxFrac = 1.0;
-	int	nTotal = 0;
-	int fHasPunched = 0;
-	int fFirstBeam = 1;
-	int	nMaxHits = 10;
-	int m_iBeam, m_iGlow, m_iBalls;
-	vec3_t up, right, forward;
-
-	idx = args->entindex;
-	VectorCopy(args->origin, origin);
-	VectorCopy(args->angles, angles);
-	VectorCopy(args->velocity, velocity);
-
-	if (args->bparam2)
-	{
-		EV_StopPreviousXS(idx);
-		return;
-	}
-
-	//	Con_Printf( "Firing gauss with %f\n", flDamage );
-	EV_GetGunPosition(args, vecSrc, origin);
-
-	m_iBeam = gEngfuncs.pEventAPI->EV_FindModelIndex("sprites/smoke.spr");
-	m_iBalls = m_iGlow = gEngfuncs.pEventAPI->EV_FindModelIndex("sprites/hotglow.spr");
-
-	AngleVectors(angles, forward, right, up);
-
-	VectorMA(vecSrc, 8192, forward, vecDest);
-
-	if (EV_IsLocal(idx))
-	{
-		V_PunchAxis(0, -2.0);
-		gEngfuncs.pEventAPI->EV_WeaponAnimation(XS_FIRE2, 2);
-
-		if (m_fPrimaryFire == false)
-			g_flApplyVel = flDamage;
-
-	}
-
-	gEngfuncs.pEventAPI->EV_PlaySound(idx, origin, CHAN_WEAPON, "weapons/xs_shot.wav", 0.5 + flDamage * (1.0 / 400.0), ATTN_NORM, 0, 85 + gEngfuncs.pfnRandomLong(0, 0x1f));
-}
-//======================
-//	 XENSQUASHER END 
-//======================
 
 //======================
 //	 RELOAD START

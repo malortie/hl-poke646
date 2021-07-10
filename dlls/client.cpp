@@ -1770,11 +1770,9 @@ void UpdateClientData ( const edict_t *ent, int sendweapons, struct clientdata_s
 					}
 #else
 					if ( pl->m_pActiveItem->m_iId == WEAPON_RPG )
-					else if ( pl->m_pActiveItem->m_iId == WEAPON_XS )
 					{
 						cd->vuser2.y = ( ( CRpg * )pl->m_pActiveItem)->m_fSpotActive;
 						cd->vuser2.z = ( ( CRpg * )pl->m_pActiveItem)->m_cActiveRockets;
-						cd->vuser2.y = pl->ammo_xencandy;
 					}
 #endif // defined ( POKE646_DLL )
 				}

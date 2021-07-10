@@ -1689,15 +1689,6 @@ TYPEDESCRIPTION	CCrossbow::m_SaveData[] =
 };
 IMPLEMENT_SAVERESTORE(CCrossbow, CBasePlayerWeapon);
 
-TYPEDESCRIPTION	CXenSquasher::m_SaveData[] =
-{
-	DEFINE_FIELD(CXenSquasher, m_fInAttack, FIELD_INTEGER),
-	//	DEFINE_FIELD( CGauss, m_flStartCharge, FIELD_TIME ),
-	//	DEFINE_FIELD( CGauss, m_flPlayAftershock, FIELD_TIME ),
-	//	DEFINE_FIELD( CGauss, m_flNextAmmoBurn, FIELD_TIME ),
-	DEFINE_FIELD(CXenSquasher, m_fPrimaryFire, FIELD_BOOLEAN),
-};
-IMPLEMENT_SAVERESTORE(CXenSquasher, CBasePlayerWeapon);
 
 #endif // defined ( POKE646_DLL )
 
