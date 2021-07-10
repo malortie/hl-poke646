@@ -450,7 +450,7 @@ void CGauss::Reload( void )
 	if ( m_pPlayer->ammo_uranium <= 0 )
 		return;
 
-	BOOL bResult = DefaultReload( GAUSS_MAX_CLIP, GAUSS_RELOAD, 4.0 );
+	BOOL bResult = DefaultReload( GAUSS_MAX_CLIP, GAUSS_RELOAD, 81.0f / 20.0f );
 	if ( bResult )
 	{
 		EMIT_SOUND( ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/xs_reload.wav", 0.8, ATTN_NORM );
