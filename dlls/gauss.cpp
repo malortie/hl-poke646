@@ -228,7 +228,7 @@ void CGauss::SecondaryAttack()
 	}
 	else if (m_fInAttack == 1)
 	{
-		if (m_flTimeWeaponIdle < UTIL_WeaponTimeBase())
+		if (m_flTimeWeaponIdle <= UTIL_WeaponTimeBase())
 		{
 			SendWeaponAnim( GAUSS_SPIN );
 			m_fInAttack = 2;
