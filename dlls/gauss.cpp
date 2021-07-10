@@ -30,6 +30,8 @@
 #define	GAUSS_PRIMARY_CHARGE_VOLUME	256// how loud gauss is while charging
 #define GAUSS_PRIMARY_FIRE_VOLUME	450// how loud gauss is when discharged
 
+#define FIRE2_SEQUENCE_DURATION		(33.0f / 15.0f)
+
 enum gauss_e {
 	GAUSS_IDLE = 0,
 	GAUSS_IDLE2,
@@ -175,7 +177,7 @@ void CGauss::PrimaryAttack()
 
 	StartFire();
 	m_fInAttack = 0;
-	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 1.0;
+	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + FIRE2_SEQUENCE_DURATION;
 	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.4;
 }
 
@@ -260,7 +262,7 @@ void CGauss::SecondaryAttack()
 			// out of ammo! force the gun to fire
 			StartFire();
 			m_fInAttack = 0;
-			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 1.0;
+			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + FIRE2_SEQUENCE_DURATION;
 			m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 1;
 			return;
 		}
@@ -482,7 +484,7 @@ void CGauss::WeaponIdle( void )
 	{
 		StartFire();
 		m_fInAttack = 0;
-		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 2.0;
+		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + FIRE2_SEQUENCE_DURATION;
 	}
 	else
 	{
