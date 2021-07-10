@@ -57,9 +57,6 @@ public:
 	BOOL  m_fTongueExtended;
 	BOOL  m_fLiftingPrey;
 	float m_flTongueAdj;
-#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
-	BOOL  m_fXenCandySpawned;
-#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 };
 LINK_ENTITY_TO_CLASS( monster_barnacle, CBarnacle );
 
@@ -71,9 +68,6 @@ TYPEDESCRIPTION	CBarnacle::m_SaveData[] =
 	DEFINE_FIELD( CBarnacle, m_fTongueExtended, FIELD_BOOLEAN ),
 	DEFINE_FIELD( CBarnacle, m_fLiftingPrey, FIELD_BOOLEAN ),
 	DEFINE_FIELD( CBarnacle, m_flTongueAdj, FIELD_FLOAT ),
-#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
-	DEFINE_FIELD( CBarnacle, m_fXenCandySpawned, FIELD_BOOLEAN ),
-#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 };
 
 IMPLEMENT_SAVERESTORE( CBarnacle, CBaseMonster );
@@ -101,8 +95,11 @@ void CBarnacle :: HandleAnimEvent( MonsterEvent_t *pEvent )
 	case BARNACLE_AE_PUKEGIB:
 		CGib::SpawnRandomGibs( pev, 1, 1 );	
 #if defined ( POKE646_DLL ) && !defined ( VENDETTA )
-		if ((pev->spawnflags & SF_BARNACLE_SPAWN_XENCANDY) && !m_fXenCandySpawned)
+		if (pev->spawnflags & SF_BARNACLE_SPAWN_XENCANDY)
 		{
+			// Do not spawn ammo more than once.
+			pev->spawnflags &= ~SF_BARNACLE_SPAWN_XENCANDY;
+
 			Vector vecSrc = pev->origin + Vector(0, 0, -16);
 
 			Vector vecAngles = pev->angles;
@@ -114,8 +111,6 @@ void CBarnacle :: HandleAnimEvent( MonsterEvent_t *pEvent )
 			if (pItem)
 			{
 				pItem->pev->owner = edict();
-
-				m_fXenCandySpawned = TRUE;
 			}
 		}
 #endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
@@ -157,10 +152,6 @@ void CBarnacle :: Spawn()
 	pev->nextthink = gpGlobals->time + 0.5;
 
 	UTIL_SetOrigin ( pev, pev->origin );
-
-#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
-	m_fXenCandySpawned = FALSE;
-#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 }
 
 int CBarnacle::TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, int bitsDamageType )
