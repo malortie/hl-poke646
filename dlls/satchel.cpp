@@ -401,16 +401,19 @@ BOOL CSatchel::CanDeploy( void )
 BOOL CSatchel::Deploy( )
 {
 
-	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 1.0;
-	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + UTIL_SharedRandomFloat( m_pPlayer->random_seed, 10, 15 );
-
+	BOOL bResult;
 	if ( m_chargeReady )
-		return DefaultDeploy( "models/v_pipebomb_watch.mdl", "models/p_pipebomb_watch.mdl", SATCHEL_RADIO_DRAW, "hive" );
+		bResult = DefaultDeploy( "models/v_pipebomb_watch.mdl", "models/p_pipebomb_watch.mdl", SATCHEL_RADIO_DRAW, "hive" );
 	else
-		return DefaultDeploy( "models/v_pipebomb.mdl", "models/p_pipebomb.mdl", SATCHEL_DRAW, "trip" );
+		bResult = DefaultDeploy( "models/v_pipebomb.mdl", "models/p_pipebomb.mdl", SATCHEL_DRAW, "trip" );
 
+	if ( bResult )
+	{
+		m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 1.0;
+		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + UTIL_SharedRandomFloat( m_pPlayer->random_seed, 10, 15 );
+	}
 	
-	return TRUE;
+	return bResult;
 }
 
 
