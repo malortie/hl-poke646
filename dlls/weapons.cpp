@@ -49,6 +49,7 @@ DLL_GLOBAL	short	g_sModelIndexBloodSpray;// holds the sprite index for splattere
 #if defined ( POKE646_DLL )
 DLL_GLOBAL	short	g_sModelIndexShockwave;// holds the index for the shockwave explosion
 #endif // defined ( POKE646_DLL )
+DLL_GLOBAL	short	g_sModelIndexWhite;// holds the index for white sprite
 
 ItemInfo CBasePlayerItem::ItemInfoArray[MAX_WEAPONS];
 AmmoInfo CBasePlayerItem::AmmoInfoArray[MAX_AMMO_SLOTS];
@@ -444,6 +445,7 @@ void W_Precache(void)
 #if defined ( POKE646_DLL )
 	g_sModelIndexShockwave = PRECACHE_MODEL("sprites/shockwave.spr"); // shockwave explosion
 #endif // defined ( POKE646_DLL )
+	g_sModelIndexWhite = PRECACHE_MODEL("sprites/white.spr");
 
 #if defined ( POKE646_DLL )
 

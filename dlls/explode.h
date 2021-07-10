@@ -25,9 +25,7 @@
 
 extern DLL_GLOBAL	short	g_sModelIndexFireball;
 extern DLL_GLOBAL	short	g_sModelIndexSmoke;
-#if defined ( POKE646_DLL )
-extern DLL_GLOBAL	short	g_sModelIndexShockwave;
-#endif // defined ( POKE646_DLL )
+extern DLL_GLOBAL	short	g_sModelIndexWhite;
 
 extern void ExplosionCreate( const Vector &center, const Vector &angles, edict_t *pOwner, int magnitude, BOOL doDamage );
 

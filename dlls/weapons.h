@@ -444,6 +444,7 @@ extern DLL_GLOBAL	short	g_sModelIndexBloodSpray;// holds the sprite index for bl
 #if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 extern DLL_GLOBAL	short	g_sModelIndexShockwave;// holds the index for the shockwave explosion
 #endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
+extern DLL_GLOBAL	short	g_sModelIndexWhite;// holds the index for the shockwave explosion
 
 extern void ClearMultiDamage(void);
 extern void ApplyMultiDamage(entvars_t* pevInflictor, entvars_t* pevAttacker );
