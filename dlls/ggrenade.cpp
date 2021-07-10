@@ -60,7 +60,7 @@ void CGrenade::Explode( TraceResult *pTrace, int bitsDamageType )
 	if (FClassnameIs(pev, "monster_satchel"))
 	{
 		// Poke646 - Pipebomb fire trail effect.
-		int trailCount = RANDOM_LONG(1, 4);
+		int trailCount = RANDOM_LONG(2, 4);
 		for (int i = 0; i < trailCount; i++)
 			Create("fire_trail", pev->origin, pTrace->vecPlaneNormal, NULL);
 
