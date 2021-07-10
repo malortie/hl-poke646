@@ -400,6 +400,12 @@ BOOL CSatchel::CanDeploy( void )
 
 BOOL CSatchel::Deploy( )
 {
+	if ( m_chargeReady == 2 )
+	{
+		// If we must play the redraw animation, reset the chargeReady status to
+		// prevent it playing again in WeaponIdle().
+		m_chargeReady = 0;
+	}
 
 	BOOL bResult;
 	if ( m_chargeReady )
