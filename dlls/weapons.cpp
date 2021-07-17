@@ -1651,6 +1651,7 @@ TYPEDESCRIPTION	CGauss::m_SaveData[] =
 //	DEFINE_FIELD( CGauss, m_flPlayAftershock, FIELD_TIME ),
 //	DEFINE_FIELD( CGauss, m_flNextAmmoBurn, FIELD_TIME ),
 	DEFINE_FIELD( CGauss, m_fPrimaryFire, FIELD_BOOLEAN ),
+	DEFINE_FIELD( CGauss, m_iNumConsumedAmmo, FIELD_INTEGER ),
 };
 IMPLEMENT_SAVERESTORE( CGauss, CBasePlayerWeapon );
 

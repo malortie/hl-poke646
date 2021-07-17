@@ -22,48 +22,33 @@
 
 #define XENSPIT_MAX_PROJECTILES	4
 
-class CXenLargeSpit : public CBaseEntity
+class CXSBeam : public CBaseEntity
 {
 public:
 	void Spawn(void);
 	void Precache(void);
 
-	static CXenLargeSpit* Shoot(entvars_t *pevOwner, Vector vecStart, Vector vecAngles, Vector vecVelocity);
-	void Touch(CBaseEntity *pOther);
-	void EXPORT CycleThink(void);
+	static CXSBeam* ShootSmall(entvars_t* pevOwner, Vector vecStart, Vector vecVelocity, float flDamage, CBaseEntity* pParent = NULL);
+	static CXSBeam* ShootBig(entvars_t* pevOwner, Vector vecStart, Vector vecVelocity, float flDamage, int iNumBeams, float flCycle = 0.0f);
+	void Touch(CBaseEntity* pOther);
+	void EXPORT FlySineThink(void);
+	void EXPORT BigFlyThink(void);
 
-	virtual int		Save(CSave &save);
-	virtual int		Restore(CRestore &restore);
+	void SpawnTrail();
+
+	virtual int		Save(CSave& save);
+	virtual int		Restore(CRestore& restore);
 	static	TYPEDESCRIPTION m_SaveData[];
 
-	CBaseEntity* m_pChildren[XENSPIT_MAX_PROJECTILES];
-	int m_iChildCount;
-};
-
-
-class CXenSmallSpit : public CBaseEntity
-{
-public:
-	void Spawn(void);
-	void Precache(void);
-
-	static CXenSmallSpit* ShootStraight(entvars_t *pevOwner, Vector vecStart, Vector vecAngles, Vector vecVelocity);
-	static CXenSmallSpit* ShootCycle(entvars_t *pevOwner, Vector vecStart, Vector vecAngles, Vector vecVelocity, CBaseEntity* pParent, float flCycle = 0.0f);
-	void Touch(CBaseEntity *pOther);
-	void EXPORT CycleThink(void);
-	void EXPORT StraightThink(void);
-
-	virtual int		Save(CSave &save);
-	virtual int		Restore(CRestore &restore);
-	static	TYPEDESCRIPTION m_SaveData[];
-
+	int     m_iGlow;
 	int		m_iTrail;
 	float	m_flCycle;
 	Vector  m_vecOldVelocity;
 
-	CBaseEntity* m_pParent;
+	EHANDLE m_hParent;
 
-	CBeam*	m_pBeam;
+	EHANDLE m_hChildren[XENSPIT_MAX_PROJECTILES];
+	int m_iChildCount;
 };
 
 

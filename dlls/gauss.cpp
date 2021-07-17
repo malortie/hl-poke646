@@ -73,6 +73,8 @@ void CGauss::Spawn( )
 
 	m_iDefaultAmmo = GAUSS_DEFAULT_GIVE;
 
+	m_iNumConsumedAmmo = 0; // Reset used ammo.
+
 	FallInit();// get ready to fall down.
 }
 
@@ -101,8 +103,7 @@ void CGauss::Precache( void )
 
 	PRECACHE_MODEL("sprites/glow02.spr");
 
-	UTIL_PrecacheOther("xensmallspit");
-	UTIL_PrecacheOther("xenlargespit");
+	UTIL_PrecacheOther("xs_beam");
 }
 
 int CGauss::AddToPlayer( CBasePlayer *pPlayer )
@@ -150,6 +151,8 @@ void CGauss::Holster( int skiplocal /* = 0 */ )
 	
 	SendWeaponAnim( GAUSS_HOLSTER );
 	m_fInAttack = 0;
+
+	m_iNumConsumedAmmo = 0; // Reset used ammo.
 }
 
 
@@ -177,6 +180,7 @@ void CGauss::PrimaryAttack()
 
 	StartFire();
 	m_fInAttack = 0;
+	m_iNumConsumedAmmo = 0;
 	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + FIRE2_SEQUENCE_DURATION;
 	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.4;
 }
@@ -191,6 +195,7 @@ void CGauss::SecondaryAttack()
 			EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/xs_moan2.wav", 1.0, ATTN_NORM, 0, 80 + RANDOM_LONG(0,0x3f));
 			SendWeaponAnim( GAUSS_IDLE );
 			m_fInAttack = 0;
+			m_iNumConsumedAmmo = 0;
 		}
 		else
 		{
@@ -213,6 +218,7 @@ void CGauss::SecondaryAttack()
 		m_fPrimaryFire = FALSE;
 
 		m_iClip--;// take one ammo just to start the spin
+		m_iNumConsumedAmmo++; // Increment num consumed ammo.
 		m_pPlayer->m_flNextAmmoBurn = UTIL_WeaponTimeBase();
 
 		// spin up
@@ -248,11 +254,13 @@ void CGauss::SecondaryAttack()
 #endif
 			{
 				m_iClip--;
+				m_iNumConsumedAmmo++;
 				m_pPlayer->m_flNextAmmoBurn = UTIL_WeaponTimeBase() + 0.1;
 			}
 			else
 			{
 				m_iClip--;
+				m_iNumConsumedAmmo++;
 				m_pPlayer->m_flNextAmmoBurn = UTIL_WeaponTimeBase() + 0.3;
 			}
 		}
@@ -262,6 +270,7 @@ void CGauss::SecondaryAttack()
 			// out of ammo! force the gun to fire
 			StartFire();
 			m_fInAttack = 0;
+			m_iNumConsumedAmmo = 0;
 			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + FIRE2_SEQUENCE_DURATION;
 			m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 1;
 			return;
@@ -296,6 +305,7 @@ void CGauss::SecondaryAttack()
 			EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM,   "weapons/xs_moan3.wav", 1.0, ATTN_NORM, 0, 75 + RANDOM_LONG(0,0x3f));
 			
 			m_fInAttack = 0;
+			m_iNumConsumedAmmo = 0;
 			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 1.0;
 			m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 1.0;
 				
@@ -412,36 +422,22 @@ void CGauss::Fire( Vector vecOrigSrc, Vector vecDir, float flDamage )
 //	ALERT( at_console, "%f %f\n", tr.flFraction, flMaxFrac );
 
 #ifndef CLIENT_DLL
-	if ( m_fPrimaryFire )
+	if ( m_fPrimaryFire || m_iNumConsumedAmmo <= 2 )
 	{
-		CXenSmallSpit::ShootStraight(m_pPlayer->pev, vecSrc, m_pPlayer->pev->v_angle, vecDir * 800);
+		CXSBeam::ShootSmall(m_pPlayer->pev, vecSrc, vecDir * 1500, flDamage);
 	}
 	else
 	{
-		UTIL_MakeVectors(m_pPlayer->pev->v_angle + m_pPlayer->pev->punchangle);
+		int iNumBeams = 0;
+		if (m_iNumConsumedAmmo <= 6)
+			iNumBeams = 2;
+		else if (m_iNumConsumedAmmo <= 9)
+			iNumBeams = 3;
+		else
+			iNumBeams = 4;
 
-		CXenLargeSpit* pLargeSpit = CXenLargeSpit::Shoot(m_pPlayer->pev, vecSrc, m_pPlayer->pev->v_angle, gpGlobals->v_forward);
-		pLargeSpit->pev->velocity = gpGlobals->v_forward * 800;
-		pLargeSpit->pev->scale = 0.2f;
-
-		int iNumProjectiles = std::max(1, static_cast<int>(flDamage * XENSPIT_MAX_PROJECTILES / 200));
-
-		float cycle = 0;
-		float cycleGap = 1.0f / (float)iNumProjectiles;
-
-		cycle = cycleGap;
-
-		CXenSmallSpit* pSpit = NULL;
-		for (int i = 0; i < iNumProjectiles; i++)
-		{
-			pSpit = CXenSmallSpit::ShootCycle(m_pPlayer->pev, vecSrc, m_pPlayer->pev->v_angle, gpGlobals->v_forward, pLargeSpit, cycle);
-			pSpit->pev->velocity = g_vecZero;
-			pSpit->pev->scale = 0.25f;
-			pLargeSpit->m_pChildren[i] = pSpit;
-			pLargeSpit->m_iChildCount++;
-
-			cycle += cycleGap;
-		}
+		float flCycle = 0.02f;
+		CXSBeam::ShootBig(m_pPlayer->pev, vecSrc, vecDir * 1200, flDamage, iNumBeams, flCycle);
 	}
 #endif
 	// ALERT( at_console, "%d bytes\n", nTotal );
@@ -484,6 +480,7 @@ void CGauss::WeaponIdle( void )
 	{
 		StartFire();
 		m_fInAttack = 0;
+		m_iNumConsumedAmmo = 0;
 		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + FIRE2_SEQUENCE_DURATION;
 	}
 	else

@@ -866,6 +866,8 @@ public:
 	// we need to know so we can pick the right set of effects. 
 	BOOL m_fPrimaryFire;
 
+	int m_iNumConsumedAmmo; // Total ammo count burned during charge.
+
 	virtual BOOL UseDecrement( void )
 	{ 
 #if defined( CLIENT_WEAPONS )
