@@ -75,9 +75,6 @@ void EV_SnarkFire( struct event_args_s *args  );
 
 void EV_TrainPitchAdjust( struct event_args_s *args );
 
-#if defined ( POKE646_CLIENT_DLL )
-void EV_Reload(struct event_args_s *args);
-#endif // defined ( POKE646_CLIENT_DLL )
 }
 
 #define VECTOR_CONE_1DEGREES Vector( 0.00873, 0.00873, 0.00873 )
@@ -1727,7 +1724,6 @@ int EV_TFC_IsAllyTeam( int iTeam1, int iTeam2 )
 	return 0;
 }
 
-#if defined ( POKE646_CLIENT_DLL )
 
 
 
@@ -1736,28 +1732,6 @@ int EV_TFC_IsAllyTeam( int iTeam1, int iTeam2 )
 
 
 
-//======================
-//	 RELOAD START
-//======================
-
-void EV_Reload(event_args_t *args)
-{
-	int idx;
-
-	idx = args->entindex;
-
-	if (EV_IsLocal(idx))
-	{
-		int anim = args->iparam1;
-		int body = args->iparam2;
-		gEngfuncs.pEventAPI->EV_WeaponAnimation(anim, body);
-	}
-}
-
-//======================
-//	 RELOAD END
-//======================
 
 
 
-#endif // defined ( POKE646_CLIENT_DLL )

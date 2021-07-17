@@ -42,9 +42,6 @@ void EV_SnarkFire( struct event_args_s *args );
 
 void EV_TrainPitchAdjust( struct event_args_s *args );
 
-#if defined ( POKE646_CLIENT_DLL )
-void EV_Reload(struct event_args_s *args);
-#endif // defined ( POKE646_CLIENT_DLL )
 }
 
 /*
@@ -82,7 +79,4 @@ void Game_HookEvents( void )
 	gEngfuncs.pfnHookEvent( "events/tripfire.sc",				EV_TripmineFire );
 	gEngfuncs.pfnHookEvent( "events/snarkfire.sc",				EV_SnarkFire );
 
-#if defined ( POKE646_CLIENT_DLL )
-	gEngfuncs.pfnHookEvent( "events/reload.sc",					EV_Reload );
-#endif // defined ( POKE646_CLIENT_DLL )
 }
