@@ -64,8 +64,8 @@ extern DLL_GLOBAL int		g_iSkillLevel;
 #define HGRUNT_SHOTGUN				( 1 << 3)
 
 #define HEAD_GROUP					1
-#define HEAD_GRUNT					0
-#define HEAD_COMMANDER				1
+#define HEAD_GRUNT					1
+#define HEAD_COMMANDER				0
 #define HEAD_SHOTGUN				2
 #define HEAD_M203					3
 #define GUN_GROUP					2
@@ -276,10 +276,7 @@ int CHGrunt::IRelationship ( CBaseEntity *pTarget )
 //=========================================================
 void CHGrunt :: GibMonster ( void )
 {
-#if defined ( POKE646_DLL )
-
-
-#else
+/* Poke646 - Do not drop weapons.  
 	Vector	vecGunPos;
 	Vector	vecGunAngles;
 
@@ -312,7 +309,7 @@ void CHGrunt :: GibMonster ( void )
 			}
 		}
 	}
-#endif // defined ( POKE646_DLL )
+*/
 
 	CBaseMonster :: GibMonster();
 }
@@ -612,7 +609,7 @@ void CHGrunt :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecD
 	if (ptr->iHitgroup == 11)
 	{
 		// make sure we're wearing one
-		if (GetBodygroup( 1 ) == HEAD_GRUNT && (bitsDamageType & (DMG_BULLET | DMG_SLASH | DMG_BLAST | DMG_CLUB)))
+		if (GetBodygroup( 1 ) == HEAD_SHOTGUN && (bitsDamageType & (DMG_BULLET | DMG_SLASH | DMG_BLAST | DMG_CLUB)))
 		{
 			// absorb damage
 			flDamage -= 20;
@@ -853,10 +850,6 @@ void CHGrunt :: HandleAnimEvent( MonsterEvent_t *pEvent )
 	{
 		case HGRUNT_AE_DROP_GUN:
 			{
-#if defined ( POKE646_DLL )
-
-
-#else
 			Vector	vecGunPos;
 			Vector	vecGunAngles;
 
@@ -865,6 +858,7 @@ void CHGrunt :: HandleAnimEvent( MonsterEvent_t *pEvent )
 			// switch to body group with no gun.
 			SetBodygroup( GUN_GROUP, GUN_NONE );
 
+			/* Poke646 - Do not drop weapons.   
 			// now spawn a gun.
 			if (FBitSet( pev->weapons, HGRUNT_SHOTGUN ))
 			{
@@ -878,7 +872,7 @@ void CHGrunt :: HandleAnimEvent( MonsterEvent_t *pEvent )
 			{
 				DropItem( "ammo_ARgrenades", BodyTarget( pev->origin ), vecGunAngles );
 			}
-#endif // defined ( POKE646_DLL )
+			*/
 			}
 			break;
 
@@ -1032,7 +1026,7 @@ void CHGrunt :: Spawn()
 	}
 	m_cAmmoLoaded		= m_cClipSize;
 
-#if !defined ( POKE646_DLL )
+	/*
 	if (RANDOM_LONG( 0, 99 ) < 80)
 		pev->skin = 0;	// light skin
 	else
@@ -1047,7 +1041,24 @@ void CHGrunt :: Spawn()
 		SetBodygroup( HEAD_GROUP, HEAD_M203 );
 		pev->skin = 1; // alway dark skin
 	}
-#endif // !defined ( POKE646_DLL )
+	*/
+
+	// Poke646 - Grunt bodygroup setup.
+	pev->skin = 0; // Grunt has only one skin.
+
+	// Poke646 - Choose a random head except commander head, which is set in CSquadMonster::StartMonster.
+	switch (RANDOM_LONG(0,2))
+	{
+	case 0:
+		SetBodygroup( HEAD_GROUP, HEAD_GRUNT );
+		break;
+	case 1:
+		SetBodygroup( HEAD_GROUP, HEAD_SHOTGUN );
+		break;
+	case 2:
+		SetBodygroup( HEAD_GROUP, HEAD_M203 );
+		break;
+	}
 
 	CTalkMonster::g_talkWaitTime = 0;
 
