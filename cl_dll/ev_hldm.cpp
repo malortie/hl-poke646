@@ -876,14 +876,14 @@ void EV_FireGauss( event_args_t *args )
 	int m_iWeaponVolume = GAUSS_PRIMARY_FIRE_VOLUME;
 	vec3_t vecSrc;
 	vec3_t vecDest;
-	edict_t		*pentIgnore;
+//	edict_t		*pentIgnore;
 	pmtrace_t tr, beam_tr;
 	float flMaxFrac = 1.0;
 	int	nTotal = 0;
 	int fHasPunched = 0;
 	int fFirstBeam = 1;
 	int	nMaxHits = 10;
-	physent_t *pEntity;
+//	physent_t *pEntity;
 	int m_iBeam, m_iGlow, m_iBalls;
 	vec3_t up, right, forward;
 
