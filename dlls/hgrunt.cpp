@@ -1018,6 +1018,9 @@ void CHGrunt :: Spawn()
 		// pev->weapons = HGRUNT_9MMAR | HGRUNT_GRENADELAUNCHER;
 	}
 
+	// Poke646 - No grenade launch allowed.
+	ClearBits(pev->weapons, HGRUNT_GRENADELAUNCHER);
+
 	if (FBitSet( pev->weapons, HGRUNT_SHOTGUN ))
 	{
 		SetBodygroup( GUN_GROUP, GUN_SHOTGUN );
