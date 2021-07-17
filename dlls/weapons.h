@@ -877,6 +877,9 @@ public:
 #endif
 	}
 
+	void AttachToPlayer ( CBasePlayer *pPlayer );
+	void EXPORT IdleThink ( void );
+
 private:
 	unsigned short m_usGaussFire;
 	unsigned short m_usGaussSpin;

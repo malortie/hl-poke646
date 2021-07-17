@@ -76,6 +76,15 @@ void CGauss::Spawn( )
 	m_iNumConsumedAmmo = 0; // Reset used ammo.
 
 	FallInit();// get ready to fall down.
+
+	Materialize();
+	SetThink( &CGauss::IdleThink ); // Play idle sequence in think function.
+
+	// Reset sequence.
+	pev->sequence = 0;
+	ResetSequenceInfo();
+
+	pev->nextthink = gpGlobals->time + 0.01f;
 }
 
 
@@ -508,7 +517,17 @@ void CGauss::WeaponIdle( void )
 	}
 }
 
+void CGauss::AttachToPlayer( CBasePlayer* pPlayer )
+{
+	CBasePlayerWeapon::AttachToPlayer( pPlayer );
+	SetThink( NULL ); // Stop calling IdleThink().
+}
 
+void CGauss::IdleThink( void )
+{
+	pev->nextthink = gpGlobals->time + 0.1;
+	StudioFrameAdvance( 0.1 );
+}
 
 
 
