@@ -1175,7 +1175,7 @@ int CHudAmmo::DrawWList(float flTime)
 
 			// Draw Ammo Bar
 
-			DrawAmmoBar(p, x + giABWidth/2, y, giABWidth, giABHeight);
+			DrawAmmoBar(p, x + 1, y + 1, giABWidth, giABHeight);
 
 			x += p->rcActive.right - p->rcActive.left + 5;
 		}
