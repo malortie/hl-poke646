@@ -56,7 +56,7 @@ void CGenericModel::KeyValue(KeyValueData* pkvd)
 		pkvd->fHandled = TRUE;
 	}
 	else
-		CBaseDelay::KeyValue(pkvd);
+		CBaseAnimating::KeyValue(pkvd);
 }
 
 void CGenericModel::Spawn(void)
