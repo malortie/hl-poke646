@@ -1069,6 +1069,22 @@ int CHudAmmo::DrawWList(float flTime)
 #if defined ( POKE646_CLIENT_DLL )
 	int r,g,b,x,y,a,i;
 
+	x = 10; //!!!
+	y = 10; //!!!
+
+	// Draw top line
+	for ( i = 0; i < MAX_WEAPON_SLOTS; i++ )
+	{
+		UnpackRGB(r,g,b, RGB_YELLOWISH);
+	
+		ScaleColors(r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 96));
+		SPR_Set(gHUD.GetSprite(m_HUD_bucket0 + i), r, g, b );
+
+		SPR_DrawAdditive(0, x, y, &gHUD.GetSpriteRect(m_HUD_bucket0 + i));
+		
+		y += giBucketHeight + 5;
+	}
+
 	if ( !gpActiveSel )
 		return 0;
 
@@ -1093,37 +1109,6 @@ int CHudAmmo::DrawWList(float flTime)
 		}
 	}
 		
-	// Draw top line
-	for ( i = 0; i < MAX_WEAPON_SLOTS; i++ )
-	{
-		int iHeight;
-
-		UnpackRGB(r,g,b, RGB_YELLOWISH);
-	
-		if ( iActiveSlot == i )
-			a = std::min(static_cast<int>(gHUD.m_flAlpha), 255);
-		else
-			a = std::min(static_cast<int>(gHUD.m_flAlpha), 192);
-
-		ScaleColors(r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 128)); // 255
-		SPR_Set(gHUD.GetSprite(m_HUD_bucket0 + i), r, g, b );
-
-		// make active slot wide enough to accomodate gun pictures
-		if ( i == iActiveSlot )
-		{
-			WEAPON *p = gWR.GetFirstPos(iActiveSlot);
-			if ( p )
-				iHeight = p->rcActive.bottom - p->rcActive.top;
-			else
-				iHeight = giBucketWidth;
-		}
-		else
-			iHeight = giBucketHeight;
-
-		SPR_DrawAdditive(0, x, y, &gHUD.GetSpriteRect(m_HUD_bucket0 + i));
-		
-		y += iHeight + 5;
-	}
 
 
 	a = std::min(static_cast<int>(gHUD.m_flAlpha), 128); //!!!
