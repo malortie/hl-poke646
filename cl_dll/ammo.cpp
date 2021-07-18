@@ -985,15 +985,13 @@ int DrawBar(int x, int y, int width, int height, float f)
 		r = 255 - g;
 		b = 0;
 
-		ScaleColors(r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 255));
-
 		FillRGBA(x, y, w, height, r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 255));
 		x += w;
 		width -= w;
 	}
 	else
 	{
-		UnpackRGB(r, g, b, RGB_YELLOWISH);
+		r = g = b = 0;
 	}
 
 	FillRGBA(x, y, width, height, r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 64));
