@@ -3597,7 +3597,6 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 	case 101:
 		gEvilImpulse101 = TRUE;
 #if defined ( POKE646_DLL )
-		GiveNamedItem( "item_suit" );
 		GiveNamedItem( "weapon_heaterpipe" );
 		GiveNamedItem( "weapon_shotgun" );
 		GiveNamedItem( "ammo_buckshot" );
