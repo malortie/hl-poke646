@@ -643,14 +643,16 @@ int CHudAmmo::MsgFunc_WeaponList(const char *pszName, int iSize, void *pbuf )
 
 	std::strcpy( Weapon.szName, READ_STRING() );
 	Weapon.iAmmoType = (int)READ_CHAR();	
+
+	constexpr int value_limit = static_cast<int>(std::numeric_limits<short>::max());
 	
-	Weapon.iMax1 = READ_BYTE();
-	if (Weapon.iMax1 == 255)
+	Weapon.iMax1 = READ_SHORT();
+	if (Weapon.iMax1 == value_limit)
 		Weapon.iMax1 = -1;
 
 	Weapon.iAmmo2Type = READ_CHAR();
-	Weapon.iMax2 = READ_BYTE();
-	if (Weapon.iMax2 == 255)
+	Weapon.iMax2 = READ_SHORT();
+	if (Weapon.iMax2 == value_limit)
 		Weapon.iMax2 = -1;
 
 	Weapon.iSlot = READ_CHAR();
