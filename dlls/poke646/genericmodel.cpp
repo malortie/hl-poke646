@@ -75,7 +75,7 @@ void CGenericModel::Spawn(void)
 	}
 
 	pev->frame = 0;
-	pev->framerate = 1.0f;
+	ResetSequenceInfo();
 
 	SetThink(&CGenericModel::IdleThink);
 	SetTouch(NULL);
@@ -93,7 +93,7 @@ void CGenericModel::IdleThink(void)
 {
 	float flInterval = StudioFrameAdvance();
 
-	pev->nextthink = gpGlobals->time + 0.5;
+	pev->nextthink = gpGlobals->time + 0.1;
 
 	DispatchAnimEvents(flInterval);
 
