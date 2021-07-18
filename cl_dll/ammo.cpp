@@ -1167,7 +1167,7 @@ int CHudAmmo::DrawWList(float flTime)
 				if ( gWR.HasAmmo(p) )
 					ScaleColors(r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 192));
 				else
-					ScaleColors(r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 64));
+					ScaleColors(r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 100));
 
 				SPR_Set( p->hInactive, r, g, b );
 				SPR_DrawAdditive( 0, x, y, &p->rcInactive );
