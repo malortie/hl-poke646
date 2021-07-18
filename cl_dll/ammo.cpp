@@ -996,7 +996,7 @@ int DrawBar(int x, int y, int width, int height, float f)
 		UnpackRGB(r, g, b, RGB_YELLOWISH);
 	}
 
-	FillRGBA(x, y, width, height, r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 128));
+	FillRGBA(x, y, width, height, r, g, b, std::min(static_cast<int>(gHUD.m_flAlpha), 64));
 
 	return (x + width);
 #else
