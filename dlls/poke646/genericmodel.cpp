@@ -31,21 +31,10 @@ public:
 
 	void EXPORT IdleThink(void);
 
-	virtual int		Save(CSave &save);
-	virtual int		Restore(CRestore &restore);
-	static	TYPEDESCRIPTION m_SaveData[];
-
-	string_t m_iszSequence;
+	string_t m_iszSequence; // Temporary.
 };
 
 LINK_ENTITY_TO_CLASS(model_generic, CGenericModel);
-
-TYPEDESCRIPTION	CGenericModel::m_SaveData[] =
-{
-	DEFINE_FIELD(CGenericModel, m_iszSequence, FIELD_STRING),
-};
-
-IMPLEMENT_SAVERESTORE(CGenericModel, CBaseAnimating);
 
 void CGenericModel::KeyValue(KeyValueData* pkvd)
 {
