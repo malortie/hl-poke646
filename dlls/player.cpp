@@ -4002,12 +4002,12 @@ void CBasePlayer::SendAmmoUpdate(void)
 
 			ASSERT( m_rgAmmo[i] >= 0 );
 			constexpr int value_limit = static_cast<int>(std::numeric_limits<short>::max());
-			ASSERT( m_rgAmmo[i] <= value_limit );
+			ASSERT( m_rgAmmo[i] < value_limit );
 
 			// send "Ammo" update message
 			MESSAGE_BEGIN( MSG_ONE, gmsgAmmoX, NULL, pev );
 				WRITE_BYTE( i );
-				WRITE_SHORT( std::max( std::min( m_rgAmmo[i], value_limit ), 0 ) );  // clamp the value to two bytes
+				WRITE_SHORT( std::max( std::min( m_rgAmmo[i], value_limit - 1 ), 0 ) );  // clamp the value to two bytes
 			MESSAGE_END();
 		}
 	}
