@@ -243,7 +243,7 @@ int CCrowbar::Swing( int fFirst )
 	}
 	else
 	{
-		switch( ((m_iSwing++) % 2) + 1 )
+		switch( ((m_iSwing++) % 3) )
 		{
 		case 0:
 			SendWeaponAnim( CROWBAR_ATTACK1HIT ); break;
