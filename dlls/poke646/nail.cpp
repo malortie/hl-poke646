@@ -120,7 +120,8 @@ void CNail::NailTouch(CBaseEntity *pOther)
 			pev->nextthink = gpGlobals->time + 2.0;
 		}
 
-		if (UTIL_PointContents(pev->origin) != CONTENTS_WATER && RANDOM_LONG(0,5) == 0)
+		int contents = UTIL_PointContents(pev->origin);
+		if (contents != CONTENTS_WATER && contents != CONTENTS_SKY && RANDOM_LONG(0,5) == 0)
 		{
 			UTIL_Sparks(pev->origin);
 		}
