@@ -298,7 +298,8 @@ int CHudScope::DrawScope(void)
 	pmtrace_t * trace = gEngfuncs.PM_TraceLine(v_origin, forward, PM_TRACELINE_PHYSENTSONLY, 2, -1);
 
 	float dist = (trace->endpos - v_origin).Length();
-	float meters = dist * 0.021527f; // Convert hammer units to meters.
+	// Assuming 1 foot is roughly equal to 12 hammer units, convert to meters. 
+	float meters = (dist / 12.0f) * 0.3048f;
 
 
 	char szDistance[16];
