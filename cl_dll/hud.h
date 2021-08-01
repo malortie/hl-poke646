@@ -551,6 +551,9 @@ public:
 
 	int DrawScope(void);
 
+protected:
+	void DrawScopeBorder(int frame, int x, int y, int width, int height);
+
 private:
 	HSPRITE m_hSprite;
 };
