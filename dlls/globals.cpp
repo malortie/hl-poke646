@@ -37,3 +37,6 @@ DLL_GLOBAL int			gDisplayTitle;
 DLL_GLOBAL BOOL			g_fGameOver;
 DLL_GLOBAL const Vector	g_vecZero = Vector(0,0,0);
 DLL_GLOBAL int			g_Language;
+
+// Poke646 - Required to detect when to play a new MP3.
+DLL_GLOBAL BOOL			g_fPlayMP3 = FALSE;

@@ -31,6 +31,8 @@
 #include "demo_api.h"
 #include "vgui_ScorePanel.h"
 
+#include "music.h"
+
 hud_player_info_t	 g_PlayerInfoList[MAX_PLAYERS+1];	   // player info from the engine
 extra_player_info_t  g_PlayerExtraInfo[MAX_PLAYERS+1];   // additional player info sent directly to the client dll
 
@@ -131,6 +133,20 @@ int __MsgFunc_StartUp(const char *pszName, int iSize, void *pbuf)
 	return gHUD.MsgFunc_StartUp(pszName, iSize, pbuf);
 }
 #endif // defined ( POKE646_CLIENT_DLL )
+
+int __MsgFunc_PlayMP3(const char *pszName, int iSize, void *pbuf)
+{
+	BEGIN_READ(pbuf, iSize);
+
+	char szMapName[128] = {};
+	std::strncpy(szMapName, READ_STRING(), ARRAYSIZE(szMapName));
+	szMapName[ARRAYSIZE(szMapName) - 1] = '\0';
+	std::strncat(szMapName, ".bsp", ARRAYSIZE(szMapName) - std::strlen(szMapName));
+
+	g_Music.PlayMapMusic(szMapName);
+
+	return 1;
+}
 
 // TFFree Command Menu
 void __CmdFunc_OpenCommandMenu(void)
@@ -300,6 +316,7 @@ void CHud :: Init( void )
 #if defined ( POKE646_CLIENT_DLL )
 	HOOK_MESSAGE( StartUp );
 #endif // defined ( POKE646_CLIENT_DLL )
+	HOOK_MESSAGE( PlayMP3 );
 
 	// TFFree CommandMenu
 	HOOK_COMMAND( "+commandmenu", OpenCommandMenu );
@@ -388,6 +405,9 @@ void CHud :: Init( void )
 	ServersInit();
 
 	MsgFunc_ResetHUD(0, 0, NULL );
+
+	// Poke646 - Load soundtracks.
+	g_Music.LoadMapSoundtracks("sound/soundtrack.txt");
 }
 
 // CHud destructor

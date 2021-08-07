@@ -469,11 +469,17 @@ LINK_ENTITY_TO_CLASS( worldspawn, CWorld );
 extern DLL_GLOBAL BOOL		g_fGameOver;
 float g_flWeaponCheat; 
 
+extern DLL_GLOBAL BOOL g_fPlayMP3;
+
 void CWorld :: Spawn( void )
 {
 	g_fGameOver = FALSE;
 	Precache( );
 	g_flWeaponCheat = CVAR_GET_FLOAT( "sv_cheats" );  // Is the impulse 101 command allowed?
+
+	// Poke646 - Required to detect when to play a new MP3.
+	g_fPlayMP3 = TRUE;
+	pev->nextthink = gpGlobals->time + 0.1;
 }
 
 void CWorld :: Precache( void )
@@ -739,4 +745,29 @@ void CWorld :: KeyValue( KeyValueData *pkvd )
 	}
 	else
 		CBaseEntity::KeyValue( pkvd );
+}
+
+void CWorld::Think(void)
+{
+	if (g_fPlayMP3)
+	{
+		// Continue to think as long as MP3 must be played.
+		pev->nextthink = gpGlobals->time + 0.1;
+
+		extern int gmsgPlayMP3;
+		// Ensure message has been linked.
+		if (gmsgPlayMP3)
+		{
+			// Singleplayer only - See if the player has spawned and is connected.
+			CBaseEntity* pPlayer = UTIL_PlayerByIndex(1);
+			if (pPlayer)
+			{
+				g_fPlayMP3 = FALSE;
+
+				MESSAGE_BEGIN(MSG_ONE, gmsgPlayMP3, NULL, pPlayer->edict());
+					WRITE_STRING(STRING(gpGlobals->mapname));
+				MESSAGE_END();
+			}
+		}
+	}
 }

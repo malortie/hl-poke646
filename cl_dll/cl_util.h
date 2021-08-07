@@ -192,3 +192,7 @@ inline void UnpackRGB(int &r, int &g, int &b, unsigned long ulRGB)\
 }
 
 HSPRITE LoadSprite(const char *pszName);
+
+#ifndef ARRAYSIZE
+#define ARRAYSIZE(p)		(sizeof(p)/sizeof(p[0]))
+#endif

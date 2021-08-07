@@ -202,6 +202,7 @@ int gmsgStatusValue = 0;
 int gmsgStartUp = 0;
 int gmsgScope = 0;
 #endif // defined ( POKE646_DLL )
+int gmsgPlayMP3 = 0;
 
 
 void LinkUserMessages( void )
@@ -254,6 +255,7 @@ void LinkUserMessages( void )
 	gmsgStartUp = REG_USER_MSG("StartUp", 2);
 	gmsgScope = REG_USER_MSG("Scope", 1); 
 #endif // defined ( POKE646_DLL )
+	gmsgPlayMP3 = REG_USER_MSG("PlayMP3", -1);
 
 }
 
