@@ -407,7 +407,11 @@ void CHud :: Init( void )
 	MsgFunc_ResetHUD(0, 0, NULL );
 
 	// Poke646 - Load soundtracks.
-	g_Music.LoadMapSoundtracks("sound/soundtrack.txt");
+	static char soundtrack_file_path[256] = {};
+	const char* gamedir = gEngfuncs.pfnGetGameDirectory();
+	std::snprintf(soundtrack_file_path, ARRAYSIZE(soundtrack_file_path), "%s/sound/soundtrack.txt", gamedir);
+
+	g_Music.LoadMapSoundtracks(soundtrack_file_path);
 }
 
 // CHud destructor
