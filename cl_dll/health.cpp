@@ -248,20 +248,17 @@ int CHudHealth::Draw(float flTime)
 	// Poke646 - Always draw the health.
 	{
 		HealthWidth = gHUD.GetSpriteRect(gHUD.m_HUD_number_0).right - gHUD.GetSpriteRect(gHUD.m_HUD_number_0).left;
+		int CrossWidth = gHUD.GetSpriteRect(m_HUD_cross).right - gHUD.GetSpriteRect(m_HUD_cross).left;
+		int CrossHeight = gHUD.GetSpriteRect(m_HUD_cross).bottom - gHUD.GetSpriteRect(m_HUD_cross).top;
 
-		struct rect_s cross = gHUD.GetSpriteRect(m_HUD_cross);
-
-		int CrossWidth = cross.right - cross.left;
-		int CrossHeight = cross.bottom - cross.top;
-
-		y = ScreenHeight - gHUD.m_iFontHeight / 2 - CrossHeight;
+		y = ScreenHeight - CrossHeight - gHUD.m_iFontHeight / 2;
 		x = CrossWidth;
 
 		SPR_Set(gHUD.GetSprite(m_HUD_cross), r, g, b);
-		SPR_DrawAdditive(0, x, y, &cross);
+		SPR_DrawAdditive(0, x, y, &gHUD.GetSpriteRect(m_HUD_cross));
 
 		y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
-		x = CrossWidth * 2.0f + HealthWidth;
+		x = CrossWidth * 2 + HealthWidth;
 
 		x = gHUD.DrawHudNumber(x, y, DHN_3DIGITS | DHN_DRAWZERO, m_iHealth, r, g, b);
 	}
