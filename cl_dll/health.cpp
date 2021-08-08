@@ -27,11 +27,9 @@
 #include "parsemsg.h"
 #include <cstring>
 
-#if defined ( POKE646_CLIENT_DLL )
-#ifndef M_PI
-#define M_PI	3.14159265358979323846
-#endif
-#endif // defined ( POKE646_CLIENT_DLL )
+// Poke646 - Health at which it starts occiliating.
+#define HEALTH_CRITICAL		15
+#define HEALTH_MAX_ALPHA	255
 
 DECLARE_MESSAGE(m_Health, Health )
 DECLARE_MESSAGE(m_Health, Damage )
@@ -72,6 +70,8 @@ int CHudHealth::Init(void)
 	m_fAttackFront = m_fAttackRear = m_fAttackRight = m_fAttackLeft = 0;
 	giDmgHeight = 0;
 	giDmgWidth = 0;
+	m_flDamageBrightness = 0.0f;
+	m_flTargetDamageBrightness = HEALTH_MAX_ALPHA;
 
 	std::memset(m_dmg, 0, sizeof(DAMAGE_IMAGE) * NUM_DMG_TYPES);
 
@@ -91,6 +91,10 @@ void CHudHealth::Reset( void )
 	{
 		m_dmg[i].fExpire = 0;
 	}
+
+	// Poke646 - Reset damage brightness.
+	m_flDamageBrightness = 0.0f;
+	m_flTargetDamageBrightness = HEALTH_MAX_ALPHA;
 }
 
 int CHudHealth::VidInit(void)
@@ -162,9 +166,14 @@ void CHudHealth::GetPainColor( int &r, int &g, int &b )
 	r = 255 - g;
 	b = 0;
 #else
-	if (m_iHealth > 25)
+	if (m_iHealth > HEALTH_CRITICAL)
 	{
 		UnpackRGB(r,g,b, RGB_YELLOWISH);
+	}
+	else if (m_iHealth > 0)
+	{
+		UnpackRGB(r, g, b, RGB_YELLOWISH);
+		g = b = m_flDamageBrightness;
 	}
 	else
 	{
@@ -175,7 +184,7 @@ void CHudHealth::GetPainColor( int &r, int &g, int &b )
 		g = 0;
 		b = 0;
 #endif // defined ( POKE646_CLIENT_DLL )
-		g = b =  255 * static_cast<int>(std::abs(std::sin(gEngfuncs.GetClientTime() * M_PI * 2.0f)));
+		g = b = 0;
 	}
 #endif 
 }
@@ -193,6 +202,22 @@ int CHudHealth::Draw(float flTime)
 
 	if ( !m_hSprite )
 		m_hSprite = LoadSprite(PAIN_NAME);
+
+	// Update brightness when health is <= critical level.
+	if (m_iHealth <= HEALTH_CRITICAL)
+	{
+		if (m_flDamageBrightness == 0)
+			m_flTargetDamageBrightness = HEALTH_MAX_ALPHA;
+		else if (m_flDamageBrightness == HEALTH_MAX_ALPHA)
+			m_flTargetDamageBrightness = 0;
+
+		// Occiliate faster as player health is approaching 0.
+		float frequency = std::max(1.0f, 15.0f * (static_cast<float>(HEALTH_CRITICAL - m_iHealth) / HEALTH_CRITICAL));
+		if (m_flDamageBrightness < m_flTargetDamageBrightness)
+			m_flDamageBrightness = std::min(m_flDamageBrightness + frequency, m_flTargetDamageBrightness);
+		else if (m_flDamageBrightness > m_flTargetDamageBrightness)
+			m_flDamageBrightness = std::max(m_flDamageBrightness - frequency, m_flTargetDamageBrightness);
+	}
 
 	// Has health changed? Flash the health #
 	if (m_fFade)
@@ -212,7 +237,7 @@ int CHudHealth::Draw(float flTime)
 		a = std::min(static_cast<int>(gHUD.m_flAlpha), MIN_ALPHA);
 
 	// If health is getting low, make it bright red
-	if (m_iHealth <= 25)
+	if (m_iHealth <= HEALTH_CRITICAL)
 		a = std::min(static_cast<int>(gHUD.m_flAlpha), 255);
 
 	GetPainColor( r, g, b );

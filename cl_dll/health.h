@@ -113,6 +113,9 @@ public:
 	float m_fAttackFront, m_fAttackRear, m_fAttackLeft, m_fAttackRight;
 	void GetPainColor( int &r, int &g, int &b );
 	float m_fFade;
+	// Poke646 - Used for health damage brightness.
+	float m_flDamageBrightness;
+	float m_flTargetDamageBrightness;
 
 private:
 	HSPRITE m_hSprite;
