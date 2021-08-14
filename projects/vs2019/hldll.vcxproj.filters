@@ -34,6 +34,9 @@
     <Filter Include="Header Files\pm_shared">
       <UniqueIdentifier>{37941113-16fa-4ce0-9bdd-a72a1ced8902}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\dlls\poke646">
+      <UniqueIdentifier>{74a53a97-b3e3-401f-931d-cbd762896dad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\dlls\aflock.cpp">
@@ -156,9 +159,6 @@
     <ClCompile Include="..\..\dlls\h_export.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dlls\handgrenade.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\dlls\hassassin.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
@@ -178,9 +178,6 @@
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\hornet.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\hornetgun.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\houndeye.cpp">
@@ -342,6 +339,21 @@
     <ClCompile Include="..\..\dlls\xen.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\dlls\poke646\firetrail.cpp">
+      <Filter>Source Files\dlls\poke646</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\poke646\genericmodel.cpp">
+      <Filter>Source Files\dlls\poke646</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\poke646\nail.cpp">
+      <Filter>Source Files\dlls\poke646</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\poke646\robocop.cpp">
+      <Filter>Source Files\dlls\poke646</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\poke646\xenspit.cpp">
+      <Filter>Source Files\dlls\poke646</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\dlls\doors.h">
@@ -478,6 +490,12 @@
     </ClInclude>
     <ClInclude Include="..\..\dlls\vector.h">
       <Filter>Header Files\dlls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dlls\poke646\nail.h">
+      <Filter>Source Files\dlls\poke646</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dlls\poke646\xenspit.h">
+      <Filter>Source Files\dlls\poke646</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

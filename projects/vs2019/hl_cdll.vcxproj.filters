@@ -55,6 +55,12 @@
     <Filter Include="Source Files\_hl\cl_dll\hl">
       <UniqueIdentifier>{bd9d5958-4e67-4bff-bbd8-6ba6dfcdb720}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\cl_dll\poke646">
+      <UniqueIdentifier>{4ae00e6e-cb4a-4ec3-8ea7-40eaccc8f386}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_hl\dlls\poke646">
+      <UniqueIdentifier>{78bedfb3-f894-492c-840c-1c7b86e2f41c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\dlls\crossbow.cpp">
@@ -70,9 +76,6 @@
       <Filter>Source Files\_hl\cl_dll</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\gauss.cpp">
-      <Filter>Source Files\_hl\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\handgrenade.cpp">
       <Filter>Source Files\_hl\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\cl_dll\hl\hl_weapons.cpp">
@@ -91,9 +94,6 @@
       <Filter>Source Files\_hl\dlls\wpn_shared</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\squeakgrenade.cpp">
-      <Filter>Source Files\_hl\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\hornetgun.cpp">
       <Filter>Source Files\_hl\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\mp5.cpp">
@@ -306,6 +306,12 @@
     <ClCompile Include="..\..\public\interface.cpp">
       <Filter>Source Files\public</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\cl_dll\poke646\scope.cpp">
+      <Filter>Source Files\cl_dll\poke646</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cl_dll\poke646\music.cpp">
+      <Filter>Source Files\cl_dll\poke646</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\cl_dll\kbutton.h">
@@ -427,6 +433,9 @@
     </ClInclude>
     <ClInclude Include="..\..\cl_dll\view.h">
       <Filter>Header Files\cl_dll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cl_dll\poke646\music.h">
+      <Filter>Source Files\cl_dll\poke646</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

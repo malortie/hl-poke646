@@ -63,7 +63,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;QUIVER;VOXEL;QUAKE2;VALVE_DLL;CLIENT_WEAPONS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS</PreprocessorDefinitions>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <AdditionalIncludeDirectories>..\..\dlls;..\..\engine;..\..\common;..\..\pm_shared;..\..\game_shared;..\..\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\dlls;..\..\engine;..\..\common;..\..\pm_shared;..\..\game_shared;..\..\public;..\..\dlls\poke646;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -88,7 +88,7 @@ if exist "$(TargetDir)$(TargetName).pdb" copy "$(TargetDir)$(TargetName).pdb" "$
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;QUIVER;VOXEL;QUAKE2;VALVE_DLL;CLIENT_WEAPONS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\dlls;..\..\engine;..\..\common;..\..\pm_shared;..\..\game_shared;..\..\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\dlls;..\..\engine;..\..\common;..\..\pm_shared;..\..\game_shared;..\..\public;..\..\dlls\poke646;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
@@ -143,13 +143,11 @@ if exist "$(TargetDir)$(TargetName).pdb" copy "$(TargetDir)$(TargetName).pdb" "$
     <ClCompile Include="..\..\dlls\ggrenade.cpp" />
     <ClCompile Include="..\..\dlls\globals.cpp" />
     <ClCompile Include="..\..\dlls\gman.cpp" />
-    <ClCompile Include="..\..\dlls\handgrenade.cpp" />
     <ClCompile Include="..\..\dlls\hassassin.cpp" />
     <ClCompile Include="..\..\dlls\headcrab.cpp" />
     <ClCompile Include="..\..\dlls\healthkit.cpp" />
     <ClCompile Include="..\..\dlls\hgrunt.cpp" />
     <ClCompile Include="..\..\dlls\hornet.cpp" />
-    <ClCompile Include="..\..\dlls\hornetgun.cpp" />
     <ClCompile Include="..\..\dlls\houndeye.cpp" />
     <ClCompile Include="..\..\dlls\h_ai.cpp" />
     <ClCompile Include="..\..\dlls\h_battery.cpp" />
@@ -176,6 +174,11 @@ if exist "$(TargetDir)$(TargetName).pdb" copy "$(TargetDir)$(TargetName).pdb" "$
     <ClCompile Include="..\..\dlls\plane.cpp" />
     <ClCompile Include="..\..\dlls\plats.cpp" />
     <ClCompile Include="..\..\dlls\player.cpp" />
+    <ClCompile Include="..\..\dlls\poke646\firetrail.cpp" />
+    <ClCompile Include="..\..\dlls\poke646\genericmodel.cpp" />
+    <ClCompile Include="..\..\dlls\poke646\nail.cpp" />
+    <ClCompile Include="..\..\dlls\poke646\robocop.cpp" />
+    <ClCompile Include="..\..\dlls\poke646\xenspit.cpp" />
     <ClCompile Include="..\..\dlls\python.cpp" />
     <ClCompile Include="..\..\dlls\rat.cpp" />
     <ClCompile Include="..\..\dlls\roach.cpp" />
@@ -236,6 +239,8 @@ if exist "$(TargetDir)$(TargetName).pdb" copy "$(TargetDir)$(TargetName).pdb" "$
     <ClInclude Include="..\..\dlls\nodes.h" />
     <ClInclude Include="..\..\dlls\plane.h" />
     <ClInclude Include="..\..\dlls\player.h" />
+    <ClInclude Include="..\..\dlls\poke646\nail.h" />
+    <ClInclude Include="..\..\dlls\poke646\xenspit.h" />
     <ClInclude Include="..\..\dlls\saverestore.h" />
     <ClInclude Include="..\..\dlls\schedule.h" />
     <ClInclude Include="..\..\dlls\scripted.h" />
