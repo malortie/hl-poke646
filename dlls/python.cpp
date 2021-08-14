@@ -23,6 +23,7 @@
 #include "gamerules.h"
 
 
+#if 0 // Poke646 - No Python.
 enum python_e {
 	PYTHON_IDLE1 = 0,
 	PYTHON_FIDGET,
@@ -278,6 +279,7 @@ void CPython::WeaponIdle( void )
 	
 	SendWeaponAnim( iAnim, UseDecrement() ? 1 : 0, bUseScope );
 }
+#endif // Poke646 - No python.
 
 
 class CPythonAmmo : public CBasePlayerAmmo
