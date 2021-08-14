@@ -24,7 +24,7 @@
 #include "gamerules.h"
 
 
-#if !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
+#if 0 // Poke646 - No RPG.
 
 enum rpg_e {
 	RPG_IDLE = 0,
@@ -41,7 +41,7 @@ enum rpg_e {
 
 LINK_ENTITY_TO_CLASS( weapon_rpg, CRpg );
 
-#endif // !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
+#endif // Poke646 - No RPG.
 
 #ifndef CLIENT_DLL
 
@@ -282,7 +282,7 @@ void CRpgRocket :: FollowThink( void  )
 }
 #endif
 
-#if !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
+#if 0 // Poke646 - No RPG.
 
 void CRpg::Reload( void )
 {
@@ -616,6 +616,6 @@ class CRpgAmmo : public CBasePlayerAmmo
 };
 LINK_ENTITY_TO_CLASS( ammo_rpgclip, CRpgAmmo );
 
-#endif // !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
+#endif // Poke646 - No RPG.
 
 #endif
