@@ -46,9 +46,7 @@ DLL_GLOBAL	short	g_sModelIndexWExplosion;// holds the index for the underwater e
 DLL_GLOBAL	short	g_sModelIndexBubbles;// holds the index for the bubbles model
 DLL_GLOBAL	short	g_sModelIndexBloodDrop;// holds the sprite index for the initial blood
 DLL_GLOBAL	short	g_sModelIndexBloodSpray;// holds the sprite index for splattered blood
-#if defined ( POKE646_DLL )
 DLL_GLOBAL	short	g_sModelIndexShockwave;// holds the index for the shockwave explosion
-#endif // defined ( POKE646_DLL )
 DLL_GLOBAL	short	g_sModelIndexWhite;// holds the index for white sprite
 
 ItemInfo CBasePlayerItem::ItemInfoArray[MAX_WEAPONS];
@@ -317,7 +315,6 @@ void W_Precache(void)
 	// custom items...
 
 	// common world objects
-#if defined ( POKE646_DLL )
 	UTIL_PrecacheOther( "item_suit" );
 	UTIL_PrecacheOther( "item_battery" );
 	UTIL_PrecacheOther( "item_antidote" );
@@ -350,79 +347,6 @@ void W_Precache(void)
 	UTIL_PrecacheOtherWeapon("weapon_xs");
 	UTIL_PrecacheOther("ammo_xencandy");
 
-#else
-	UTIL_PrecacheOther( "item_suit" );
-	UTIL_PrecacheOther( "item_battery" );
-	UTIL_PrecacheOther( "item_antidote" );
-	UTIL_PrecacheOther( "item_security" );
-	UTIL_PrecacheOther( "item_longjump" );
-
-	// shotgun
-	UTIL_PrecacheOtherWeapon( "weapon_shotgun" );
-	UTIL_PrecacheOther( "ammo_buckshot" );
-
-	// crowbar
-	UTIL_PrecacheOtherWeapon( "weapon_crowbar" );
-
-	// glock
-	UTIL_PrecacheOtherWeapon( "weapon_9mmhandgun" );
-	UTIL_PrecacheOther( "ammo_9mmclip" );
-
-	// mp5
-	UTIL_PrecacheOtherWeapon( "weapon_9mmAR" );
-	UTIL_PrecacheOther( "ammo_9mmAR" );
-	UTIL_PrecacheOther( "ammo_ARgrenades" );
-
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// python
-	UTIL_PrecacheOtherWeapon( "weapon_357" );
-	UTIL_PrecacheOther( "ammo_357" );
-#endif
-	
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// gauss
-	UTIL_PrecacheOtherWeapon( "weapon_gauss" );
-	UTIL_PrecacheOther( "ammo_gaussclip" );
-#endif
-
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// rpg
-	UTIL_PrecacheOtherWeapon( "weapon_rpg" );
-	UTIL_PrecacheOther( "ammo_rpgclip" );
-#endif
-
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// crossbow
-	UTIL_PrecacheOtherWeapon( "weapon_crossbow" );
-	UTIL_PrecacheOther( "ammo_crossbow" );
-#endif
-
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// egon
-	UTIL_PrecacheOtherWeapon( "weapon_egon" );
-#endif
-
-	// tripmine
-	UTIL_PrecacheOtherWeapon( "weapon_tripmine" );
-
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// satchel charge
-	UTIL_PrecacheOtherWeapon( "weapon_satchel" );
-#endif
-
-	// hand grenade
-	UTIL_PrecacheOtherWeapon("weapon_handgrenade");
-
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// squeak grenade
-	UTIL_PrecacheOtherWeapon( "weapon_snark" );
-#endif
-
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// hornetgun
-	UTIL_PrecacheOtherWeapon( "weapon_hornetgun" );
-#endif
-#endif // defined ( POKE646_DLL )
 
 
 #if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
@@ -442,16 +366,12 @@ void W_Precache(void)
 	g_sModelIndexLaser = PRECACHE_MODEL( (char *)g_pModelNameLaser );
 	g_sModelIndexLaserDot = PRECACHE_MODEL("sprites/laserdot.spr");
 
-#if defined ( POKE646_DLL )
 	g_sModelIndexShockwave = PRECACHE_MODEL("sprites/shockwave.spr"); // shockwave explosion
-#endif // defined ( POKE646_DLL )
 	g_sModelIndexWhite = PRECACHE_MODEL("sprites/white.spr");
 
-#if defined ( POKE646_DLL )
 
 
 	PRECACHE_MODEL("sprites/wallsmoke.spr");
-#endif // defined ( POKE646_DLL )
 
 	// used by explosions
 	PRECACHE_MODEL ("models/grenade.mdl");
@@ -470,14 +390,12 @@ void W_Precache(void)
 	
 	PRECACHE_SOUND ("items/weapondrop1.wav");// weapon falls to the ground
 
-#if defined ( POKE646_DLL )
 	PRECACHE_MODEL("models/w_grenade.mdl");
 
 	PRECACHE_SOUND("weapons/brad_hit1.wav");	// hit by nail
 	PRECACHE_SOUND("weapons/brad_hit2.wav");	// hit by nail
 
 	UTIL_PrecacheOther("fire_trail");			// pipebomb explosion effect.
-#endif // defined ( POKE646_DLL )
 }
 
 
@@ -1674,7 +1592,6 @@ TYPEDESCRIPTION	CSatchel::m_SaveData[] =
 };
 IMPLEMENT_SAVERESTORE( CSatchel, CBasePlayerWeapon );
 
-#if defined ( POKE646_DLL )
 TYPEDESCRIPTION	CGlock::m_SaveData[] = 
 {
 	DEFINE_FIELD( CGlock, m_fInAttack, FIELD_INTEGER ),
@@ -1691,5 +1608,4 @@ TYPEDESCRIPTION	CCrossbow::m_SaveData[] =
 IMPLEMENT_SAVERESTORE(CCrossbow, CBasePlayerWeapon);
 
 
-#endif // defined ( POKE646_DLL )
 

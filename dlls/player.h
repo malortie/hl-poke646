@@ -62,7 +62,6 @@
 
 #define TEAM_NAME_LENGTH	16
 
-#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 
 //
 // Player exert.
@@ -78,7 +77,6 @@
 #define PLAYER_BREATHE_SOUND			"player/pl_breathe.wav"
 #define PLAYER_BREATHE_SOUND_DURATION	1.5f
 
-#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 
 typedef enum
 {
@@ -341,7 +339,6 @@ public:
 	
 	float m_flNextChatTime;
 
-#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 
 	//
 	// Exert
@@ -357,7 +354,6 @@ public:
 	void HidePlayerHUD( BOOL bInstant = FALSE );
 	void UpdatePlayerHUDVisibility( BOOL bInstant = FALSE );
 
-#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 	
 	BOOL m_fRestoreHUD;
 	BOOL m_bFirstTimeSpawn;

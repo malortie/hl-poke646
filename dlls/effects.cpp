@@ -2251,11 +2251,7 @@ void CItemSoda::CanTouch ( CBaseEntity *pOther )
 
 	// spoit sound here
 
-#if defined ( POKE646_DLL )
 	pOther->TakeHealth( 5, DMG_GENERIC );// a bit of health.
-#else
-	pOther->TakeHealth( 1, DMG_GENERIC );// a bit of health.
-#endif // defined ( POKE646_DLL )
 
 	if ( !FNullEnt( pev->owner ) )
 	{

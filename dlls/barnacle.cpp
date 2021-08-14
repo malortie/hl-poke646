@@ -22,9 +22,7 @@
 #include	"monsters.h"
 #include	"schedule.h"
 
-#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
 #define SF_BARNACLE_SPAWN_XENCANDY		1
-#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 
 #define	BARNACLE_BODY_HEIGHT	44 // how 'tall' the barnacle's model is.
 #define BARNACLE_PULL_SPEED		8
@@ -94,7 +92,6 @@ void CBarnacle :: HandleAnimEvent( MonsterEvent_t *pEvent )
 	{
 	case BARNACLE_AE_PUKEGIB:
 		CGib::SpawnRandomGibs( pev, 1, 1 );	
-#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
 		if (pev->spawnflags & SF_BARNACLE_SPAWN_XENCANDY)
 		{
 			// Do not spawn ammo more than once.
@@ -113,7 +110,6 @@ void CBarnacle :: HandleAnimEvent( MonsterEvent_t *pEvent )
 				pItem->pev->owner = edict();
 			}
 		}
-#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 		break;
 	default:
 		CBaseMonster::HandleAnimEvent( pEvent );
@@ -408,9 +404,7 @@ void CBarnacle :: Precache()
 	PRECACHE_SOUND("barnacle/bcl_die1.wav" );
 	PRECACHE_SOUND("barnacle/bcl_die3.wav" );
 
-#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
 	UTIL_PrecacheOther( "ammo_xencandy" );
-#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 }	
 
 //=========================================================

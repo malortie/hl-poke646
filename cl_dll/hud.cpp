@@ -127,12 +127,10 @@ int __MsgFunc_GameMode(const char *pszName, int iSize, void *pbuf )
 	return gHUD.MsgFunc_GameMode( pszName, iSize, pbuf );
 }
 
-#if defined ( POKE646_CLIENT_DLL )
 int __MsgFunc_StartUp(const char *pszName, int iSize, void *pbuf)
 {
 	return gHUD.MsgFunc_StartUp(pszName, iSize, pbuf);
 }
-#endif // defined ( POKE646_CLIENT_DLL )
 
 int __MsgFunc_PlayMP3(const char *pszName, int iSize, void *pbuf)
 {
@@ -313,9 +311,7 @@ void CHud :: Init( void )
 	HOOK_MESSAGE( ViewMode );
 	HOOK_MESSAGE( SetFOV );
 	HOOK_MESSAGE( Concuss );
-#if defined ( POKE646_CLIENT_DLL )
 	HOOK_MESSAGE( StartUp );
-#endif // defined ( POKE646_CLIENT_DLL )
 	HOOK_MESSAGE( PlayMP3 );
 
 	// TFFree CommandMenu
@@ -352,10 +348,8 @@ void CHud :: Init( void )
 
 	m_iLogo = 0;
 	m_iFOV = 0;
-#if defined ( POKE646_CLIENT_DLL )
 	m_flAlpha = 0;
 	m_flTargetAlpha = 0;
-#endif // defined ( POKE646_CLIENT_DLL )
 
 	CVAR_CREATE( "zoom_sensitivity_ratio", "1.2", 0 );
 	default_fov = CVAR_CREATE( "default_fov", "90", 0 );
@@ -395,9 +389,7 @@ void CHud :: Init( void )
 	m_AmmoSecondary.Init();
 	m_TextMessage.Init();
 	m_StatusIcons.Init();
-#if defined ( POKE646_CLIENT_DLL )
 	m_Scope.Init();
-#endif // defined ( POKE646_CLIENT_DLL )
 	GetClientVoiceMgr()->Init(&g_VoiceStatusHelper, (vgui::Panel**)&gViewPort);
 
 	m_Menu.Init();
@@ -554,9 +546,7 @@ void CHud :: VidInit( void )
 	m_AmmoSecondary.VidInit();
 	m_TextMessage.VidInit();
 	m_StatusIcons.VidInit();
-#if defined ( POKE646_CLIENT_DLL )
 	m_Scope.VidInit();
-#endif // defined ( POKE646_CLIENT_DLL )
 	GetClientVoiceMgr()->VidInit();
 }
 
@@ -739,7 +729,6 @@ float CHud::GetSensitivity( void )
 	return m_flMouseSensitivity;
 }
 
-#if defined ( POKE646_CLIENT_DLL )
 int CHud::MsgFunc_StartUp(const char *pszName, int iSize, void *pbuf)
 {
 	BEGIN_READ(pbuf, iSize);
@@ -766,4 +755,3 @@ int CHud::MsgFunc_StartUp(const char *pszName, int iSize, void *pbuf)
 
 	return 1;
 }
-#endif // defined ( POKE646_CLIENT_DLL )

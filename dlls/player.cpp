@@ -118,14 +118,12 @@ TYPEDESCRIPTION	CBasePlayer::m_playerSaveData[] =
 	DEFINE_FIELD(CBasePlayer, m_iHideHUD, FIELD_INTEGER),
 	DEFINE_FIELD(CBasePlayer, m_iFOV, FIELD_INTEGER),
 
-#if defined ( POKE646_DLL )
 
 	// Player exert.
 	DEFINE_FIELD(CBasePlayer, m_flExertLevel, FIELD_FLOAT),
 	DEFINE_FIELD(CBasePlayer, m_flNextExtertDecrement, FIELD_TIME),
 	DEFINE_FIELD(CBasePlayer, m_flNextBreatheSound, FIELD_TIME),
 
-#endif // defined ( POKE646_DLL )
 	DEFINE_FIELD(CBasePlayer, m_bFirstTimeSpawn, FIELD_BOOLEAN),
 	
 	//DEFINE_FIELD( CBasePlayer, m_fDeadTime, FIELD_FLOAT ), // only used in multiplayer games
@@ -198,10 +196,8 @@ int gmsgTeamNames = 0;
 int gmsgStatusText = 0;
 int gmsgStatusValue = 0; 
 
-#if defined ( POKE646_DLL )
 int gmsgStartUp = 0;
 int gmsgScope = 0;
-#endif // defined ( POKE646_DLL )
 int gmsgPlayMP3 = 0;
 
 
@@ -251,10 +247,8 @@ void LinkUserMessages( void )
 	gmsgStatusText = REG_USER_MSG("StatusText", -1);
 	gmsgStatusValue = REG_USER_MSG("StatusValue", 3); 
 
-#if defined ( POKE646_DLL )
 	gmsgStartUp = REG_USER_MSG("StartUp", 2);
 	gmsgScope = REG_USER_MSG("Scope", 1); 
-#endif // defined ( POKE646_DLL )
 	gmsgPlayMP3 = REG_USER_MSG("PlayMP3", -1);
 
 }
@@ -387,10 +381,8 @@ void CBasePlayer :: DeathSound( void )
 		break;
 	}
 
-#if !defined ( POKE646 )
 	// play one of the suit death alarms
 	EMIT_GROUPNAME_SUIT(ENT(pev), "HEV_DEAD");
-#endif // !defined ( POKE646 )
 }
 
 // override takehealth
@@ -862,21 +854,10 @@ void CBasePlayer::RemoveAllItems( BOOL removeSuit )
 	pev->viewmodel		= 0;
 	pev->weaponmodel	= 0;
 	
-#if defined ( POKE646_DLL )
-	if ( removeSuit )
-	{
-		pev->weapons = 0;
-	
-		HidePlayerHUD();
-	}
-	else
-		pev->weapons &= ~WEAPON_ALLWEAPONS;
-#else
 	if ( removeSuit )
 		pev->weapons = 0;
 	else
 		pev->weapons &= ~WEAPON_ALLWEAPONS;
-#endif // defined ( POKE646_DLL )
 
 	for ( i = 0; i < MAX_AMMO_SLOTS;i++)
 		m_rgAmmo[i] = 0;
@@ -2128,9 +2109,7 @@ void CBasePlayer::CheckTimeBasedDamage()
 				bDuration = NERVEGAS_DURATION;
 				break;
 			case itbd_Poison:
-#if !defined ( POKE646_DLL ) || defined ( VENDETTA )
-				TakeDamage(pev, pev, POISON_DAMAGE, DMG_GENERIC);
-#endif // !defined ( POKE646_DLL ) || defined ( VENDETTA )
+//				TakeDamage(pev, pev, POISON_DAMAGE, DMG_GENERIC); // Poke646 - No take damage poison
 				bDuration = POISON_DURATION;
 				break;
 			case itbd_Radiation:
@@ -2370,8 +2349,6 @@ void CBasePlayer::CheckSuitUpdate()
 
 void CBasePlayer::SetSuitUpdate(char *name, int fgroup, int iNoRepeatTime)
 {
-#if defined ( POKE646_DLL )
-#endif // defined ( POKE646_DLL )
 	return; // Poke646 - No suit update sentence.
 
 	int i;
@@ -2697,9 +2674,7 @@ void CBasePlayer::PostThink()
 
 	UpdatePlayerSound();
 
-#if defined ( POKE646_DLL )
 	UpdateExertLevel();
-#endif // defined ( POKE646_DLL )
 
 pt_end:
 #if defined( CLIENT_WEAPONS )
@@ -2895,20 +2870,12 @@ ReturnSpot:
 void CBasePlayer::Spawn( void )
 {
 	pev->classname		= MAKE_STRING("player");
-#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
 	pev->health			= 50;
-#else
-	pev->health			= 100;
-#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 	pev->armorvalue		= 0;
 	pev->takedamage		= DAMAGE_AIM;
 	pev->solid			= SOLID_SLIDEBOX;
 	pev->movetype		= MOVETYPE_WALK;
-#if defined ( POKE646_DLL ) && !defined ( VENDETTA )
 	pev->max_health		= 100;
-#else
-	pev->max_health		= pev->health;
-#endif // defined ( POKE646_DLL ) && !defined ( VENDETTA )
 	pev->flags		   &= FL_PROXY;	// keep proxy flag sey by engine
 	pev->flags		   |= FL_CLIENT;
 	pev->air_finished	= gpGlobals->time + 12;
@@ -3523,7 +3490,7 @@ void CBasePlayer::ImpulseCommands( )
 		break;
 		}
 	case 100:
-#if !defined ( POKE646_DLL )
+/* Poke646 - No flashlight.
         // temporary flashlight for level designers
         if ( FlashlightIsOn() )
 		{
@@ -3533,7 +3500,7 @@ void CBasePlayer::ImpulseCommands( )
 		{
 			FlashlightTurnOn();
 		}
-#endif // !defined ( POKE646_DLL )
+*/
 		break;
 
 	case	201:// paint decal
@@ -3598,7 +3565,6 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 
 	case 101:
 		gEvilImpulse101 = TRUE;
-#if defined ( POKE646_DLL )
 		GiveNamedItem( "weapon_heaterpipe" );
 		GiveNamedItem( "weapon_shotgun" );
 		GiveNamedItem( "ammo_buckshot" );
@@ -3612,34 +3578,6 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 		GiveNamedItem( "weapon_xs" );
 		GiveNamedItem( "ammo_xencandy" );
 
-#else
-		GiveNamedItem( "item_suit" );
-		GiveNamedItem( "item_battery" );
-		GiveNamedItem( "weapon_crowbar" );
-		GiveNamedItem( "weapon_9mmhandgun" );
-		GiveNamedItem( "ammo_9mmclip" );
-		GiveNamedItem( "weapon_shotgun" );
-		GiveNamedItem( "ammo_buckshot" );
-		GiveNamedItem( "weapon_9mmAR" );
-		GiveNamedItem( "ammo_9mmAR" );
-		GiveNamedItem( "ammo_ARgrenades" );
-		GiveNamedItem( "weapon_handgrenade" );
-		GiveNamedItem( "weapon_tripmine" );
-#ifndef OEM_BUILD
-		GiveNamedItem( "weapon_357" );
-		GiveNamedItem( "ammo_357" );
-		GiveNamedItem( "weapon_crossbow" );
-		GiveNamedItem( "ammo_crossbow" );
-		GiveNamedItem( "weapon_egon" );
-		GiveNamedItem( "weapon_gauss" );
-		GiveNamedItem( "ammo_gaussclip" );
-		GiveNamedItem( "weapon_rpg" );
-		GiveNamedItem( "ammo_rpgclip" );
-		GiveNamedItem( "weapon_satchel" );
-		GiveNamedItem( "weapon_snark" );
-		GiveNamedItem( "weapon_hornetgun" );
-#endif
-#endif // defined ( POKE646_DLL )
 		gEvilImpulse101 = FALSE;
 		break;
 
@@ -4766,7 +4704,6 @@ BOOL CBasePlayer :: SwitchWeapon( CBasePlayerItem *pWeapon )
 }
 
 
-#if defined ( POKE646_DLL )
 void CBasePlayer::UpdateExertLevel(void)
 {
 	if (m_flExertLevel > 0 && m_flNextExtertDecrement <= gpGlobals->time)
@@ -4806,7 +4743,6 @@ void CBasePlayer::HidePlayerHUD(BOOL bInstant)
 	MESSAGE_END();
 }
 
-#endif // defined ( POKE646_DLL )
 void CBasePlayer::UpdatePlayerHUDVisibility(BOOL bInstant)
 {
 	if (pev->flags & FL_FROZEN)

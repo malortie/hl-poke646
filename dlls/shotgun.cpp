@@ -27,7 +27,6 @@
 #define VECTOR_CONE_DM_DOUBLESHOTGUN Vector( 0.17365, 0.04362, 0.00 ) // 20 degrees by 5 degrees
 
 enum shotgun_e {
-#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 	SHOTGUN_IDLE = 0,
 	SHOTGUN_FIRE,
 	SHOTGUN_RELOAD,
@@ -36,18 +35,6 @@ enum shotgun_e {
 	SHOTGUN_DRAW,
 	SHOTGUN_HOLSTER,
 	SHOTGUN_IDLE_DEEP,
-#else
-	SHOTGUN_IDLE = 0,
-	SHOTGUN_FIRE,
-	SHOTGUN_FIRE2,
-	SHOTGUN_RELOAD,
-	SHOTGUN_PUMP,
-	SHOTGUN_START_RELOAD,
-	SHOTGUN_DRAW,
-	SHOTGUN_HOLSTER,
-	SHOTGUN_IDLE4,
-	SHOTGUN_IDLE_DEEP
-#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 };
 
 LINK_ENTITY_TO_CLASS( weapon_shotgun, CShotgun );
@@ -112,11 +99,7 @@ int CShotgun::GetItemInfo(ItemInfo *p)
 	p->iMaxAmmo2 = -1;
 	p->iMaxClip = SHOTGUN_MAX_CLIP;
 	p->iSlot = 2;
-#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 	p->iPosition = 0;
-#else
-	p->iPosition = 1;
-#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 	p->iFlags = 0;
 	p->iId = m_iId = WEAPON_SHOTGUN;
 	p->iWeight = SHOTGUN_WEIGHT;
@@ -133,7 +116,6 @@ BOOL CShotgun::Deploy( )
 
 void CShotgun::PrimaryAttack()
 {
-#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
 	// don't fire underwater
 	if (m_pPlayer->pev->waterlevel == 3)
 	{
@@ -189,77 +171,6 @@ void CShotgun::PrimaryAttack()
 	Vector vecImpulse = -gpGlobals->v_forward;
 
 	// Send player impulse.
-#else
-
-	// don't fire underwater
-	if (m_pPlayer->pev->waterlevel == 3)
-	{
-		PlayEmptySound( );
-		m_flNextPrimaryAttack = GetNextAttackDelay(0.15);
-		return;
-	}
-
-	if (m_iClip <= 0)
-	{
-		Reload( );
-		if (m_iClip == 0)
-			PlayEmptySound( );
-		return;
-	}
-
-	m_pPlayer->m_iWeaponVolume = LOUD_GUN_VOLUME;
-	m_pPlayer->m_iWeaponFlash = NORMAL_GUN_FLASH;
-
-	m_iClip--;
-
-	int flags;
-#if defined( CLIENT_WEAPONS )
-	flags = FEV_NOTHOST;
-#else
-	flags = 0;
-#endif
-
-
-	m_pPlayer->pev->effects = (int)(m_pPlayer->pev->effects) | EF_MUZZLEFLASH;
-
-	Vector vecSrc	 = m_pPlayer->GetGunPosition( );
-	Vector vecAiming = m_pPlayer->GetAutoaimVector( AUTOAIM_5DEGREES );
-
-	Vector vecDir;
-
-#ifdef CLIENT_DLL
-	if ( bIsMultiplayer() )
-#else
-	if ( g_pGameRules->IsMultiplayer() )
-#endif
-	{
-		vecDir = m_pPlayer->FireBulletsPlayer( 4, vecSrc, vecAiming, VECTOR_CONE_DM_SHOTGUN, 2048, BULLET_PLAYER_BUCKSHOT, 0, 0, m_pPlayer->pev, m_pPlayer->random_seed );
-	}
-	else
-	{
-		// regular old, untouched spread. 
-		vecDir = m_pPlayer->FireBulletsPlayer( 6, vecSrc, vecAiming, VECTOR_CONE_10DEGREES, 2048, BULLET_PLAYER_BUCKSHOT, 0, 0, m_pPlayer->pev, m_pPlayer->random_seed );
-	}
-
-	PLAYBACK_EVENT_FULL( flags, m_pPlayer->edict(), m_usSingleFire, 0.0, (float *)&g_vecZero, (float *)&g_vecZero, vecDir.x, vecDir.y, 0, 0, 0, 0 );
-
-
-	if (!m_iClip && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0)
-		// HEV suit - indicate out of ammo condition
-		m_pPlayer->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
-
-	if (m_iClip != 0)
-		m_flPumpTime = gpGlobals->time + 0.5;
-
-	m_flNextPrimaryAttack = GetNextAttackDelay(0.75);
-	m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.75;
-	if (m_iClip != 0)
-		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 5.0;
-	else
-		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 0.75;
-
-	m_fInSpecialReload = 0;
-#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL ) || defined ( VENDETTA )
 	m_pPlayer->pev->velocity.x = m_pPlayer->pev->velocity.x + vecImpulse.x * 200;
 	m_pPlayer->pev->velocity.y = m_pPlayer->pev->velocity.y + vecImpulse.y * 200;
 	m_pPlayer->pev->velocity.z = m_pPlayer->pev->velocity.z + vecImpulse.z * 100; // Weaker force applied vertically.
@@ -268,7 +179,7 @@ void CShotgun::PrimaryAttack()
 
 void CShotgun::SecondaryAttack( void )
 {
-#if !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL ) && !defined ( VENDETTA )
+  return; // Poke646 - No secondary attack.
 	// don't fire underwater
 	if (m_pPlayer->pev->waterlevel == 3)
 	{
@@ -339,7 +250,6 @@ void CShotgun::SecondaryAttack( void )
 		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 1.5;
 
 	m_fInSpecialReload = 0;
-#endif // !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL ) && !defined ( VENDETTA )
 }
 
 
@@ -396,14 +306,14 @@ void CShotgun::WeaponIdle( void )
 
 	m_pPlayer->GetAutoaimVector( AUTOAIM_5DEGREES );
 
-#if !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
+/* Poke 646 - No pump sound.
 	if ( m_flPumpTime && m_flPumpTime < gpGlobals->time )
 	{
 		// play pumping sound
 		EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM, "weapons/scock1.wav", 1, ATTN_NORM, 0, 95 + RANDOM_LONG(0,0x1f));
 		m_flPumpTime = 0;
 	}
-#endif // !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
+*/
 
 	if (m_flTimeWeaponIdle <=  UTIL_WeaponTimeBase() )
 	{
@@ -413,11 +323,7 @@ void CShotgun::WeaponIdle( void )
 		}
 		else if (m_fInSpecialReload != 0)
 		{
-#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 			if (m_iClip != SHOTGUN_MAX_CLIP && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType])
-#else
-			if (m_iClip != 8 && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType])
-#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 			{
 				Reload( );
 			}
@@ -438,7 +344,6 @@ void CShotgun::WeaponIdle( void )
 		{
 			int iAnim;
 			float flRand = UTIL_SharedRandomFloat( m_pPlayer->random_seed, 0, 1 );
-#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 			if (flRand <= 0.8)
 			{
 				iAnim = SHOTGUN_IDLE_DEEP;
@@ -449,23 +354,6 @@ void CShotgun::WeaponIdle( void )
 				iAnim = SHOTGUN_IDLE;
 				m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + (51.0/9.0);
 			}
-#else
-			if (flRand <= 0.8)
-			{
-				iAnim = SHOTGUN_IDLE_DEEP;
-				m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + (60.0/12.0);// * RANDOM_LONG(2, 5);
-			}
-			else if (flRand <= 0.95)
-			{
-				iAnim = SHOTGUN_IDLE;
-				m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + (20.0/9.0);
-			}
-			else
-			{
-				iAnim = SHOTGUN_IDLE4;
-				m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + (20.0/9.0);
-			}
-#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 			SendWeaponAnim( iAnim );
 		}
 	}

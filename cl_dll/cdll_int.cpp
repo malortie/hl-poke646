@@ -62,11 +62,9 @@ void InitInput (void);
 void EV_HookEvents( void );
 void IN_Commands( void );
 
-#if defined ( POKE646_CLIENT_DLL )
 extern cvar_t	*cl_forwardspeed;
 extern cvar_t	*cl_backspeed;
 extern cvar_t	*cl_sidespeed;
-#endif // defined ( POKE646_CLIENT_DLL )
 
 /*
 ================================
@@ -184,14 +182,12 @@ int CL_DLLEXPORT HUD_VidInit( void )
 
 	VGui_Startup();
 
-#if defined ( POKE646_CLIENT_DLL )
 	//
 	// Fixup player speed.
 	//
 	cl_forwardspeed->value	=
 	cl_backspeed->value		=
 	cl_sidespeed->value		= 200;
-#endif // defined ( POKE646_CLIENT_DLL )
 
 	return 1;
 }

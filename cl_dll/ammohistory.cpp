@@ -107,86 +107,6 @@ void HistoryResource :: CheckClearHistory( void )
 //
 int HistoryResource :: DrawAmmoHistory( float flTime )
 {
-#if defined ( POKE646_CLIENT_DLL )
-	for ( int i = 0; i < MAX_HISTORY; i++ )
-	{
-		if ( rgAmmoHistory[i].type )
-		{
-			rgAmmoHistory[i].DisplayTime = min( rgAmmoHistory[i].DisplayTime, gHUD.m_flTime + HISTORY_DRAW_TIME );
-
-			if ( rgAmmoHistory[i].DisplayTime <= flTime )
-			{  // pic drawing time has expired
-				memset( &rgAmmoHistory[i], 0, sizeof(HIST_ITEM) );
-				CheckClearHistory();
-			}
-			else if ( rgAmmoHistory[i].type == HISTSLOT_AMMO )
-			{
-				wrect_t rcPic;
-				HSPRITE *spr = gWR.GetAmmoPicFromWeapon( rgAmmoHistory[i].iId, rcPic );
-
-				int r, g, b;
-				UnpackRGB(r,g,b, RGB_YELLOWISH);
-				float scale = (rgAmmoHistory[i].DisplayTime - flTime) * 80;
-				ScaleColors(r, g, b, min( gHUD.m_flAlpha , min(scale, 255) ) );
-
-				// Draw the pic
-				int ypos = ScreenHeight - (AMMO_PICKUP_PICK_HEIGHT + (AMMO_PICKUP_GAP * i));
-				int xpos = ScreenWidth - 24;
-				if ( spr && *spr )    // weapon isn't loaded yet so just don't draw the pic
-				{ // the dll has to make sure it has sent info the weapons you need
-					SPR_Set( *spr, r, g, b );
-					SPR_DrawAdditive( 0, xpos, ypos, &rcPic );
-				}
-
-				// Draw the number
-				gHUD.DrawHudNumberString( xpos - 10, ypos, xpos - 100, rgAmmoHistory[i].iCount, r, g, b );
-			}
-			else if ( rgAmmoHistory[i].type == HISTSLOT_WEAP )
-			{
-				WEAPON *weap = gWR.GetWeapon( rgAmmoHistory[i].iId );
-
-				if ( !weap )
-					return 1;  // we don't know about the weapon yet, so don't draw anything
-
-				int r, g, b;
-				UnpackRGB(r,g,b, RGB_YELLOWISH);
-
-				if ( !gWR.HasAmmo( weap ) )
-					UnpackRGB(r,g,b, RGB_REDISH);	// if the weapon doesn't have ammo, display it as red
-
-				float scale = (rgAmmoHistory[i].DisplayTime - flTime) * 80;
-				ScaleColors(r, g, b, min(gHUD.m_flAlpha, min(scale, 255) ) );
-
-				int ypos = ScreenHeight - (AMMO_PICKUP_PICK_HEIGHT + (AMMO_PICKUP_GAP * i));
-				int xpos = ScreenWidth - (weap->rcInactive.right - weap->rcInactive.left);
-				SPR_Set( weap->hInactive, r, g, b );
-				SPR_DrawAdditive( 0, xpos, ypos, &weap->rcInactive );
-			}
-			else if ( rgAmmoHistory[i].type == HISTSLOT_ITEM )
-			{
-				int r, g, b;
-
-				if ( !rgAmmoHistory[i].iId )
-					continue;  // sprite not loaded
-
-				wrect_t rect = gHUD.GetSpriteRect( rgAmmoHistory[i].iId );
-
-				UnpackRGB(r,g,b, RGB_YELLOWISH);
-				float scale = (rgAmmoHistory[i].DisplayTime - flTime) * 80;
-				ScaleColors(r, g, b, min(gHUD.m_flAlpha, min(scale, 255)));
-
-				int ypos = ScreenHeight - (AMMO_PICKUP_PICK_HEIGHT + (AMMO_PICKUP_GAP * i));
-				int xpos = ScreenWidth - (rect.right - rect.left) - 10;
-
-				SPR_Set( gHUD.GetSprite( rgAmmoHistory[i].iId ), r, g, b );
-				SPR_DrawAdditive( 0, xpos, ypos, &rect );
-			}
-		}
-	}
-
-
-	return 1;
-#else
 	for ( int i = 0; i < MAX_HISTORY; i++ )
 	{
 		if ( rgAmmoHistory[i].type )
@@ -265,7 +185,6 @@ int HistoryResource :: DrawAmmoHistory( float flTime )
 
 
 	return 1;
-#endif // defined ( POKE646_CLIENT_DLL )
 }
 
 

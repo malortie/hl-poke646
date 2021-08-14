@@ -59,7 +59,6 @@ void CL_DLLEXPORT HUD_DrawTransparentTriangles( void )
 		 g_pParticleMan->Update();
 }
 
-#if defined ( POKE646_CLIENT_DLL )
 /*
 =================
 HUD_DrawOrthoTriangles
@@ -71,4 +70,3 @@ void HUD_DrawOrthoTriangles(void)
 {
 	gHUD.m_Scope.DrawScope();
 }
-#endif // defined ( POKE646_CLIENT_DLL )

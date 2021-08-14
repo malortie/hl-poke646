@@ -279,7 +279,6 @@ cvar_t	sk_sentry_health1 = {"sk_sentry_health1","0"};
 cvar_t	sk_sentry_health2 = {"sk_sentry_health2","0"};
 cvar_t	sk_sentry_health3 = {"sk_sentry_health3","0"};
 
-#if defined( POKE646_DLL )
 
 // RoboCop
 cvar_t	sk_robocop_health1 = { "sk_robocop_health1", "0" };
@@ -298,7 +297,6 @@ cvar_t	sk_robocop_sw_radius1 = { "sk_robocop_sw_radius1", "0" };
 cvar_t	sk_robocop_sw_radius2 = { "sk_robocop_sw_radius2", "0" };
 cvar_t	sk_robocop_sw_radius3 = { "sk_robocop_sw_radius3", "0" };
 
-#endif // defined( POKE646_DLL )
 
 // PLAYER WEAPONS
 
@@ -738,7 +736,6 @@ void GameDLLInit( void )
 	CVAR_REGISTER ( &sk_sentry_health2 );// {"sk_sentry_health2","0"};
 	CVAR_REGISTER ( &sk_sentry_health3 );// {"sk_sentry_health3","0"};
 
-#if defined( POKE646_DLL )
 
 	// RoboCop
 	CVAR_REGISTER(&sk_robocop_health1);
@@ -757,7 +754,6 @@ void GameDLLInit( void )
 	CVAR_REGISTER(&sk_robocop_sw_radius2);
 	CVAR_REGISTER(&sk_robocop_sw_radius3);
 
-#endif // defined( POKE646_DLL )
 
 	// PLAYER WEAPONS
 

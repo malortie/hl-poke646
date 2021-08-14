@@ -222,13 +222,11 @@ void CGameRules::RefreshSkillData ( void )
 	// Sentry Turret
 	gSkillData.sentryHealth = GetSkillCvar( "sk_sentry_health");
 
-#if defined( POKE646_DLL )
 	// RoboCop
 	gSkillData.robocopHealth = GetSkillCvar("sk_robocop_health");
 	gSkillData.robocopDmgMortar = GetSkillCvar("sk_robocop_dmg_mortar");
 	gSkillData.robocopDmgFist = GetSkillCvar("sk_robocop_dmg_fist");
 	gSkillData.robocopSWRadius = GetSkillCvar("sk_robocop_sw_radius");
-#endif // defined( POKE646_DLL )
 
 // PLAYER WEAPONS
 

@@ -2509,7 +2509,6 @@ void CDeadHGrunt :: Spawn( void )
 	// Corpses have less health
 	pev->health			= 8;
 
-#if !defined ( POKE646_DLL )
 	// map old bodies onto new bodies
 	switch( pev->body )
 	{
@@ -2538,7 +2537,6 @@ void CDeadHGrunt :: Spawn( void )
 		SetBodygroup( GUN_GROUP, GUN_NONE );
 		break;
 	}
-#endif // !defined ( POKE646_DLL )
 
 	MonsterInitDead();
 }

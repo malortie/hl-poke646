@@ -90,12 +90,10 @@ struct skilldata_t
 	float miniturretHealth;
 	float sentryHealth;
 
-#if defined( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 	float robocopHealth;
 	float robocopDmgMortar;
 	float robocopDmgFist;
 	float robocopSWRadius;
-#endif // defined( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 
 // Player Weapons
 	float plrDmgCrowbar;

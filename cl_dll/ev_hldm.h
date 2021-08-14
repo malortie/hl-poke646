@@ -40,7 +40,6 @@ enum glock_e {
 };
 
 enum shotgun_e {
-#if defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 	SHOTGUN_IDLE = 0,
 	SHOTGUN_FIRE,
 	SHOTGUN_RELOAD,
@@ -49,18 +48,6 @@ enum shotgun_e {
 	SHOTGUN_DRAW,
 	SHOTGUN_HOLSTER,
 	SHOTGUN_IDLE_DEEP,
-#else
-	SHOTGUN_IDLE = 0,
-	SHOTGUN_FIRE,
-	SHOTGUN_FIRE2,
-	SHOTGUN_RELOAD,
-	SHOTGUN_PUMP,
-	SHOTGUN_START_RELOAD,
-	SHOTGUN_DRAW,
-	SHOTGUN_HOLSTER,
-	SHOTGUN_IDLE4,
-	SHOTGUN_IDLE_DEEP
-#endif // defined ( POKE646_DLL ) || defined ( POKE646_CLIENT_DLL )
 };
 
 enum mp5_e

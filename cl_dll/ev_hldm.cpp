@@ -246,7 +246,6 @@ char *EV_HLDM_DamageDecal( physent_t *pe )
 	return decalname;
 }
 
-#if defined ( POKE646_CLIENT_DLL )
 
 //=====================
 // EV_WallPuffCallback
@@ -255,7 +254,6 @@ void EV_WallPuffCallback(struct tempent_s *ent, float frametime, float currentti
 {
 	ent->entity.angles = ent->entity.baseline.vuser1;
 }
-#endif // defined ( POKE646_CLIENT_DLL )
 
 void EV_HLDM_GunshotDecalTrace( pmtrace_t *pTrace, char *decalName )
 {
@@ -288,7 +286,6 @@ void EV_HLDM_GunshotDecalTrace( pmtrace_t *pTrace, char *decalName )
 				gEngfuncs.pEfxAPI->Draw_DecalIndex( gEngfuncs.pEfxAPI->Draw_DecalIndexFromName( decalName ) ), 
 				gEngfuncs.pEventAPI->EV_IndexFromTrace( pTrace ), 0, pTrace->endpos, 0 );
 
-#if defined ( POKE646_CLIENT_DLL )
 			//
 			// Spawn small smoke puffs at the trace end location.
 			//
@@ -317,7 +314,6 @@ void EV_HLDM_GunshotDecalTrace( pmtrace_t *pTrace, char *decalName )
 				pSmoke->entity.baseline.vuser1 = angles;
 				pSmoke->callback = EV_WallPuffCallback;
 			}
-#endif // defined ( POKE646_CLIENT_DLL )
 		}
 	}
 }
@@ -575,7 +571,6 @@ void EV_FireGlock2( event_args_t *args )
 //======================
 void EV_FireShotGunDouble( event_args_t *args )
 {
-#if !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
 	int idx;
 	vec3_t origin;
 	vec3_t angles;
@@ -627,7 +622,6 @@ void EV_FireShotGunDouble( event_args_t *args )
 	{
 		EV_HLDM_FireBullets( idx, forward, right, up, 12, vecSrc, vecAiming, 2048, BULLET_PLAYER_BUCKSHOT, 0, &tracerCount[idx-1], 0.08716, 0.08716 );
 	}
-#endif // !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
 }
 
 void EV_FireShotGunSingle( event_args_t *args )
@@ -667,11 +661,7 @@ void EV_FireShotGunSingle( event_args_t *args )
 
 	EV_EjectBrass ( ShellOrigin, ShellVelocity, angles[ YAW ], shell, TE_BOUNCE_SHOTSHELL ); 
 
-#if defined ( POKE646_CLIENT_DLL )
-	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/dbarrel1.wav", gEngfuncs.pfnRandomFloat(0.95, 1.0), ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong( 0, 0x1f ) );
-#else
 	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/sbarrel1.wav", gEngfuncs.pfnRandomFloat(0.95, 1.0), ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong( 0, 0x1f ) );
-#endif // defined ( POKE646_CLIENT_DLL )
 
 	EV_GetGunPosition( args, vecSrc, origin );
 	VectorCopy( forward, vecAiming );

@@ -96,8 +96,6 @@ int CHudFlashlight:: MsgFunc_Flashlight(const char *pszName,  int iSize, void *p
 
 int CHudFlashlight::Draw(float flTime)
 {
-#if defined ( POKE646_CLIENT_DLL )
-#endif // defined ( POKE646_CLIENT_DLL )
 	return 1; // Poke646 - No flashlight HUD.
 
 	if ( gHUD.m_iHideHUDDisplay & ( HIDEHUD_FLASHLIGHT | HIDEHUD_ALL ) )

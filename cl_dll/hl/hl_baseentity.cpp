@@ -301,11 +301,9 @@ const char *CBasePlayer::TeamID( void ) { return ""; }
 int CBasePlayer :: GiveAmmo( int iCount, char *szName, int iMax ) { return 0; }
 void CBasePlayer::AddPoints( int score, BOOL bAllowNegativeScore ) { } 
 void CBasePlayer::AddPointsToTeam( int score, BOOL bAllowNegativeScore ) { } 
-#if defined ( POKE646_CLIENT_DLL )
 void CBasePlayer::UpdateExertLevel(void) {}
 void CBasePlayer::ShowPlayerHUD(BOOL bInstant) {}
 void CBasePlayer::HidePlayerHUD(BOOL bInstant) {}
-#endif // defined ( POKE646_CLIENT_DLL )
 void CBasePlayer::UpdatePlayerHUDVisibility(BOOL bInstant) {}
 
 void ClearMultiDamage(void) { }
