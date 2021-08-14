@@ -2371,8 +2371,8 @@ void CBasePlayer::CheckSuitUpdate()
 void CBasePlayer::SetSuitUpdate(char *name, int fgroup, int iNoRepeatTime)
 {
 #if defined ( POKE646_DLL )
-	return;
 #endif // defined ( POKE646_DLL )
+	return; // Poke646 - No suit update sentence.
 
 	int i;
 	int isentence;
