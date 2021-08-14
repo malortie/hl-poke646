@@ -164,11 +164,26 @@ void CXSBeam::Touch(CBaseEntity *pOther)
 
 	RadiusDamage(pev->origin, pev, pev, pev->dmg, std::max( 100.0f, pev->dmg ), CLASS_NONE, DMG_POISON);
 
-	if (!pOther->pev->takedamage)
+	if (pOther->IsBSPModel())
 	{
 		// make a splat on the wall
 		UTIL_TraceLine(pev->origin, pev->origin + pev->velocity * 10, dont_ignore_monsters, ENT(pev), &tr);
 		UTIL_DecalTrace(&tr, DECAL_SMALLSCORCH3);
+
+		if (!pOther->pev->takedamage)
+		{
+			// entry wall glow
+			MESSAGE_BEGIN( MSG_PVS, SVC_TEMPENTITY, pev->origin );
+				WRITE_BYTE( TE_GLOWSPRITE );
+				WRITE_COORD( pev->origin.x );	// pos
+				WRITE_COORD( pev->origin.y );
+				WRITE_COORD( pev->origin.z );
+				WRITE_SHORT( m_iGlow );		// model
+				WRITE_BYTE( 5 );				// life * 10
+				WRITE_BYTE( 5 );				// size * 10
+				WRITE_BYTE( 200 );			// brightness
+			MESSAGE_END();
+		}
 	}
 
 	// light.
@@ -183,18 +198,6 @@ void CXSBeam::Touch(CBaseEntity *pOther)
 		WRITE_BYTE(0);		// b
 		WRITE_BYTE(50);	// time * 10
 		WRITE_BYTE(4);		// decay * 0.1
-	MESSAGE_END();
-
-	// entry wall glow
-	MESSAGE_BEGIN( MSG_PVS, SVC_TEMPENTITY, pev->origin );
-		WRITE_BYTE( TE_GLOWSPRITE );
-		WRITE_COORD( pev->origin.x );	// pos
-		WRITE_COORD( pev->origin.y );
-		WRITE_COORD( pev->origin.z );
-		WRITE_SHORT( m_iGlow );		// model
-		WRITE_BYTE( 5 );				// life * 10
-		WRITE_BYTE( 5 );				// size * 10
-		WRITE_BYTE( 200 );			// brightness
 	MESSAGE_END();
 
 	// Remove all children.
