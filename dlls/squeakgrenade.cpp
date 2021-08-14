@@ -409,7 +409,7 @@ void CSqueakGrenade::SuperBounceTouch( CBaseEntity *pOther )
 
 #endif
 
-#if !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
+#if 0 // Poke646 - No snark weapon.
 
 LINK_ENTITY_TO_CLASS( weapon_snark, CSqueak );
 
@@ -600,6 +600,6 @@ void CSqueak::WeaponIdle( void )
 	SendWeaponAnim( iAnim );
 }
 
-#endif // !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
+#endif // Poke646 - No snark weapon.
 
 #endif
