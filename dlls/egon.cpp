@@ -25,6 +25,7 @@
 #include "customentity.h"
 #include "gamerules.h"
 
+#if 0 // Poke646 - No egon.
 #define	EGON_PRIMARY_VOLUME		450
 #define EGON_BEAM_SPRITE		"sprites/xbeam1.spr"
 #define EGON_FLARE_SPRITE		"sprites/XSpark1.spr"
@@ -537,6 +538,7 @@ void CEgon::EndAttack( void )
 
 	DestroyEffect();
 }
+#endif // Poke646 - No egon.
 
 
 
