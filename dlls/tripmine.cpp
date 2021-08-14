@@ -352,7 +352,7 @@ void CTripmineGrenade::DelayDeathThink( void )
 }
 #endif
 
-#if !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
+#if 0 // Poke646 - No tripmine weapon.
 
 LINK_ENTITY_TO_CLASS( weapon_tripmine, CTripmine );
 
@@ -523,7 +523,7 @@ void CTripmine::WeaponIdle( void )
 	SendWeaponAnim( iAnim );
 }
 
-#endif // !defined ( POKE646_DLL ) && !defined ( POKE646_CLIENT_DLL )
+#endif // Poke646 - No tripmine weapon.
 
 
 
