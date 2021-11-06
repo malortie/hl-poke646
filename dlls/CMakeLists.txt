@@ -50,6 +50,7 @@ set(LINK_OPTS_RELEASE
 # Include directories
 set(INCLUDE_DIRS
   ${CMAKE_CURRENT_SOURCE_DIR}
+  ${POKE646_DLLS_DIR}
   ${ENGINE_DIR}
   ${COMMON_DIR}
   ${PM_SHARED_DIR}
@@ -105,6 +106,8 @@ set(HEADER_FILES
   ${PM_SHARED_DIR}/pm_movevars.h
   ${PM_SHARED_DIR}/pm_shared.h
   ${MOD_CONFIG_FILE_PATH}
+  ${POKE646_DLLS_FOLDER}/nail.h
+  ${POKE646_DLLS_FOLDER}/xenspit.h
 )
 
 # Source files
@@ -144,13 +147,13 @@ set(SOURCE_FILES
   ggrenade.cpp
   globals.cpp
   gman.cpp
-  handgrenade.cpp
+#  handgrenade.cpp
   hassassin.cpp
   headcrab.cpp
   healthkit.cpp
   hgrunt.cpp
   hornet.cpp
-  hornetgun.cpp
+#  hornetgun.cpp
   houndeye.cpp
   h_ai.cpp
   h_battery.cpp
@@ -208,6 +211,11 @@ set(SOURCE_FILES
   xen.cpp
   zombie.cpp
   ${GAME_SHARED_DIR}/voice_gamemgr.cpp
+  ${POKE646_DLLS_FOLDER}/firetrail.cpp
+  ${POKE646_DLLS_FOLDER}/genericmodel.cpp
+  ${POKE646_DLLS_FOLDER}/nail.cpp
+  ${POKE646_DLLS_FOLDER}/robocop.cpp
+  ${POKE646_DLLS_FOLDER}/xenspit.cpp
 )
 
 set(PM_SHARED_SOURCE_FILES

@@ -47,7 +47,9 @@ set(LINK_OPTS_RELEASE
 # Include directories
 set(INCLUDE_DIRS 
   ${DLLS_DIR}
+  ${POKE646_DLLS_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}
+  ${POKE646_CL_DLL_DIR}
   ${PUBLIC_DIR}
   ${COMMON_DIR}
   ${PM_SHARED_DIR}
@@ -100,6 +102,7 @@ set(HEADER_FILES
   ${PM_SHARED_DIR}/pm_movevars.h
   ${PM_SHARED_DIR}/pm_shared.h
   ${MOD_CONFIG_FILE_PATH}
+  ${POKE646_DLLS_FOLDER}/music.h
 )
 
 # Source files
@@ -165,8 +168,8 @@ set(SOURCE_FILES
   ${DLLS_DIR}/crowbar.cpp
   ${DLLS_DIR}/egon.cpp
   ${DLLS_DIR}/gauss.cpp
-  ${DLLS_DIR}/handgrenade.cpp
-  ${DLLS_DIR}/hornetgun.cpp
+#  ${DLLS_DIR}/handgrenade.cpp
+#  ${DLLS_DIR}/hornetgun.cpp
   ${DLLS_DIR}/mp5.cpp
   ${DLLS_DIR}/python.cpp
   ${DLLS_DIR}/rpg.cpp
@@ -184,6 +187,8 @@ set(SOURCE_FILES
   ${GAME_SHARED_DIR}/vgui_slider2.cpp
   ${GAME_SHARED_DIR}/voice_banmgr.cpp
   ${PUBLIC_DIR}/interface.cpp
+  ${POKE646_DLLS_FOLDER}/music.cpp
+  ${POKE646_DLLS_FOLDER}/scope.cpp
 )
 
 set(PM_SHARED_SOURCE_FILES
