@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [poke646/2.0.0] - 2021-08-14
+## [2.0.0] - 2021-11-07
 
 ### Added
 
@@ -69,7 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Crowbar not playing the first attack hit sequence
 - Nail emitting sparks when touching sky surfaces
 
-## [poke646/1.0.0] - 2016-02-01
+## [1.0.0] - 2016-02-01
 
 ### Added
 
