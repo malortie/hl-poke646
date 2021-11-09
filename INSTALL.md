@@ -2,11 +2,12 @@
 
 ## Install on Windows
 
-1. Download the latest Release
-2. Copy the mod folder to your Half-Life game directory e.g.
+1. Install the latest version of the original Poke646 mod
+2. Download the latest Release from https://github.com/malortie/hl-poke646/releases
+3. Copy the Release poke646 folder content into the Poke646 mod directory e.g.
    ```text
-   C:\Program Files (x86)\steamapps\common\Half-Life
+   release\poke646 -> C:\Program Files (x86)\Steam\steamapps\common\Half-Life\poke646
    ```
-3. Run SETUP.bat
-4. Restart Steam
-5. Launch the mod
+4. Run SETUP.bat
+5. Restart Steam
+6. Launch the mod
